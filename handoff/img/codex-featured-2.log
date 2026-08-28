@@ -1,0 +1,495 @@
+Reading additional input from stdin...
+2026-08-28T16:02:46.633751Z ERROR codex_models_manager::cache: failed to load models cache: missing field `base_instructions` at line 97 column 5
+OpenAI Codex v0.146.1
+--------
+workdir: /Users/themon/MONApay/site/handoff/img
+model: gpt-5.6-sol
+provider: openai
+approval: never
+sandbox: workspace-write [workdir, /tmp, $TMPDIR]
+reasoning effort: xhigh
+reasoning summaries: none
+session id: 01a0491c-013c-75c3-a03f-afc4650527b7
+--------
+user
+Đọc BRIEF-FEATURED-BLOG.md (luật) rồi BRIEF-FEATURED-BLOG-2.md (5 bài), xem 3 ref trong ref/ bằng view_image, dùng image_gen render 5 ảnh 1536x1024 lưu out/<slug>.png, tự soát chữ tiếng Việt đủ dấu + băng tay 'AI Agent MONA', sai thì regen, ghi out/STATUS-2.txt.
+codex
+Mình sẽ dùng skill `imagegen` vì đây là tác vụ tạo bitmap. Trước hết mình đọc đầy đủ hai brief và skill, rồi xem trực tiếp cả 3 ảnh tham chiếu trước khi render; mỗi ảnh sẽ được kiểm lại chữ tiếng Việt và băng tay “AI Agent MONA”, ảnh nào sai mình sẽ regen trước khi ghi trạng thái.
+exec
+/bin/zsh -lc "sed -n '1,240p' /Users/themon/.codex/skills/.system/imagegen/SKILL.md && printf '\\n---BRIEF 1---\\n' && sed -n '1,260p' BRIEF-FEATURED-BLOG.md && printf '\\n---BRIEF 2---\\n' && sed -n '1,320p' BRIEF-FEATURED-BLOG-2.md && printf '\\n---FILES---\\n' && rg --files ref . | sed -n '1,200p'" in /Users/themon/MONApay/site/handoff/img
+ succeeded in 47ms:
+---
+name: "imagegen"
+description: "Generate or edit raster images when the task benefits from AI-created bitmap visuals such as photos, illustrations, textures, sprites, mockups, or transparent-background cutouts. Use when Codex should create a brand-new image, transform an existing image, or derive visual variants from references, and the output should be a bitmap asset rather than repo-native code or vector. Do not use when the task is better handled by editing existing SVG/vector/code-native assets, extending an established icon or logo system, or building the visual directly in HTML/CSS/canvas."
+---
+
+# Image Generation Skill
+
+Generates or edits images for the current project (for example website assets, game assets, UI mockups, product mockups, wireframes, logo design, photorealistic images, or infographics).
+
+## Top-level modes and rules
+
+This skill has exactly two top-level modes:
+
+- **Default built-in tool mode (preferred):** built-in `image_gen` tool for normal image generation, editing, and simple transparent-image requests. Does not require `OPENAI_API_KEY`.
+- **Fallback CLI mode:** `scripts/image_gen.py` CLI. Use when the user explicitly asks for the CLI/API/model path, or after the user explicitly confirms a true model-native transparency fallback with `gpt-image-1.5`. Requires `OPENAI_API_KEY`.
+
+Within CLI fallback, the CLI exposes three subcommands:
+
+- `generate`
+- `edit`
+- `generate-batch`
+
+Rules:
+- Use the built-in `image_gen` tool by default for normal image generation and editing requests.
+- Do not switch to CLI fallback for ordinary quality, size, or file-path control.
+- If the user explicitly asks for a transparent image/background, stay on built-in `image_gen` first: prompt for a flat removable chroma-key background, then remove it locally with the installed helper at `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`.
+- Never silently switch from built-in `image_gen` or CLI `gpt-image-2` to CLI `gpt-image-1.5`. Treat this as a model/path downgrade and ask the user before doing it, unless the user has already explicitly requested `gpt-image-1.5`, `scripts/image_gen.py`, or CLI fallback.
+- If a transparent request appears too complex for clean chroma-key removal, asks for true/native transparency, or local removal fails validation, explain that true transparency requires CLI `gpt-image-1.5 --background transparent --output-format png` because `gpt-image-2` does not support `background=transparent`, then ask whether to proceed. Run the CLI fallback only after the user confirms.
+- The word `batch` by itself does not mean CLI fallback. If the user asks for many assets or says to batch-generate assets without explicitly asking for CLI/API/model controls, stay on the built-in path and issue one built-in call per requested asset or variant.
+- If the built-in tool fails or is unavailable, tell the user the CLI fallback exists and that it requires `OPENAI_API_KEY`. Proceed only if the user explicitly asks for that fallback.
+- If the user explicitly asks for CLI mode, use the bundled `scripts/image_gen.py` workflow. Do not create one-off SDK runners.
+- Never modify `scripts/image_gen.py`. If something is missing, ask the user before doing anything else.
+
+Built-in save-path policy:
+- In built-in tool mode, Codex saves generated images under `$CODEX_HOME/*` by default.
+- Do not describe or rely on OS temp as the default built-in destination.
+- Do not describe or rely on a destination-path argument (if any) on the built-in `image_gen` tool. If a specific location is needed, generate first and then move or copy the selected output from `$CODEX_HOME/generated_images/...`.
+- Save-path precedence in built-in mode:
+  1. If the user names a destination, move or copy the selected output there.
+  2. If the image is meant for the current project, move or copy the final selected image into the workspace before finishing.
+  3. If the image is only for preview or brainstorming, render it inline; the underlying file can remain at the default `$CODEX_HOME/*` path.
+- Never leave a project-referenced asset only at the default `$CODEX_HOME/*` path.
+- Do not overwrite an existing asset unless the user explicitly asked for replacement; otherwise create a sibling versioned filename such as `hero-v2.png` or `item-icon-edited.png`.
+
+Shared prompt guidance for both modes lives in `references/prompting.md` and `references/sample-prompts.md`.
+
+Fallback-only docs/resources for CLI mode:
+- `references/cli.md`
+- `references/image-api.md`
+- `references/codex-network.md`
+- `scripts/image_gen.py`
+
+Local post-processing helper:
+- `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py`: removes a flat chroma-key background from a generated image and writes a PNG/WebP with alpha. Prefer auto-key sampling, soft matte, and despill for antialiased edges.
+
+## When to use
+- Generate a new image (concept art, product shot, cover, website hero)
+- Generate a new image using one or more reference images for style, composition, or mood
+- Edit an existing image (inpainting, lighting or weather transformations, background replacement, object removal, compositing, transparent background)
+- Produce many assets or variants for one task
+
+## When not to use
+- Extending or matching an existing SVG/vector icon set, logo system, or illustration library inside the repo
+- Creating simple shapes, diagrams, wireframes, or icons that are better produced directly in SVG, HTML/CSS, or canvas
+- Making a small project-local asset edit when the source file already exists in an editable native format
+- Any task where the user clearly wants deterministic code-native output instead of a generated bitmap
+
+## Decision tree
+
+Think about two separate questions:
+
+1. **Intent:** is this a new image or an edit of an existing image?
+2. **Execution strategy:** is this one asset or many assets/variants?
+
+Intent:
+- If the user wants to modify an existing image while preserving parts of it, treat the request as **edit**.
+- If the user provides images only as references for style, composition, mood, or subject guidance, treat the request as **generate**.
+- If the user provides no images, treat the request as **generate**.
+
+Built-in edit semantics:
+- Built-in edit mode is for images already visible in the conversation context, such as attached images or images generated earlier in the thread.
+- If the user wants to edit a local image file with the built-in tool, first load it with built-in `view_image` tool so the image is visible in the conversation context, then proceed with the built-in edit flow.
+- Do not promise arbitrary filesystem-path editing through the built-in tool.
+- If a local file still needs direct file-path control, masks, or other explicit CLI-only parameters, use the explicit CLI fallback only when the user asks for it.
+- For edits, preserve invariants aggressively and save non-destructively by default.
+
+Execution strategy:
+- In the built-in default path, produce many assets or variants by issuing one `image_gen` call per requested asset or variant.
+- In the CLI fallback path, use the CLI `generate-batch` subcommand only when the user explicitly chose CLI mode and needs many prompts/assets.
+- For many distinct assets, do not use `n` as a substitute for separate prompts. `n` is for variants of one prompt; distinct assets need distinct built-in calls or distinct CLI `generate-batch` jobs.
+
+Assume the user wants a new image unless they clearly ask to change an existing one.
+
+## Workflow
+1. Decide the top-level mode: built-in by default, including simple transparent-output requests; fallback CLI only if explicitly requested or after the user explicitly confirms a transparent-output fallback.
+2. Decide the intent: `generate` or `edit`.
+3. Decide whether the output is preview-only or meant to be consumed by the current project.
+4. Decide the execution strategy: single asset vs repeated built-in calls vs CLI `generate-batch`.
+5. Collect inputs up front: prompt(s), exact text (verbatim), constraints/avoid list, and any input images.
+6. For every input image, label its role explicitly:
+   - reference image
+   - edit target
+   - supporting insert/style/compositing input
+7. If the edit target is only on the local filesystem and you are staying on the built-in path, inspect it with `view_image` first so the image is available in conversation context.
+8. If the user asked for a photo, illustration, sprite, product image, banner, or other explicitly raster-style asset, use `image_gen` rather than substituting SVG/HTML/CSS placeholders. If the request is for an icon, logo, or UI graphic that should match existing repo-native SVG/vector/code assets, prefer editing those directly instead.
+9. Augment the prompt based on specificity:
+   - If the user's prompt is already specific and detailed, normalize it into a clear spec without adding creative requirements.
+   - If the user's prompt is generic, add tasteful augmentation only when it materially improves output quality.
+10. Use the built-in `image_gen` tool by default.
+11. For transparent-output requests, follow the transparent image guidance below: generate with built-in `image_gen` on a flat chroma-key background, copy the selected output into the workspace or `tmp/imagegen/`, run the installed `$CODEX_HOME/skills/.system/imagegen/scripts/remove_chroma_key.py` helper, and validate the alpha result before using it. If this path looks unsuitable or fails, ask before switching to CLI `gpt-image-1.5`.
+12. Inspect outputs and validate: subject, style, composition, text accuracy, and invariants/avoid items.
+13. Iterate with a single targeted change, then re-check.
+14. For preview-only work, render the image inline; the underlying file may remain at the default `$CODEX_HOME/generated_images/...` path.
+15. For project-bound work, move or copy the selected artifact into the workspace and update any consuming code or references. Never leave a project-referenced asset only at the default `$CODEX_HOME/generated_images/...` path.
+16. For batches or multi-asset requests, persist every requested deliverable final in the workspace unless the user explicitly asked to keep outputs preview-only. Discarded variants do not need to be kept unless requested.
+17. If the user explicitly chooses or confirms the CLI fallback, then use the fallback-only docs for model, quality, size, `input_fidelity`, masks, output format, output paths, and network setup.
+18. Always report the final saved path(s) for any workspace-bound asset(s), plus the final prompt or prompt set and whether the built-in tool or fallback CLI mode was used.
+
+## Transparent image requests
+
+Transparent-image requests still use built-in `image_gen` first. Because the built-in tool does not expose a true transparent-background control, create a removable chroma-key source image and then convert the key color to alpha locally.
+
+Default sequence:
+1. Use built-in `image_gen` to generate the requested subject on a perfectly flat solid chroma-key background.
+2. Choose a key color that is unlikely to appear in the subject: default `#00ff00`, use `#ff00ff` for green subjects, and avoid `#0000ff` for blue subjects.
+3. After generation, move or copy the selected source image from `$CODEX_HOME/generated_images/...` into the workspace or `tmp/imagegen/`.
+4. Run the installed helper path, not a project-relative script path:
+   ```bash
+   python "${CODEX_HOME:-$HOME/.codex}/skills/.system/imagegen/scripts/remove_chroma_key.py" \
+     --input <source> \
+     --out <final.png> \
+     --auto-key border \
+     --soft-matte \
+     --transparent-threshold 12 \
+     --opaque-threshold 220 \
+     --despill
+   ```
+5. Validate that the output has an alpha channel, transparent corners, plausible subject coverage, and no obvious key-color fringe. If a thin fringe remains, retry once with `--edge-contract 1`; use `--edge-feather 0.25` only when the edge is visibly stair-stepped and the subject is not shiny or reflective.
+6. Save the final alpha PNG/WebP in the project if the asset is project-bound. Never leave a project-referenced transparent asset only under `$CODEX_HOME/*`.
+
+Prompt transparent requests like this:
+
+```text
+Create the requested subject on a perfectly flat solid #00ff00 chroma-key background for background removal.
+The background must be one uniform color with no shadows, gradients, texture, reflections, floor plane, or lighting variation.
+Keep the subject fully separated from the background with crisp edges and generous padding.
+Do not use #00ff00 anywhere in the subject.
+No cast shadow, no contact shadow, no reflection, no watermark, and no text unless explicitly requested.
+```
+
+Do not automatically use CLI `gpt-image-1.5 --background transparent --output-format png` instead of chroma keying. Ask the user first when the user asks for true/native transparency, when local removal fails validation, or when the requested image is complex: hair, fur, feathers, smoke, glass, liquids, translucent materials, reflective objects, soft shadows, realistic product grounding, or subject colors that conflict with all practical key colors.
+
+Use a concise confirmation like:
+
+```text
+This likely needs true native transparency. The default built-in path uses a chroma-key background plus local removal, but true transparency requires the CLI fallback with gpt-image-1.5 because gpt-image-2 does not support background=transparent. It also requires OPENAI_API_KEY. Should I proceed with that CLI fallback?
+```
+
+## Prompt augmentation
+
+Reformat user prompts into a structured, production-oriented spec. Make the user's goal clearer and more actionable, but do not blindly add detail.
+
+Treat this as prompt-shaping guidance, not a closed schema. Use only the lines that help, and add a short extra labeled line when it materially improves clarity.
+
+### Specificity policy
+
+Use the user's prompt specificity to decide how much augmentation is appropriate:
+
+- If the prompt is already specific and detailed, preserve that specificity and only normalize/structure it.
+- If the prompt is generic, you may add tasteful augmentation when it will materially improve the result.
+
+Allowed augmentations:
+- composition or framing hints
+- polish level or intended-use hints
+- practical layout guidance
+- reasonable scene concreteness that supports the stated request
+
+Not allowed augmentations:
+- extra characters or objects that are not implied by the request
+- brand names, slogans, palettes, or narrative beats that are not implied
+- arbitrary side-specific placement unless the surrounding layout supports it
+
+## Use-case taxonomy (exact slugs)
+
+Classify each request into one of these buckets and keep the slug consistent across prompts and references.
+
+Generate:
+- photorealistic-natural — candid/editorial lifestyle scenes with real texture and natural lighting.
+- product-mockup — product/packaging shots, catalog imagery, merch concepts.
+- ui-mockup — app/web interface mockups and wireframes; specify the desired fidelity.
+- infographic-diagram — diagrams/infographics with structured layout and text.
+- scientific-educational — classroom explainers, scientific diagrams, and learning visuals with required labels and accuracy constraints.
+- ads-marketing — campaign concepts and ad creatives with audience, brand position, scene, and exact tagline/copy.
+- productivity-visual — slide, chart, workflow, and data-heavy business visuals.
+- logo-brand — logo/mark exploration, vector-friendly.
+- illustration-story — comics, children’s book art, narrative scenes.
+- stylized-concept — style-driven concept art, 3D/stylized renders.
+- historical-scene — period-accurate/world-knowledge scenes.
+
+Edit:
+- text-localization — translate/replace in-image text, preserve layout.
+- identity-preserve — try-on, person-in-scene; lock face/body/pose.
+- precise-object-edit — remove/replace a specific element (including interior swaps).
+- lighting-weather — time-of-day/season/atmosphere changes only.
+- background-extraction — transparent background / clean cutout. Use built-in `image_gen` with chroma-key removal first for simple opaque subjects; ask before using CLI true transparency for complex subjects.
+- style-transfer — apply reference style while changing subject/scene.
+- compositing — multi-image insert/merge with matched lighting/perspective.
+- sketch-to-render — drawing/line art to photoreal render.
+
+## Shared prompt schema
+
+Use the following labeled spec as shared prompt scaffolding for both top-level modes:
+
+```text
+Use case: <taxonomy slug>
+Asset type: <where the asset will be used>
+Primary request: <user's main prompt>
+Input images: <Image 1: role; Image 2: role> (optional)
+Scene/backdrop: <environment>
+Subject: <main subject>
+Style/medium: <photo/illustration/3D/etc>
+Composition/framing: <wide/close/top-down; placement>
+Lighting/mood: <lighting + mood>
+Color palette: <palette notes>
+Materials/textures: <surface details>
+Text (verbatim): "<exact text>"
+Constraints: <must keep/must avoid>
+Avoid: <negative constraints>
+```
+
+Notes:
+- `Asset type` and `Input images` are prompt scaffolding, not dedicated CLI flags.
+- `Scene/backdrop` refers to the visual setting. It is not the same as the fallback CLI `background` parameter, which controls output transparency behavior.
+- Fallback-only execution notes such as `Quality:`, `Input fidelity:`, masks, output format, and output paths belong in the CLI path only. Do not treat them as built-in `image_gen` tool arguments.
+
+Augmentation rules:
+- Keep it short.
+- Add only the details needed to improve the prompt materially.
+- For edits, explicitly list invariants (`change only X; keep Y unchanged`).
+- If any critical detail is missing and blocks success, ask a question; otherwise proceed.
+
+---BRIEF 1---
+# BRIEF — Featured image (thumbnail bán click) cho 9 bài blog monapay.vn
+
+## Luật (từ PLAYBOOK-ANH-CONTENT-MONEY của MONA, áp cho monapay.vn với palette MONA Pay)
+- Tool `image_gen`, **landscape 1536x1024**, 1 ảnh/bài, lưu `out/<slug>.png`.
+- **Xem 3 reference trước khi render** (view_image): `ref/MAU-featured-clickbait.png` (bố cục mẫu Mon duyệt: tít 2 dòng IN HOA trên tấm nền tối bo góc bên trái, gấu biểu cảm mạnh góc trái dưới, nửa phải minh hoạ đúng ý), `ref/gau-bang-tay-ai-agent-mona.png` (thần thái Gấu Cười 3D dễ thương + BĂNG TAY quấn bắp tay in chữ `AI Agent MONA`), `ref/gau-present-chi-bang.png` (đồng phục polo trắng / hoodie kem).
+- **Gấu**: 3D dễ thương đúng thần thái reference (KHÔNG creepy, KHÔNG panda thật), mặc polo trắng hoặc hoodie kem trơn (KHÔNG tự chế logo trên ngực; che ngực bằng tay/đạo cụ nếu cần), **bắt buộc băng tay quấn bắp tay trên in chữ trắng `AI Agent MONA` đúng chính tả** (gradient xanh #2f4fe0 → tím #7c3aed → coral #ff7a59 trên băng). Biểu cảm MẠNH theo từng bài.
+- **Chữ**: để model viết thẳng tiếng Việt CÓ DẤU, IN HOA, đúng nguyên văn bên dưới, 2 dòng: dòng 1 = keyword (trắng), dòng 2 = hook (màu chốt). Sai dấu/sai chữ/thiếu chữ → REGEN, không nộp.
+- **Palette MONA Pay** (khác mona.media): nền tối crimson-đen `#1B0C11 → #3A1020` có vệt sáng lạnh, ánh sáng trắng mát; chữ hook màu **teal `#36BFB2`** cho bài "thơm/hướng dẫn", **coral `#FF786A`** cho bài "đau". Điểm nhấn teal/crimson. ⛔️ KHÔNG ám vàng, KHÔNG tím indigo chủ đạo, KHÔNG logo hãng khác (MoMo/PayPal/ngân hàng), KHÔNG người thật, KHÔNG watermark, KHÔNG cliché bóng đèn/bắt tay/địa cầu/bánh răng.
+- Nửa phải = cảnh CÓ Ý đúng bài (gấu/đồ vật đang LÀM việc bài nói), không mockup rỗng.
+- Checklist tự soát từng ảnh: đúng 2 dòng chữ, đủ dấu; băng tay đọc được `AI Agent MONA`; gấu đúng thần thái; 1536x1024; không ám vàng; không logo lạ. Ghi `out/STATUS.txt` mỗi dòng `<slug> OK|REGEN <ghi chú>`.
+
+## 9 bài (slug → dòng 1 / dòng 2 (màu) → biểu cảm gấu → cảnh nửa phải)
+1. `xac-nhan-thanh-toan-tu-dong` → "XÁC NHẬN THANH TOÁN TỰ ĐỘNG" / "HẾT CANH APP NGÂN HÀNG" (teal) → gấu thở phào, thumbs up → điện thoại hiện thông báo tiền vào, mũi tên sang màn hình đơn hàng chuyển trạng thái xanh "đã thanh toán" (chữ trên màn có thể là ký hiệu tick, không cần chữ).
+2. `tu-dong-bao-co-tien-vao-tai-khoan` → "BÁO CÓ TỰ ĐỘNG" / "CẢ NHÓM THẤY TIỀN VÀO" (teal) → gấu chỉ tay hào hứng → màn hình chat nhóm kiểu Telegram (không logo) với bong bóng thông báo tiền vào, vài gấu đồng nghiệp nhìn màn.
+3. `gan-cong-thanh-toan-vao-website` → "GẮN CỔNG THANH TOÁN VÀO WEB" / "CÁCH NÀO MIỄN PHÍ?" (teal) → gấu suy nghĩ, tay chống cằm → 3 cánh cửa/ngả rẽ trước một website, một ngả sáng teal có mã QR.
+4. `nhan-tien-viet-va-ngoai-te-usd` → "THU TIỀN VIỆT HAY TIỀN ĐÔ?" / "CHỌN SAI MẤT PHÍ MỖI ĐƠN" (coral) → gấu lo lắng nhìn hoá đơn → hai làn: đồng VND chảy thẳng vào ngân hàng vs đồng USD đi qua nhiều trạm thu phí.
+5. `cong-thanh-toan-mien-phi` → "CỔNG THANH TOÁN MIỄN PHÍ" / "KHÔNG THU MỘT ĐỒNG" (teal) → gấu cười tươi giơ bảng giá 0 → đồng xu "0" teal to, tiền vào thẳng két/ngân hàng.
+6. `momo-zalopay-shopeepay-vnpay-cho-website` → "VÍ ĐIỆN TỬ HAY VIETQR?" / "WEB BÁN HÀNG NÊN GẮN GÌ" (teal) → gấu cân 2 tay như cái cân → bên trái vài ví điện tử generic (icon ví, không logo), bên phải mã QR + app ngân hàng, cân nghiêng nhẹ về QR.
+7. `mona-pay-mo-public-sau-4-nam` → "MONA PAY MỞ CHO MỌI NGƯỜI" / "SAU 4 NĂM CHỈ KHÁCH MONA DÙNG" (teal) → gấu mở toang cánh cửa, vẫy tay → sau cửa là dãy cửa hàng/quán/trung tâm sáng đèn, dòng khách đi vào.
+8. `vi-sao-mona-pay-mien-phi` → "VÌ SAO MIỄN PHÍ HOÀN TOÀN?" / "TIỀN KHÔNG QUA TRUNG GIAN" (teal) → gấu giải thích, tay chỉ sơ đồ → mũi tên tiền từ khách bay thẳng vào toà nhà ngân hàng, không có trạm trung gian nào (trạm bị gạch chéo).
+9. `tu-xay-cong-thanh-toan-de-thu-tien-hosting` → "TỰ XÂY CỔNG THANH TOÁN" / "ĐỂ THU TIỀN HOSTING 4 NĂM" (teal) → gấu kỹ sư đội mũ, cầm laptop → tủ server sáng đèn teal, dòng thông báo tiền vào chạy trên màn.
+
+---BRIEF 2---
+# BRIEF — Featured image đợt 2 (5 bài glossary) — luật y hệt BRIEF-FEATURED-BLOG.md (đọc file đó trước, xem 3 ref trong ref/). Lưu out/<slug>.png 1536x1024. Ghi out/STATUS-2.txt.
+Lưu ý thêm: mọi gấu trong hình (kể cả gấu phụ) mặc polo trắng trơn hoặc hoodie kem trơn, không hoodie màu khác.
+1. `webhook-la-gi` → "WEBHOOK LÀ GÌ?" / "TIỀN VÀO LÀ WEB BIẾT NGAY" (teal) → gấu giải thích, một tay chỉ → toà ngân hàng nhỏ bên trái bắn một tia sáng teal tới máy chủ/website bên phải có chuông thông báo rung.
+2. `vietqr-la-gi` → "VIETQR LÀ GÌ?" / "QUÉT LÀ CHUYỂN ĐÚNG TIỀN" (teal) → gấu cầm điện thoại giơ lên quét → mã QR lớn phát sáng teal, màn hình điện thoại hiện dấu tick.
+3. `api-ngan-hang-la-gi` → "API NGÂN HÀNG LÀ GÌ?" / "PHẦN MỀM NÓI CHUYỆN VỚI BANK" (teal) → gấu cắm một sợi cáp sáng teal nối toà nhà ngân hàng với laptop/phần mềm, dữ liệu chảy dọc cáp.
+4. `open-banking-la-gi` → "OPEN BANKING LÀ GÌ?" / "NGÂN HÀNG MỞ CỬA CHO PHẦN MỀM" (teal) → gấu đứng trước toà ngân hàng cổ điển có cánh cổng lớn đang mở, dòng dữ liệu/biểu tượng chảy ra tới các phần mềm nhỏ.
+5. `tai-khoan-ngan-hang-ao-la-gi` → "TÀI KHOẢN ẢO LÀ GÌ?" / "MỖI ĐƠN MỘT SỐ, KHỎI NHẦM" (teal) → gấu xếp các thẻ số tài khoản (dãy số generic, không tên bank) vào từng hộp đơn hàng, mỗi hộp một thẻ khớp màu teal.
+
+---FILES---
+ref/gau-present-chi-bang.png
+./codex-featured-2.log
+ref/gau-bang-tay-ai-agent-mona.png
+ref/MAU-featured-clickbait.png
+./codex-featured.log
+./BRIEF-FEATURED-BLOG.md
+./BRIEF-FEATURED-BLOG-2.md
+./ref/gau-present-chi-bang.png
+./ref/gau-bang-tay-ai-agent-mona.png
+./ref/MAU-featured-clickbait.png
+./out/gan-cong-thanh-toan-vao-website.png
+./out/xac-nhan-thanh-toan-tu-dong.png
+./out/tu-dong-bao-co-tien-vao-tai-khoan.png
+./out/nhan-tien-viet-va-ngoai-te-usd.png
+
+codex
+Mình đã xem đủ 3 ref. Mình đang khóa style chung theo mẫu: headline đúng 2 dòng trên panel tối bên trái; gấu 3D ở góc trái dưới, áo trắng/kem trơn; băng tay gradient nằm rõ trên bắp tay; nửa phải là cảnh giải thích khái niệm, nền crimson-đen và ánh teal. Bắt đầu render từng bài để có thể soát và sửa riêng từng ảnh.
+exec
+/bin/zsh -lc 'find /Users/themon/.codex/generated_images -type f -mmin -10 -maxdepth 4 -print 2>/dev/null | tail -20' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 159ms:
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-12acdbda-cd4e-4d53-9d38-0c6b100ad7f0.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-97ac480e-46c4-4306-b8bc-f055cc447ed0.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-44d2bbff-0b82-4c15-aa94-1d988bbb5b81.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-d6763422-ab7c-423e-acd3-f41358c7ff79.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-855805b2-74fe-42ba-9de4-f7718632d55e.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-0aaf639a-83f4-4d37-95d0-bc6535681bbe.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-0fb61638-dfa3-4bef-adcd-f1391578e124.png
+/Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-aa2c12f6-2988-4afa-8d36-af90d0844797.png
+/Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-517ecc6b-d657-435a-abb6-0677c59e4041.png
+
+2026-08-28T16:04:22.950471Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+exec
+/bin/zsh -lc 'for f in $(find /Users/themon/.codex/generated_images -type f -mmin -10 -name '"'*.png' -print); do stat -f '%m %N' \""'$f"; sips -g pixelWidth -g pixelHeight "$f" 2>/dev/null | tail -2 | tr '"'\\n' ' '; echo; done | sort -n | tail -15" in /Users/themon/MONApay/site/handoff/img
+ succeeded in 817ms:
+  pixelWidth: 1536   pixelHeight: 1024 
+  pixelWidth: 1536   pixelHeight: 1024 
+  pixelWidth: 1536   pixelHeight: 1024 
+  pixelWidth: 1536   pixelHeight: 1024 
+  pixelWidth: 1536   pixelHeight: 1024 
+  pixelWidth: 1536   pixelHeight: 1024 
+1787932609 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-44d2bbff-0b82-4c15-aa94-1d988bbb5b81.png
+1787932689 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-d6763422-ab7c-423e-acd3-f41358c7ff79.png
+1787932738 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-97ac480e-46c4-4306-b8bc-f055cc447ed0.png
+1787932790 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-12acdbda-cd4e-4d53-9d38-0c6b100ad7f0.png
+1787932874 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-0aaf639a-83f4-4d37-95d0-bc6535681bbe.png
+1787932912 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-0fb61638-dfa3-4bef-adcd-f1391578e124.png
+1787932969 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-855805b2-74fe-42ba-9de4-f7718632d55e.png
+1787933047 /Users/themon/.codex/generated_images/01a04914-e6fb-7662-854e-735b0c1e7188/exec-aa2c12f6-2988-4afa-8d36-af90d0844797.png
+1787933058 /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-517ecc6b-d657-435a-abb6-0677c59e4041.png
+
+2026-08-28T16:04:27.306096Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+2026-08-28T16:04:30.810664Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+exec
+/bin/zsh -lc 'cp /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-517ecc6b-d657-435a-abb6-0677c59e4041.png out/webhook-la-gi.png && sips -g pixelWidth -g pixelHeight out/webhook-la-gi.png' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 87ms:
+/Users/themon/MONAPay/site/handoff/img/out/webhook-la-gi.png
+  pixelWidth: 1536
+  pixelHeight: 1024
+
+2026-08-28T16:04:35.809656Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+2026-08-28T16:05:18.677090Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+codex
+Ảnh `vietqr-la-gi` đã đúng headline và cảnh, nhưng băng tay phát sinh ký tự thừa (“1”) nên không đạt luật. Mình đang sửa đúng một điểm này và giữ nguyên toàn bộ bố cục còn lại.
+exec
+/bin/zsh -lc 'cp /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-2b849792-fd68-4236-9486-ee761f55aee2.png out/vietqr-la-gi.png && sips -g pixelWidth -g pixelHeight out/vietqr-la-gi.png' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 117ms:
+/Users/themon/MONAPay/site/handoff/img/out/vietqr-la-gi.png
+  pixelWidth: 1536
+  pixelHeight: 1024
+
+2026-08-28T16:08:32.271460Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+exec
+/bin/zsh -lc 'cp /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-8c031d85-14f4-4f66-8fa0-d217c7c34150.png out/api-ngan-hang-la-gi.png && sips -g pixelWidth -g pixelHeight out/api-ngan-hang-la-gi.png' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 119ms:
+/Users/themon/MONAPay/site/handoff/img/out/api-ngan-hang-la-gi.png
+  pixelWidth: 1536
+  pixelHeight: 1024
+
+2026-08-28T16:08:37.668878Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+codex
+Ba ảnh đầu đã qua soát: `webhook-la-gi`, `vietqr-la-gi` (sau 2 lượt sửa băng tay) và `api-ngan-hang-la-gi`. Cả ba đều đúng 1536×1024, headline đủ dấu, băng tay đọc đúng “AI Agent MONA”, không có logo lạ. Mình tiếp tục hai ảnh còn lại.
+exec
+/bin/zsh -lc 'cp /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-0465cea8-ef2e-43f5-bee0-354392f3d790.png out/open-banking-la-gi.png && sips -g pixelWidth -g pixelHeight out/open-banking-la-gi.png' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 110ms:
+/Users/themon/MONAPay/site/handoff/img/out/open-banking-la-gi.png
+  pixelWidth: 1536
+  pixelHeight: 1024
+
+2026-08-28T16:11:01.242576Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+exec
+/bin/zsh -lc 'cp /Users/themon/.codex/generated_images/01a0491c-013c-75c3-a03f-afc4650527b7/exec-b8b66525-9d83-45c3-b41c-863f4d137ab2.png out/tai-khoan-ngan-hang-ao-la-gi.png && sips -g pixelWidth -g pixelHeight out/tai-khoan-ngan-hang-ao-la-gi.png && ls -lh out/{webhook-la-gi,vietqr-la-gi,api-ngan-hang-la-gi,open-banking-la-gi,tai-khoan-ngan-hang-ao-la-gi}.png' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 127ms:
+/Users/themon/MONAPay/site/handoff/img/out/tai-khoan-ngan-hang-ao-la-gi.png
+  pixelWidth: 1536
+  pixelHeight: 1024
+-rw-r--r--@ 1 themon  staff   2.0M Aug 28 23:08 out/api-ngan-hang-la-gi.png
+-rw-r--r--@ 1 themon  staff   2.0M Aug 28 23:09 out/open-banking-la-gi.png
+-rw-r--r--@ 1 themon  staff   2.0M Aug 28 23:11 out/tai-khoan-ngan-hang-ao-la-gi.png
+-rw-r--r--@ 1 themon  staff   1.9M Aug 28 23:07 out/vietqr-la-gi.png
+-rw-r--r--@ 1 themon  staff   1.9M Aug 28 23:04 out/webhook-la-gi.png
+
+2026-08-28T16:11:11.931491Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+codex
+Ảnh cuối cũng đạt: hai dòng “TÀI KHOẢN ẢO LÀ GÌ?” / “MỖI ĐƠN MỘT SỐ, KHỎI NHẦM” đủ dấu; băng tay đúng; các thẻ chỉ có dãy số generic và mỗi thẻ khớp một hộp đơn. Mình đang chạy lượt kiểm cuối trên 5 file thực tế trong `out/` rồi ghi `STATUS-2.txt`.
+exec
+/bin/zsh -lc "if [ -e out/STATUS-2.txt ]; then sed -n '1,120p' out/STATUS-2.txt; else echo 'STATUS-2.txt does not exist'; fi
+for f in out/webhook-la-gi.png out/vietqr-la-gi.png out/api-ngan-hang-la-gi.png out/open-banking-la-gi.png out/tai-khoan-ngan-hang-ao-la-gi.png; do file \""'$f"; done' in /Users/themon/MONApay/site/handoff/img
+ succeeded in 41ms:
+STATUS-2.txt does not exist
+out/webhook-la-gi.png: PNG image data, 1536 x 1024, 8-bit/color RGB, non-interlaced
+out/vietqr-la-gi.png: PNG image data, 1536 x 1024, 8-bit/color RGB, non-interlaced
+out/api-ngan-hang-la-gi.png: PNG image data, 1536 x 1024, 8-bit/color RGB, non-interlaced
+out/open-banking-la-gi.png: PNG image data, 1536 x 1024, 8-bit/color RGB, non-interlaced
+out/tai-khoan-ngan-hang-ao-la-gi.png: PNG image data, 1536 x 1024, 8-bit/color RGB, non-interlaced
+
+2026-08-28T16:11:19.811315Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+apply patch
+patch: completed
+/Users/themon/MONApay/site/handoff/img/out/STATUS-2.txt
+diff --git a/out/STATUS-2.txt b/out/STATUS-2.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..283e014b679e226712dd9886f15b6d617362a127
+--- /dev/null
++++ b/out/STATUS-2.txt
+@@ -0,0 +1,5 @@
++webhook-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh webhook đúng brief; không logo lạ.
++vietqr-la-gi OK 1536x1024; headline đủ dấu; đã regen băng tay đến khi đúng "AI Agent MONA"; cảnh quét QR đúng brief; không logo lạ.
++api-ngan-hang-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cáp dữ liệu bank-laptop đúng brief; không logo lạ.
++open-banking-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cổng ngân hàng mở và dữ liệu đi ra đúng brief; không logo lạ.
++tai-khoan-ngan-hang-ao-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; thẻ số generic khớp từng hộp đơn; không logo lạ.
+
+diff --git a/out/STATUS-2.txt b/out/STATUS-2.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..283e014b679e226712dd9886f15b6d617362a127
+--- /dev/null
++++ b/out/STATUS-2.txt
+@@ -0,0 +1,5 @@
++webhook-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh webhook đúng brief; không logo lạ.
++vietqr-la-gi OK 1536x1024; headline đủ dấu; đã regen băng tay đến khi đúng "AI Agent MONA"; cảnh quét QR đúng brief; không logo lạ.
++api-ngan-hang-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cáp dữ liệu bank-laptop đúng brief; không logo lạ.
++open-banking-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cổng ngân hàng mở và dữ liệu đi ra đúng brief; không logo lạ.
++tai-khoan-ngan-hang-ao-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; thẻ số generic khớp từng hộp đơn; không logo lạ.
+
+2026-08-28T16:11:25.760401Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+exec
+/bin/zsh -lc "sed -n '1,120p' out/STATUS-2.txt && git status --short -- out 2>/dev/null || true" in /Users/themon/MONApay/site/handoff/img
+ succeeded in 24ms:
+webhook-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh webhook đúng brief; không logo lạ.
+vietqr-la-gi OK 1536x1024; headline đủ dấu; đã regen băng tay đến khi đúng "AI Agent MONA"; cảnh quét QR đúng brief; không logo lạ.
+api-ngan-hang-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cáp dữ liệu bank-laptop đúng brief; không logo lạ.
+open-banking-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cổng ngân hàng mở và dữ liệu đi ra đúng brief; không logo lạ.
+tai-khoan-ngan-hang-ao-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; thẻ số generic khớp từng hộp đơn; không logo lạ.
+
+diff --git a/out/STATUS-2.txt b/out/STATUS-2.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..283e014b679e226712dd9886f15b6d617362a127
+--- /dev/null
++++ b/out/STATUS-2.txt
+@@ -0,0 +1,5 @@
++webhook-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh webhook đúng brief; không logo lạ.
++vietqr-la-gi OK 1536x1024; headline đủ dấu; đã regen băng tay đến khi đúng "AI Agent MONA"; cảnh quét QR đúng brief; không logo lạ.
++api-ngan-hang-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cáp dữ liệu bank-laptop đúng brief; không logo lạ.
++open-banking-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cổng ngân hàng mở và dữ liệu đi ra đúng brief; không logo lạ.
++tai-khoan-ngan-hang-ao-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; thẻ số generic khớp từng hộp đơn; không logo lạ.
+
+2026-08-28T16:11:29.167462Z ERROR codex_models_manager::manager: failed to renew cache TTL: missing field `base_instructions` at line 97 column 5
+codex
+Đã render và tự soát 5 ảnh bằng built-in `image_gen`, đúng 1536×1024. `vietqr-la-gi` đã regen đến khi băng tay đúng “AI Agent MONA”.
+
+- [webhook-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/webhook-la-gi.png)
+- [vietqr-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/vietqr-la-gi.png)
+- [api-ngan-hang-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/api-ngan-hang-la-gi.png)
+- [open-banking-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/open-banking-la-gi.png)
+- [tai-khoan-ngan-hang-ao-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/tai-khoan-ngan-hang-ao-la-gi.png)
+- [STATUS-2.txt](/Users/themon/MONApay/site/handoff/img/out/STATUS-2.txt)
+
+Prompt set bám nguyên văn 5 headline/cảnh trong Brief 2, dùng chung ba reference và toàn bộ ràng buộc palette, trang phục, băng tay, logo và chữ tiếng Việt của Brief 1.
+diff --git a/out/STATUS-2.txt b/out/STATUS-2.txt
+new file mode 100644
+index 0000000000000000000000000000000000000000..283e014b679e226712dd9886f15b6d617362a127
+--- /dev/null
++++ b/out/STATUS-2.txt
+@@ -0,0 +1,5 @@
++webhook-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh webhook đúng brief; không logo lạ.
++vietqr-la-gi OK 1536x1024; headline đủ dấu; đã regen băng tay đến khi đúng "AI Agent MONA"; cảnh quét QR đúng brief; không logo lạ.
++api-ngan-hang-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cáp dữ liệu bank-laptop đúng brief; không logo lạ.
++open-banking-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; cảnh cổng ngân hàng mở và dữ liệu đi ra đúng brief; không logo lạ.
++tai-khoan-ngan-hang-ao-la-gi OK 1536x1024; headline đủ dấu; băng tay "AI Agent MONA" rõ; thẻ số generic khớp từng hộp đơn; không logo lạ.
+
+tokens used
+64,396
+Đã render và tự soát 5 ảnh bằng built-in `image_gen`, đúng 1536×1024. `vietqr-la-gi` đã regen đến khi băng tay đúng “AI Agent MONA”.
+
+- [webhook-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/webhook-la-gi.png)
+- [vietqr-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/vietqr-la-gi.png)
+- [api-ngan-hang-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/api-ngan-hang-la-gi.png)
+- [open-banking-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/open-banking-la-gi.png)
+- [tai-khoan-ngan-hang-ao-la-gi.png](/Users/themon/MONApay/site/handoff/img/out/tai-khoan-ngan-hang-ao-la-gi.png)
+- [STATUS-2.txt](/Users/themon/MONApay/site/handoff/img/out/STATUS-2.txt)
+
+Prompt set bám nguyên văn 5 headline/cảnh trong Brief 2, dùng chung ba reference và toàn bộ ràng buộc palette, trang phục, băng tay, logo và chữ tiếng Việt của Brief 1.

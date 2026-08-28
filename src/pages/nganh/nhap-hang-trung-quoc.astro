@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/nhap-hang-trung-quoc';
+const title = 'Dịch vụ nhập hàng Trung Quốc: thu cọc, nạp tiền khách tự đối soát';
+const description = 'Đơn vị nhập hàng, thanh toán hộ Trung Quốc thu cọc và tiền nạp bằng tài khoản ảo ACB riêng từng khách: nạp là ví tự cộng, đơn tự cọc, đối soát theo mã, miễn phí.';
+
+const steps = [
+  { title: 'Mỗi khách một số tài khoản ảo ACB cố định', body: 'Phần mềm nhập hàng gọi MONA Pay cấp cho từng khách một số tài khoản ảo theo đầu số của công ty. Khách lưu số đó, nạp tiền hay cọc đơn đều chuyển vào đúng số đó, không cần gõ nội dung, không cần báo lại cho nhân viên.' },
+  { title: 'Tiền vào thẳng tài khoản ACB của công ty', body: 'Không ví trung gian, không phí phần trăm. Khách nạp 50 triệu hay 500 nghìn đều vào tài khoản công ty ngay, ACB báo cho MONA Pay biết giao dịch đó tức thì.' },
+  { title: 'Số dư ví khách và trạng thái đơn tự cập nhật', body: 'Webhook có chữ ký HMAC đi vào phần mềm, phần mềm cộng tiền vào ví khách, đơn đang chờ cọc tự chuyển sang "đã cọc", nhân viên mua hàng thấy ngay để đặt hàng bên Trung Quốc. Nhóm Telegram kế toán nhận tin cùng lúc.' },
+  { title: 'Đối soát theo tài khoản ảo, không dò sao kê', body: 'Cuối ngày kế toán tra danh sách giao dịch theo từng tài khoản ảo trên dashboard hoặc API (tối đa 100 giao dịch mỗi trang), khớp với sổ ví khách. Giao dịch nào phần mềm chưa nhận thì bấm gửi lại webhook trong lịch sử.' },
+];
+
+const faq = [
+  { q: 'Khách nạp tiền không ghi nội dung, có khớp được không?', a: 'Khớp được, vì mỗi khách có số tài khoản ảo riêng. Nhận diện bằng số tài khoản nhận, không bằng nội dung hay số tiền. Khách chuyển từ tài khoản người thân, nội dung để trống, vẫn vào đúng ví của khách đó.' },
+  { q: 'Một ngày vài trăm giao dịch nạp, hệ thống chịu được không?', a: 'Webhook gửi từng giao dịch, phần mềm trả lời trong 10 giây là xong, mỗi giao dịch có mã riêng nên gửi lại không cộng trùng. Đối soát cuối ngày tra theo trang, 100 giao dịch một trang, khớp bằng mã giao dịch.' },
+  { q: 'Tiền của khách có qua MONA Pay không?', a: 'Không. Tiền từ ngân hàng khách vào thẳng tài khoản ACB đứng tên công ty anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về phần mềm và Telegram. Sổ cái vẫn là sao kê ngân hàng.' },
+  { q: 'Công ty có nhiều nhân viên mua hàng, ai được xem tiền?', a: 'Nhân viên mua hàng chỉ thấy trạng thái đơn trong phần mềm, không cần vào app ngân hàng. Kế toán và chủ xem dashboard MONA Pay và nhóm Telegram. Không ai phải cầm điện thoại có app ngân hàng của công ty.' },
+  { q: 'Phần thanh toán cho nhà cung cấp bên Trung Quốc thì sao?', a: 'Đó là chiều tiền ra, thuộc dịch vụ thanh toán hộ và ngân hàng của anh chị, MONA Pay chỉ theo dõi chiều tiền vào tài khoản ngân hàng anh chị đã nối (ACB đang chạy, các ngân hàng khác đang kết nối). Việc MONA Pay giải là chiều khách nạp tiền và cọc đơn cho công ty anh chị.' },
+  { q: 'Phí sử dụng thế nào?', a: `MONA Pay ${PRICE_LINE}. Không thu phần trăm trên tiền khách nạp, bao nhiêu giao dịch cũng không tính. Phần mềm quản lý nhập hàng Trung Quốc của Mona.Software báo giá riêng qua ${SITE.hotline}.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Nhập hàng Trung Quốc', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Ngành nhập hàng, order, thanh toán hộ Trung Quốc</span>
+      <h1>Dịch vụ nhập hàng Trung Quốc:<br class="br-d" /> <span class="accent">khách nạp tiền, ví tự cộng, đơn tự cọc</span></h1>
+      <div class="answer-first">
+        <p>Đơn vị nhập hàng, order, thanh toán hộ Trung Quốc thu cọc đơn và tiền nạp ví khách qua MONA Pay bằng tài khoản ảo ACB riêng cho từng khách. Khách chuyển vào đúng số của mình, tiền vào thẳng tài khoản công ty, phần mềm cộng ví và chuyển đơn sang "đã cọc" trong vài giây. Hàng nghìn giao dịch một tháng đối soát bằng mã, không dò sao kê, miễn phí.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/webhooks/doi-soat">Xem cách đối soát</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện ở phòng kế toán công ty order</span>
+      <h2>Thu tiền nạp và cọc đơn từ hàng trăm khách đang kẹt ở đâu?</h2>
+      <p class="lead">Công ty nhập hàng đến MONA làm phần mềm thường có vài trăm tới vài nghìn khách sỉ, mỗi khách nạp tiền nhiều lần một tháng. Kế toán là người mệt nhất.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Khách nạp tiền rồi nhắn "em nạp rồi, cộng ví giúp"</h3><p>Mỗi ngày vài trăm tin như vậy. Kế toán mở app ngân hàng, tìm đúng số tiền, đúng giờ, đoán tên người chuyển có phải khách đó không, rồi vào phần mềm cộng ví bằng tay. Cộng chậm là khách không đặt được hàng, cộng nhầm là mất tiền thật.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Nội dung chuyển khoản mỗi người một kiểu</h3><p>Quy định ghi "mã khách + nạp tiền" nhưng khách ghi "nap", "chuyen tien", để trống, hoặc nhờ người khác chuyển. Nhận diện bằng nội dung là cách chắc chắn sai một phần mỗi ngày.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Đơn chờ cọc treo, nhân viên mua hàng đợi kế toán</h3><p>Khách cọc 30% để đặt hàng. Nhân viên mua hàng phải hỏi kế toán "đơn này cọc chưa" trước khi đặt bên Trung Quốc. Kế toán bận đối chiếu, đơn treo nửa ngày, nhà cung cấp bên kia đổi giá.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Cuối tháng đối soát hàng nghìn giao dịch bằng Excel</h3><p>Sao kê ngân hàng xuất ra, sổ ví khách xuất ra, kế toán ghép bằng số tiền và ngày. Lệch vài dòng là dò cả đêm, vì cùng số tiền có cả chục giao dịch.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Mỗi khách một số tài khoản, nạp là ví tự cộng</h2>
+      <p class="lead">Tài khoản ảo riêng từng khách là cách giải gốc: không phụ thuộc nội dung chuyển khoản, không phụ thuộc người chuyển. Bốn bước.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Phần mềm MONA cho ngành nhập hàng</span>
+      <h2>Phần mềm quản lý nhập hàng Trung Quốc của Mona.Software, nối sẵn MONA Pay</h2>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><h3>Ví khách, đơn hàng, cọc, đối soát</h3><p><a href="https://mona.software">Phần mềm quản lý nhập hàng Trung Quốc của Mona.Software</a> cấp tài khoản ảo cho từng khách, cộng ví và đổi trạng thái đơn khi tiền vào, đối soát theo mã giao dịch. Bàn giao là chạy.</p></div>
+        <div class="card"><h3>Đang dùng phần mềm riêng</h3><p>Nối bằng webhook và API tài khoản ảo theo <a href="/docs/api/tai-khoan-ao-va">tài liệu VA</a> và <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a>. Đội MONA viết lớp nối nếu anh chị không có người kỹ thuật.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Báo giá phần mềm: gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>. MONA Pay thì {PRICE_LINE}.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc. Xem thêm <a href="/acb">cách nối tài khoản ACB</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ công ty nhập hàng hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Tháng này kế toán không phải cộng ví bằng tay nữa" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, cấp tài khoản ảo cho từng khách. Cần phần mềm quản lý nhập hàng thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/api/tai-khoan-ao-va', label: 'Tài liệu tài khoản ảo' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

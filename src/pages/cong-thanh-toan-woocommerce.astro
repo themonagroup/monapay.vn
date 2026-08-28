@@ -1,0 +1,245 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import CodeTabs from '../components/CodeTabs.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Cổng thanh toán WooCommerce chuyển khoản, tự xác nhận đơn';
+const description = 'Cổng thanh toán WooCommerce của MONA Pay: khách chuyển khoản ACB xong, đơn tự sang đã thanh toán trong vài giây qua webhook. Không giữ tiền, miễn phí hoàn toàn.';
+
+const PHP = `<?php
+// mona-pay-webhook.php: bỏ vào wp-content/mu-plugins/ (hoặc functions.php của child theme)
+// Tạo endpoint https://shop-cua-anh-chi.vn/wp-json/monapay/v1/webhook để MONA Pay gọi vào
+add_action('rest_api_init', function () {
+    register_rest_route('monapay/v1', '/webhook', [
+        'methods'             => 'POST',
+        'callback'            => 'monapay_nhan_webhook',
+        'permission_callback' => '__return_true', // tự xác thực bằng HMAC bên dưới
+    ]);
+});
+
+function monapay_nhan_webhook(WP_REST_Request $req) {
+    $secret    = defined('MONA_WEBHOOK_SECRET') ? MONA_WEBHOOK_SECRET : ''; // khai báo trong wp-config.php
+    $raw       = $req->get_body();
+    $timestamp = $req->get_header('X-Mona-Timestamp') ?: '';
+    $signature = $req->get_header('X-Mona-Signature') ?: ''; // dạng "sha256=<hex>"
+
+    // 1. Chặn replay: timestamp lệch quá 5 phút thì từ chối
+    if (abs(time() - (int) $timestamp) > 300) {
+        return new WP_REST_Response(['success' => false, 'message' => 'timestamp qua han'], 400);
+    }
+
+    // 2. Kiểm chữ ký: HMAC-SHA256(secret, "<timestamp>.<raw_body>")
+    $expected = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $raw, $secret);
+    if (!hash_equals($expected, $signature)) {
+        return new WP_REST_Response(['success' => false, 'message' => 'sai chu ky'], 401);
+    }
+
+    $data = json_decode($raw, true);
+
+    // 3. Chống trùng: transaction_code không đổi qua mọi lần gửi lại
+    if (get_option('monapay_tx_' . $data['transaction_code'])) {
+        return new WP_REST_Response(['success' => true, 'message' => 'da xu ly'], 200);
+    }
+
+    // 4. Tìm đơn: nội dung chuyển khoản chứa "DH" + mã đơn (ví dụ "DH1234")
+    if (preg_match('/DH\\s?(\\d+)/i', (string) $data['description'], $m)) {
+        $order = wc_get_order((int) $m[1]);
+        if ($order && !$order->is_paid() && (int) $order->get_total() <= (int) $data['amount']) {
+            $order->payment_complete($data['transaction_code']); // đơn sang "Đang xử lý"/"Hoàn thành"
+            $order->add_order_note(sprintf(
+                'MONA Pay: nhận %s đ từ ACB, mã giao dịch %s',
+                number_format((int) $data['amount'], 0, ',', '.'),
+                $data['transaction_code']
+            ));
+            add_option('monapay_tx_' . $data['transaction_code'], time(), '', 'no');
+        }
+    }
+
+    // 5. Trả 200 ngay để MONA Pay ghi nhận thành công
+    return new WP_REST_Response(['success' => true], 200);
+}`;
+
+const CURL = `# Giả lập MONA Pay bắn webhook vào shop để test ngay trên máy
+SECRET='secret_hmac_dat_trong_dashboard'
+URL='https://shop-cua-anh-chi.vn/wp-json/monapay/v1/webhook'
+TS=$(date +%s)
+BODY='{"amount":2500000,"description":"DH1234 thanh toan","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"1234567890","bank_name":"ACB","type":"income"}'
+
+# Chữ ký = HMAC-SHA256(secret, "<timestamp>.<raw_body>")
+SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
+
+curl -X POST "$URL" \\
+  -H 'Content-Type: application/json' \\
+  -H "X-Mona-Timestamp: $TS" \\
+  -H "X-Mona-Signature: sha256=$SIG" \\
+  --data "$BODY"
+# Kỳ vọng: {"success":true} và đơn #1234 trong WooCommerce đổi trạng thái`;
+
+const NODE = `// monapay-woo.js: nhận webhook MONA Pay rồi cập nhật đơn qua WooCommerce REST API
+// Dùng khi anh chị chạy 1 dịch vụ Node riêng, không muốn đụng code PHP của web
+const express = require('express');
+const crypto  = require('crypto');
+
+const app     = express();
+const SECRET  = process.env.MONA_WEBHOOK_SECRET;   // secret HMAC đặt trong dashboard MONA Pay
+const WC_URL  = 'https://shop-cua-anh-chi.vn/wp-json/wc/v3';
+const WC_AUTH = 'Basic ' + Buffer.from(process.env.WC_KEY + ':' + process.env.WC_SECRET).toString('base64');
+
+app.post('/webhook/monapay', express.raw({ type: 'application/json' }), async (req, res) => {
+  const timestamp = req.header('X-Mona-Timestamp') || '';
+  const signature = req.header('X-Mona-Signature') || '';
+  const rawBody   = req.body.toString('utf8');
+
+  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) return res.status(400).send('timestamp qua han');
+
+  const expected = 'sha256=' + crypto.createHmac('sha256', SECRET).update(timestamp + '.' + rawBody).digest('hex');
+  const hopLe = signature.length === expected.length && crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
+  if (!hopLe) return res.status(401).send('sai chu ky');
+
+  res.status(200).json({ success: true }); // trả 200 trước, xử lý đơn sau
+
+  const data = JSON.parse(rawBody);
+  const m = /DH\\s?(\\d+)/i.exec(data.description || '');
+  if (!m) return;
+  await fetch(WC_URL + '/orders/' + m[1], {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json', Authorization: WC_AUTH },
+    body: JSON.stringify({ set_paid: true, transaction_id: data.transaction_code }),
+  });
+});
+
+app.listen(3000, () => console.log('Webhook MONA Pay cho WooCommerce chạy ở cổng 3000'));`;
+
+const steps = [
+  { title: 'Khách đặt hàng, trang thanh toán hiện mã QR đúng số tiền', body: 'Web sinh mã VietQR động cho từng đơn: số tiền đã điền sẵn, nội dung chuyển khoản là mã đơn (ví dụ DH1234). Khách mở app ngân hàng bất kỳ, quét, bấm chuyển. Không gõ tay số tiền, không gõ tay nội dung nên không có chuyện sai lệch.' },
+  { title: 'Tiền vào tài khoản ACB của anh chị', body: 'Tiền đi thẳng từ ngân hàng của khách vào tài khoản ACB đứng tên anh chị. MONA Pay không giữ tiền, không đứng giữa dòng tiền. Ngay khi có tiền vào, ACB báo cho MONA Pay biết giao dịch đó (số tiền, nội dung, mã giao dịch, thời gian).' },
+  { title: 'MONA Pay bắn webhook về web trong vài giây', body: 'MONA Pay gửi 1 gói tin JSON tới địa chỉ web của anh chị, có chữ ký HMAC để web biết chắc là MONA Pay gửi chứ không phải ai giả mạo. Web đọc nội dung "DH1234", tìm đúng đơn, so số tiền.' },
+  { title: 'Đơn WooCommerce tự chuyển sang đã thanh toán', body: 'Đơn đổi trạng thái, khách nhận email xác nhận, kho nhận lệnh đóng gói. Toàn bộ chuyện này diễn ra lúc 2 giờ sáng cũng y như 2 giờ chiều, không cần ai mở app ngân hàng ra dò.' },
+];
+
+const faq = [
+  { q: 'Tiền của shop có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB của anh chị. MONA Pay chỉ nhận thông báo từ ngân hàng rằng có giao dịch vào, rồi báo lại cho web. Không có ví trung gian, không có chuyện rút tiền về sau, không có phí trên từng giao dịch kiểu cổng thẻ.' },
+  { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Plugin MONA Pay cho WooCommerce đang được đội MONA xây, chưa đưa lên kho wordpress.org. Hiện có 2 cách làm ngay: khách làm web tại MONA thì đội kỹ thuật tụi em nối sẵn khi bàn giao; web làm ở nơi khác thì dev của anh chị dán đoạn PHP mẫu trên trang này vào, mất khoảng 30 phút.' },
+  { q: 'Khách chuyển thiếu tiền hoặc gõ sai nội dung thì sao?', a: 'Đoạn code mẫu chỉ xác nhận khi số tiền nhận được lớn hơn hoặc bằng tổng đơn và nội dung có đúng mã đơn. Trường hợp còn lại, giao dịch vẫn nằm trong dashboard MONA Pay với đầy đủ số tiền, nội dung, thời gian để nhân viên đối chiếu tay, không mất dấu.' },
+  { q: 'Web bị sập đúng lúc khách chuyển thì có mất giao dịch không?', a: 'Không mất. MONA Pay ghi lại từng lần gửi webhook kèm kết quả (mã HTTP, thời gian phản hồi, nhãn lỗi). Web trả về 200/201/202 trong 10 giây mới tính thành công; lỗi thì anh chị vào Webhooks, mục Lịch sử, bấm gửi lại. Lịch gửi lại tự động tối đa 7 lần đang được triển khai và sẽ công bố tại trang tài liệu khi lên.' },
+  { q: 'Nhiều khách chuyển cùng số tiền cùng lúc, web có xác nhận nhầm đơn không?', a: 'Không, vì web khớp đơn theo mã đơn trong nội dung chuyển khoản (DH1234), không khớp theo số tiền. Muốn chắc hơn nữa, anh chị cấp mỗi đơn 1 tài khoản ảo (VA) riêng: tiền vào VA nào là biết đơn nào, kể cả khi khách quên gõ nội dung.' },
+  { q: 'Dùng WooCommerce cho 1 shop nhỏ, 50 đơn/tháng thì tốn bao nhiêu?', a: `MONA Pay ${PRICE_LINE}, đủ tính năng: VA, VietQR, webhook, Telegram, dashboard. Shop 50 đơn hay 5.000 đơn mỗi tháng đều không tốn đồng nào, chi tiết tại trang bảng giá.` },
+  { q: 'Cần điều kiện gì để bắt đầu?', a: 'Một tài khoản ACB đứng tên anh chị hoặc công ty, số điện thoại đã đăng ký với ACB để nhận OTP, và 1 website WooCommerce có HTTPS. Đăng ký tài khoản MONA Pay tại my.monapay.vn là dùng ngay, không cần ai duyệt.' },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán WooCommerce', item: SITE.url + '/cong-thanh-toan-woocommerce' },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + '/cong-thanh-toan-woocommerce', inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-woocommerce" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">WooCommerce · chuyển khoản ACB</span>
+      <h1>Cổng thanh toán WooCommerce:<br class="hb" /> <span class="accent">khách chuyển khoản, đơn tự xác nhận</span></h1>
+      <div class="answer-first">
+        <p>MONA Pay nối tài khoản ACB của anh chị với website WooCommerce. Khách quét mã VietQR đúng số tiền, tiền vào thẳng tài khoản ACB, ACB báo cho MONA Pay, MONA Pay bắn webhook về web và đơn tự đổi trạng thái trong vài giây. Không ai phải canh app ngân hàng, không chụp màn hình, {PRICE_LINE}.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Xem tài liệu webhook</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện quen ở shop bán hàng</span>
+      <h2>Bán online mà xác nhận tiền bằng mắt người thì kẹt chỗ nào?</h2>
+      <p class="lead">Tụi em làm web bán hàng cho khách từ 2016, tới giờ đã qua 14.000+ dự án. Cứ shop nào nhận chuyển khoản là gặp đúng mấy cảnh này.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Khách chuyển xong phải chụp màn hình gửi Zalo</h3><p>Khách vừa trả tiền vừa phải làm thêm việc chứng minh. Shop nhận ảnh, mở app ngân hàng dò lại, rồi mới dám bấm xác nhận. Một đơn mất 5 phút, 50 đơn một ngày là hết buổi sáng của một nhân viên chỉ để dò tiền.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Nhân viên ngồi canh app ngân hàng</h3><p>Điện thoại công ty đăng nhập tài khoản ngân hàng nằm trên bàn, ai rảnh thì cầm lên coi. Người cầm điện thoại thấy hết số dư, thấy hết giao dịch, mà vẫn dò sót vì tin nhắn ngân hàng nhảy chen với tin nhắn khác.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Đêm khuya, cuối tuần không ai xác nhận</h3><p>Khách đặt lúc 11 giờ đêm, chuyển tiền xong ngồi chờ. Sáng hôm sau shop mới xác nhận, khách đã hỏi 3 lần "nhận được chưa". Đơn hàng trễ 1 ngày vì cái nút xác nhận, chứ hàng thì có sẵn trong kho.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Hai khách chuyển cùng 250.000 đ, khớp nhầm đơn</h3><p>Khách gõ nội dung tuỳ hứng: "ck", "thanh toan", tên riêng. Cùng số tiền, cùng khung giờ, nhân viên chọn đại một đơn để xác nhận. Đúng thì may, sai thì gửi hàng cho người chưa trả tiền và giữ hàng của người đã trả.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Từ lúc khách quét mã tới lúc đơn đổi trạng thái, 4 bước không có tay người</h2>
+      <p class="lead">Tụi em dùng cách này để thu tiền hosting, học phí, đơn phần mềm cho chính MONA, rồi từ 2022 hơn {SITE.customersSince2022} khách hàng mới của MONA thu tiền qua đây trước khi mở cho anh chị. Ngày 28/08/2026 tụi em chạy lại từ đầu tới cuối bằng 50.000 đ tiền thật, webhook về đúng chữ ký, đúng số.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Làm ngay hôm nay</span>
+      <h2>Hai cách nối MONA Pay vào WooCommerce</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <span class="badge badge-cta">Cách 1</span>
+          <h3>Web làm tại MONA: đội kỹ thuật tụi em nối sẵn</h3>
+          <p>Anh chị làm web bán hàng tại MONA thì phần nhận tiền này đi kèm lúc bàn giao. Tụi em tạo tài khoản MONA Pay, nối ACB cùng anh chị (cần OTP từ số điện thoại đăng ký với ngân hàng), gắn webhook vào web, chạy thử 1 đơn thật rồi mới giao. Anh chị chỉ cần có tài khoản ACB và 15 phút ngồi cùng để nhận 2 lần OTP.</p>
+          <p><a href={SITE.hotlineTel}>Gọi {SITE.hotline}</a> hoặc <a href="https://mona.media">xem dịch vụ thiết kế web tại mona.media</a>.</p>
+        </div>
+        <div class="card">
+          <span class="badge">Cách 2</span>
+          <h3>Web làm nơi khác: dev dán đoạn PHP mẫu, khoảng 30 phút</h3>
+          <p>Đoạn code bên dưới tạo 1 địa chỉ nhận webhook ngay trong WordPress, kiểm chữ ký HMAC, chống gửi trùng, tìm đơn theo mã trong nội dung chuyển khoản rồi gọi <code>payment_complete()</code> của WooCommerce. Dán vào thư mục <code>mu-plugins</code>, khai báo secret trong <code>wp-config.php</code>, vào dashboard MONA Pay dán địa chỉ webhook là chạy.</p>
+          <p>Plugin cài 1 nút đang được xây. Khi lên kho wordpress.org tụi em công bố tại trang này và trong dashboard.</p>
+        </div>
+      </div>
+
+      <h3 style="margin-top:2.5rem">Code mẫu: PHP cho WordPress, cURL để test, Node nếu chạy dịch vụ riêng</h3>
+      <p>Địa chỉ webhook sau khi dán code: <code>https://shop-cua-anh-chi.vn/wp-json/monapay/v1/webhook</code>. Secret HMAC đặt trong dashboard MONA Pay (mục Webhooks, chọn HMAC_SHA256) phải trùng với <code>MONA_WEBHOOK_SECRET</code> trong <code>wp-config.php</code>.</p>
+      <CodeTabs tabs={[
+        { label: 'PHP (WordPress)', lang: 'php', code: PHP },
+        { label: 'cURL test', lang: 'bash', code: CURL },
+        { label: 'Node', lang: 'js', code: NODE },
+      ]} />
+      <div class="callout ok">
+        <p><strong>Gói tin MONA Pay gửi tới web</strong> gồm 7 trường: <code>amount</code> (số tiền), <code>description</code> (nội dung chuyển khoản), <code>transfer_date</code>, <code>transaction_code</code> (mã giao dịch, không đổi qua mọi lần gửi lại), <code>account_number</code> (số VA hoặc số tài khoản nhận), <code>bank_name</code> (ACB), <code>type</code> (income). Chi tiết tại <a href="/docs/webhooks/dinh-dang-payload">định dạng payload</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Muốn chắc hơn nữa</span>
+      <h2>Mỗi đơn một tài khoản ảo, khách quên gõ nội dung vẫn khớp đúng</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Tài khoản ảo (VA) theo đơn</h3><p>ACB cấp cho anh chị một đầu số, từ đó sinh ra nhiều số tài khoản ảo. Mỗi đơn hàng gắn 1 số ảo riêng, tiền vào số nào là biết đơn nào, không cần đọc nội dung chuyển khoản. Tiền vẫn nằm trong tài khoản ACB chính.</p></div>
+        <div class="card"><h3>QR động đúng số tiền</h3><p>Mã VietQR sinh cho từng đơn đã điền sẵn số tiền và nội dung. Khách chỉ quét và bấm chuyển. Muốn huỷ đơn thì huỷ luôn mã QR qua API, khách quét mã cũ sẽ không chuyển được.</p></div>
+        <div class="card"><h3>Dashboard đối chiếu</h3><p>Mọi giao dịch vào ACB hiện trong dashboard my.monapay.vn kèm trạng thái webhook đã gửi thành công hay chưa, lọc theo ngày, xuất CSV cho kế toán. Nhân viên không cần cầm điện thoại ngân hàng nữa.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} Đứng sau là The MONA Group, thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại làm tiếp. Có chuyện gì, gọi thẳng tổng đài {SITE.hotline}, có người trực.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ shop hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Đơn WooCommerce của anh chị tự xác nhận từ tuần này" body="Tạo tài khoản, nối ACB, dán webhook. Web làm tại MONA thì tụi em nối sẵn khi bàn giao." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
+</Base>
+
+<style>
+  @media (max-width: 767px) { .hb { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); }
+</style>

@@ -1,0 +1,269 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICING_MODE, PRICING_APPROVED, PLANS, FREE_TX_PER_MONTH, FAIR_USE, PRICE_LINE } from '../data/pricing';
+
+// Trang giá chạy theo PRICING_MODE trong src/data/pricing.ts: 'free-all' (miễn phí hoàn toàn) hoặc 'tiers' (gói theo giao dịch).
+const isFree = PRICING_MODE === 'free-all';
+const fmt = (n: number) => new Intl.NumberFormat('vi-VN').format(n);
+const priceLabel = (p: (typeof PLANS)[number]) => (p.price === 0 ? '0 đ' : PRICING_APPROVED ? `${fmt(p.price)} đ` : null);
+
+// Đủ tính năng của MONA Pay, dùng cho card miễn phí (free-all)
+const tinhNang = [
+  'Tài khoản ảo ACB (VA) riêng cho từng đơn, từng khách',
+  'Mã VietQR động điền sẵn số tiền và nội dung',
+  'Webhook ký HMAC-SHA256, chống replay 5 phút, lịch sử từng lần gửi',
+  'Thông báo Telegram vào nhóm công ty, chi nhánh, theo từng VA',
+  'API v1 đầy đủ + tài liệu máy đọc (llms.txt, .md, openapi.json) cho AI agent',
+  'Dashboard xem giao dịch, gửi lại webhook, thống kê tỷ lệ thành công',
+  'Không giới hạn số webhook, số nhóm Telegram, số giao dịch',
+  `Hỗ trợ qua tổng đài ${SITE.hotline}, giờ hành chính`,
+];
+
+// Ma trận tính năng ↔ gói (chỉ dùng khi PRICING_MODE = 'tiers'). Đồng bộ tay với src/data/pricing.ts.
+const matrix: { label: string; free: string; startup: string; business: string }[] = [
+  { label: 'Giao dịch mỗi tháng', free: `${FREE_TX_PER_MONTH}`, startup: '2.000', business: '15.000' },
+  { label: 'Tài khoản ảo ACB (VA) theo đơn, theo khách', free: '✓', startup: '✓', business: '✓' },
+  { label: 'Mã VietQR động điền sẵn số tiền', free: '✓', startup: '✓', business: '✓' },
+  { label: 'Webhook ký HMAC-SHA256, lịch sử từng lần gửi', free: '✓', startup: '✓', business: '✓' },
+  { label: 'Thông báo Telegram vào nhóm công ty', free: '✓', startup: '✓', business: '✓' },
+  { label: 'API v1 + tài liệu máy đọc cho AI agent', free: '✓', startup: '✓', business: '✓' },
+  { label: 'Số webhook, số nhóm Telegram', free: 'Không giới hạn', startup: 'Không giới hạn', business: 'Không giới hạn' },
+  { label: 'Vượt hạn mức giao dịch', free: 'Chuyển gói', startup: 'Tính thêm theo giao dịch, không khoá', business: 'Tính thêm theo giao dịch, không khoá' },
+  { label: 'Xuất CSV đối soát', free: '–', startup: '✓', business: '✓' },
+  { label: 'Nhiều tài khoản ngân hàng, nhiều VA', free: '–', startup: '–', business: '✓' },
+  { label: 'Hỗ trợ', free: `Tổng đài ${SITE.hotline}`, startup: 'Ưu tiên hỗ trợ kỹ thuật', business: 'Kỹ sư MONA hỗ trợ tích hợp trực tiếp' },
+  { label: 'Hoá đơn VAT', free: '–', startup: '–', business: '✓' },
+];
+
+// So sánh với cổng thanh toán quốc tế. Số PayPal lấy từ trang phí chính thức PayPal Việt Nam, Stripe từ trang quốc gia hỗ trợ của Stripe, kiểm 28/08/2026.
+const soSanh = [
+  { label: 'Phí mỗi giao dịch', mona: isFree ? '0 đ, không giới hạn giao dịch' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng, gói trả phí theo số giao dịch`, paypal: '4,40% + phí cố định theo tiền tệ (giao dịch thương mại từ ngoài Việt Nam)', stripe: 'Chưa mở cho doanh nghiệp tại Việt Nam' },
+  { label: 'Thu phần trăm trên số tiền', mona: 'Không', paypal: 'Có, 4,40%', stripe: 'Không áp dụng' },
+  { label: 'Phí rút tiền về ngân hàng Việt Nam', mona: 'Không có, tiền vào thẳng tài khoản ACB', paypal: '60.000đ mỗi lần khi không quy đổi tiền tệ; rút lỗi bị trả lại thêm 70.000đ', stripe: 'Không áp dụng' },
+  { label: 'Đăng ký từ Việt Nam', mona: 'Được, đăng ký xong dùng ngay', paypal: 'Được', stripe: 'Chưa (trang quốc gia hỗ trợ ngày 28/08/2026 không có Việt Nam)' },
+  { label: 'Chuyển khoản nội địa, VietQR', mona: 'Có, tài khoản ảo riêng từng đơn + VietQR động', paypal: 'Không', stripe: 'Không' },
+  { label: 'Tiền về đâu', mona: 'Vào thẳng tài khoản ngân hàng, MONA Pay chỉ báo', paypal: 'Nằm trong ví PayPal, anh chị tự rút về ngân hàng', stripe: 'Không áp dụng' },
+  { label: 'Hợp với việc gì', mona: 'Thu tiền khách trong nước qua chuyển khoản', paypal: 'Bán cho khách nước ngoài trả bằng thẻ, USD', stripe: 'Doanh nghiệp đăng ký tại nước Stripe hỗ trợ' },
+];
+
+const faqFree = [
+  { q: 'Miễn phí thật không, có giới hạn ẩn nào không?',
+    a: `Miễn phí thật, không giới hạn số giao dịch, không giới hạn số webhook hay nhóm Telegram, không cắt tính năng. Giới hạn duy nhất là fair-use chống lạm dụng: ${FAIR_USE.rateLimit}. Một shop 30 đơn mỗi ngày hay một sàn 3.000 đơn mỗi ngày đều dùng cùng một hệ thống, cùng 0 đ.` },
+  { q: 'MONA Pay có thu phần trăm trên số tiền giao dịch không?',
+    a: 'Không. Tiền không đi qua MONA Pay nên không có phí giữ tiền, phí rút hay phần trăm trên giá trị đơn hàng. Một đơn 50.000 đ hay 50.000.000 đ đều đi thẳng vào tài khoản ACB của anh chị, MONA Pay chỉ đọc thông báo từ ngân hàng rồi báo lại.' },
+  { q: 'Vì sao MONA cho dùng miễn phí?',
+    a: `Vì hệ thống này ${SITE.company} đã tự xây để thu tiền cho chính mình, rồi từ 2022 tới nay hơn ${SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây, hạ tầng và đội kỹ thuật đã có sẵn, mở thêm cho anh chị không tốn thêm gì đáng kể. MONA sống bằng làm web, hosting và phần mềm; cổng thanh toán chạy tốt thì khách làm web tại MONA cũng bán hàng tốt hơn.` },
+  { q: 'Sau này có thu phí không?',
+    a: `Tụi em cam kết gói hiện tại giữ miễn phí. Nếu có thêm dịch vụ mới cần thu phí (ví dụ kỹ sư MONA tích hợp tận nơi, hỗ trợ cam kết thời gian phản hồi, hoá đơn VAT), tụi em niêm yết công khai ngay trang này trước khi áp dụng, phần đang dùng miễn phí không bị đụng tới.` },
+  { q: 'Có xuất hoá đơn VAT không?',
+    a: `Dịch vụ miễn phí thì không có hoá đơn. Anh chị cần hoá đơn cho phần dịch vụ kèm theo (kỹ sư MONA tích hợp, hỗ trợ ưu tiên) thì pháp nhân xuất là ${SITE.company}, gọi ${SITE.hotline} để tụi em làm.` },
+];
+
+const faqTiers = [
+  { q: `Vượt ${FREE_TX_PER_MONTH} giao dịch một tháng thì sao?`,
+    a: PRICING_APPROVED
+      ? `Gói Miễn phí đủ cho ${FREE_TX_PER_MONTH} giao dịch mỗi tháng. Vượt mức, anh chị chuyển sang gói Khởi nghiệp hoặc Doanh nghiệp theo bảng trên; hai gói này vượt hạn mức thì tính thêm theo giao dịch, không khoá dịch vụ giữa chừng.`
+      : `Gói Miễn phí đủ cho ${FREE_TX_PER_MONTH} giao dịch mỗi tháng. Vượt mức, anh chị chuyển sang gói trả phí; giá từng bậc tụi em niêm yết công khai ngay trang này khi ra mắt, gói trả phí vượt hạn mức thì tính thêm theo giao dịch chứ không khoá dịch vụ giữa chừng. Muốn biết số trước, gọi ${SITE.hotline}.` },
+  { q: 'MONA Pay có thu phần trăm trên số tiền giao dịch không?',
+    a: 'Không. Tiền không đi qua MONA Pay nên không có phí giữ tiền, phí rút hay phần trăm trên giá trị đơn hàng. Anh chị chỉ trả theo số giao dịch được xử lý mỗi tháng; một đơn 50.000 đ hay 50.000.000 đ đều tính là 1 giao dịch.' },
+  { q: 'Gói Miễn phí có bị cắt tính năng không?',
+    a: `Không. Gói Miễn phí có đủ tài khoản ảo ACB, mã VietQR động, webhook ký HMAC kèm lịch sử gửi, thông báo Telegram, API v1 và tài liệu máy đọc; khác gói trả phí ở hạn mức ${FREE_TX_PER_MONTH} giao dịch mỗi tháng và mức hỗ trợ. Tụi em muốn anh chị chạy thật với tiền thật rồi mới quyết định trả tiền.` },
+  { q: 'Có xuất hoá đơn VAT không?',
+    a: `Gói Doanh nghiệp có hoá đơn VAT. Pháp nhân xuất hoá đơn là ${SITE.company}, đơn vị đứng sau MONA Pay từ ${SITE.founded}. Anh chị cần hoá đơn cho gói khác thì gọi ${SITE.hotline} để tụi em xử lý riêng.` },
+];
+const faq = isFree ? faqFree : faqTiers;
+
+const title = isFree ? 'Bảng giá cổng thanh toán MONA Pay: miễn phí không giới hạn' : `Bảng giá cổng thanh toán MONA Pay: miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng`;
+const description = isFree
+  ? 'Bảng giá cổng thanh toán MONA Pay: miễn phí hoàn toàn, không giới hạn giao dịch, đủ tài khoản ảo ACB, VietQR, webhook, Telegram, API. Không thu phần trăm trên số tiền.'
+  : `Bảng giá cổng thanh toán MONA Pay: miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng đủ tính năng, gói trả phí niêm yết theo số giao dịch, không thu phần trăm trên số tiền.`;
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'Product', name: 'MONA Pay', description: SITE.entity, url: SITE.url + '/bang-gia',
+  brand: { '@type': 'Brand', name: 'MONA Pay' },
+  offers: { '@type': 'Offer', name: isFree ? 'Miễn phí hoàn toàn, không giới hạn giao dịch' : `Gói Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng`, price: '0', priceCurrency: 'VND', availability: 'https://schema.org/InStock', url: SITE.appRegister },
+}];
+---
+<Base title={title} description={description} path="/bang-gia" jsonld={jsonld}>
+
+  <section class="hero">
+    <div class="wrap narrow">
+      <span class="eyebrow">Bảng giá</span>
+      {isFree ? (
+        <h1>Bảng giá cổng thanh toán MONA Pay:<br class="br-d" /> <span class="accent">miễn phí, không giới hạn giao dịch</span></h1>
+      ) : (
+        <h1>Bảng giá cổng thanh toán MONA Pay:<br class="br-d" /> <span class="accent">miễn phí {FREE_TX_PER_MONTH} giao dịch mỗi tháng</span></h1>
+      )}
+      <div class="answer-first">
+        {isFree ? (
+          <p>MONA Pay {PRICE_LINE}, đầy đủ tính năng: tài khoản ảo ACB, VietQR động, webhook ký HMAC, Telegram, API và tài liệu cho AI agent. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí nối ngân hàng. Tiền không đi qua MONA Pay nên cũng không có phí giữ tiền hay phí rút. Giới hạn duy nhất là fair-use chống lạm dụng.</p>
+        ) : (
+          <p>MONA Pay có gói Miễn phí {FREE_TX_PER_MONTH} giao dịch mỗi tháng với đầy đủ tính năng: tài khoản ảo ACB, VietQR, webhook, Telegram, API. Các gói trả phí tính theo số giao dịch mỗi tháng, không thu phần trăm trên số tiền, niêm yết công khai tại trang này. Tiền không đi qua MONA Pay, nên không có phí giữ tiền hay phí rút.</p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  {isFree ? (
+    <section>
+      <div class="wrap">
+        <div class="free-grid">
+          <div class="price-card featured free-card">
+            <span class="badge badge-cta" style="margin-bottom:.8rem">Gói duy nhất</span>
+            <h3>Miễn phí</h3>
+            <p class="price">0 đ <small>/ tháng, không giới hạn giao dịch</small></p>
+            <p class="tx"><strong>Đăng ký xong dùng ngay, không cần duyệt.</strong> Tài khoản mới tự kích hoạt, anh chị tự nối ACB, tự tạo API key và webhook trong dashboard.</p>
+            <ul>{tinhNang.map((f) => <li>{f}</li>)}</ul>
+            <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+          </div>
+          <div class="side">
+            <div class="card">
+              <h3>Fair-use: giới hạn duy nhất</h3>
+              <p>{FAIR_USE.note}</p>
+              <ul>
+                <li><strong>{FAIR_USE.rateLimit}</strong> (webhook từ MONA Pay bắn về anh chị không tính vào mức này)</li>
+                <li>Giao dịch: <strong>{FAIR_USE.webhookPerConfig}</strong></li>
+                <li>Tài khoản tạo hàng loạt, bắn API dồn dập bất thường: tạm khoá và gọi xác minh</li>
+              </ul>
+            </div>
+            <div class="card">
+              <h3>Dịch vụ kèm theo (không phải phí dùng)</h3>
+              <p>Cổng thanh toán miễn phí cho mọi người. Riêng doanh nghiệp cần người MONA làm thay thì có dịch vụ kèm, báo giá riêng khi anh chị gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>:</p>
+              <ul>
+                <li>Kỹ sư MONA tích hợp thẳng vào web, phần mềm của anh chị</li>
+                <li>Hỗ trợ ưu tiên, có người trực riêng cho hệ thống lớn</li>
+                <li>Hoá đơn VAT cho phần dịch vụ này, pháp nhân {SITE.company}</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section>
+      <div class="wrap">
+        <div class="grid grid-3">
+          {PLANS.map((p) => {
+            const label = priceLabel(p);
+            return (
+              <div class={'price-card' + (p.featured ? ' featured' : '')}>
+                {p.featured && <span class="badge badge-cta" style="margin-bottom:.8rem">Nhiều người chọn</span>}
+                <h3>{p.name}</h3>
+                {label ? (
+                  <p class="price">{label} <small>/ tháng</small></p>
+                ) : (
+                  <p class="price price-pending">Công bố khi ra mắt <small>gọi {SITE.hotline}</small></p>
+                )}
+                <p class="tx"><strong>{p.tx}</strong></p>
+                <ul>{p.features.map((f) => <li>{f}</li>)}</ul>
+                {p.price === 0
+                  ? <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+                  : <a class="btn btn-outline" href={SITE.hotlineTel}>Gọi {SITE.hotline}</a>}
+              </div>
+            );
+          })}
+        </div>
+        {!PRICING_APPROVED && (
+          <p class="note">Giá gói trả phí tụi em công bố công khai ngay trang này khi ra mắt, cách tính giữ nguyên: theo số giao dịch mỗi tháng, không thu phần trăm trên số tiền. Cần số trước để lên kế hoạch, gọi {SITE.hotline}.</p>
+        )}
+      </div>
+    </section>
+  )}
+
+  {isFree ? (
+    <section class="section-alt">
+      <div class="wrap">
+        <span class="eyebrow">Vì sao miễn phí</span>
+        <h2>MONA lấy gì để nuôi một cổng thanh toán miễn phí?</h2>
+        <p class="lead">{SITE.entity}</p>
+        <div class="grid grid-3" style="margin-top:1.5rem">
+          <div class="card">
+            <div class="icon">1</div>
+            <h3>Hệ thống đã chạy thật cho hơn {SITE.customersSince2022} khách hàng</h3>
+            <p>{SITE.company} tự viết hệ thống này để thu tiền hosting, học phí, đơn phần mềm cho chính mình, rồi từ 2022 tới nay hơn {SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây trong web, phần mềm tụi em giao. Hạ tầng, đội kỹ thuật, quy trình đối soát đều có sẵn; mở cho anh chị dùng chung không tốn thêm gì đáng kể.</p>
+          </div>
+          <div class="card">
+            <div class="icon">2</div>
+            <h3>Tiền không qua MONA Pay nên không có phí trung gian</h3>
+            <p>Khách chuyển khoản là tiền nằm trong tài khoản ACB của anh chị ngay lúc đó. MONA Pay chỉ đọc thông báo giao dịch từ ngân hàng rồi bắn webhook, nhắn Telegram. Không giữ tiền thì không có phí giữ tiền, không phí rút, không phần trăm trên đơn hàng.</p>
+          </div>
+          <div class="card">
+            <div class="icon">3</div>
+            <h3>MONA sống bằng web, hosting và phần mềm</h3>
+            <p>Khách làm web tại <a href="https://mona.media">Mona.Media</a>, thuê hosting ở <a href="https://mona.host">Mona.Host</a>, đặt phần mềm ở <a href="https://mona.software">Mona.Software</a> đều cần nhận tiền tự động. Cổng thanh toán chạy tốt thì khách bán hàng tốt, MONA có thêm việc; đó là cách tụi em thu về, không phải thu từng giao dịch.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  ) : (
+    <section class="section-alt">
+      <div class="wrap">
+        <span class="eyebrow">Chi tiết gói</span>
+        <h2>Gói nào có gì?</h2>
+        <p class="lead">{SITE.entity}</p>
+        <p class="lead">Ba gói dùng chung một hệ thống, cùng độ an toàn, cùng tài liệu. Khác nhau ở hạn mức giao dịch mỗi tháng và mức hỗ trợ từ đội MONA.</p>
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>Tính năng</th>{PLANS.map((p) => <th>{p.name}</th>)}</tr></thead>
+            <tbody>
+              {matrix.map((r) => (
+                <tr>
+                  <td>{r.label}</td>
+                  <td class={r.free === '✓' ? 'check' : ''}>{r.free}</td>
+                  <td class={r.startup === '✓' ? 'check' : ''}>{r.startup}</td>
+                  <td class={r.business === '✓' ? 'check' : ''}>{r.business}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+  )}
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">So sánh</span>
+      <h2>So với cổng thanh toán quốc tế thì giá và tính năng ra sao?</h2>
+      <p class="lead">Anh chị hay hỏi PayPal, Stripe. Số dưới đây tụi em lấy từ trang phí chính thức của PayPal Việt Nam và trang quốc gia hỗ trợ của Stripe, kiểm ngày 28/08/2026. Hai cổng đó sinh ra để nhận tiền từ nước ngoài, MONA Pay sinh ra để xác nhận chuyển khoản trong nước. Khác bài toán, nên nhiều khách MONA dùng cả hai.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Hạng mục</th><th>MONA Pay</th><th>PayPal Việt Nam</th><th>Stripe</th></tr></thead>
+          <tbody>{soSanh.map((r) => <tr><td>{r.label}</td><td>{r.mona}</td><td>{r.paypal}</td><td>{r.stripe}</td></tr>)}</tbody>
+        </table>
+      </div>
+      <p>Đang cân nhắc cổng quốc tế cho web bán hàng? Đọc <a href="/cong-thanh-toan-quoc-te">so với cổng thanh toán quốc tế</a>, có bảng phí từng cổng và cách dùng song song với MONA Pay.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq id="faq-gia" eyebrow="Hỏi đáp về giá" title="Câu hỏi về phí anh chị hay hỏi" items={faq} />
+    </div>
+  </section>
+
+  {isFree ? (
+    <CtaBand title="Miễn phí, đăng ký xong dùng ngay" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, cấu hình webhook hoặc Telegram. Không giới hạn giao dịch, tiền vẫn nằm trong tài khoản ngân hàng của anh chị." />
+  ) : (
+    <CtaBand title={`Bắt đầu với ${FREE_TX_PER_MONTH} giao dịch miễn phí mỗi tháng`} body="Tạo tài khoản, nối ACB bằng 2 lần OTP, cấu hình webhook hoặc Telegram. Tiền vẫn nằm trong tài khoản ngân hàng của anh chị." />
+  )}
+</Base>
+
+<style>
+  .br-d{display:inline}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.4rem)}
+  @media (max-width:767px){.br-d{display:none}}
+  .price-pending{font-size:1.35rem}
+  .price-pending small{display:block;font-size:.95rem;margin-top:.2rem}
+  .tx{color:var(--text-soft);margin:.6rem 0 0}
+  .note{margin:1.4rem auto 0;max-width:820px;text-align:center;color:var(--text-soft);font-size:.95rem}
+  .price-card .btn{width:100%;justify-content:center}
+  .free-grid{display:grid;grid-template-columns:1.1fr .9fr;gap:1.25rem;align-items:start}
+  .free-grid .side{display:grid;gap:1.25rem}
+  .free-card .price small{display:block;font-size:1rem;margin-top:.2rem}
+  .free-card ul{margin-bottom:1.6rem}
+  @media (max-width:900px){.free-grid{grid-template-columns:1fr}}
+</style>

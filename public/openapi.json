@@ -1,0 +1,2995 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "MONA Pay API v1",
+    "version": "1.0",
+    "description": "MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group, giúp doanh nghiệp Việt Nam nhận và xác nhận tiền chuyển khoản theo thời gian thực qua tài khoản ảo (VA), VietQR, webhook và Telegram. Tiền không đi qua MONA Pay. Tài liệu: https://monapay.vn/docs · llms.txt: https://monapay.vn/llms.txt",
+    "contact": {
+      "name": "MONA Pay",
+      "url": "https://monapay.vn",
+      "email": "info@themona.global"
+    }
+  },
+  "servers": [
+    {
+      "url": "https://api.monapay.vn",
+      "description": "Production"
+    },
+    {
+      "url": "https://ipn.mona.host",
+      "description": "Alias cũ (vẫn chạy)"
+    }
+  ],
+  "paths": {
+    "/api/v1/client/register-client": {
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Register Client",
+        "operationId": "register_client_api_v1_client_register_client_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ClientCreate"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Register Client Api V1 Client Register Client Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error."
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request."
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/login": {
+      "post": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Login",
+        "description": "Login to get access token",
+        "operationId": "login_api_v1_client_login_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LoginRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Login Api V1 Client Login Post"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error."
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request."
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/me": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Get Current Client",
+        "description": "Get current logged in client info",
+        "operationId": "get_current_client_api_v1_client_me_get",
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Get Current Client Api V1 Client Me Get"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error."
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request."
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/bank-accounts": {
+      "get": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "List Bank Accounts",
+        "description": "Danh sách bank account của client đang đăng nhập (Bearer token)",
+        "operationId": "list_bank_accounts_api_v1_client_bank_accounts_get",
+        "parameters": [
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Page number",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Page size",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "Page size"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response List Bank Accounts Api V1 Client Bank Accounts Get",
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error."
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request."
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client/change-password": {
+      "put": {
+        "tags": [
+          "Clients"
+        ],
+        "summary": "Change Own Password",
+        "description": "Change user password (Self)",
+        "operationId": "change_own_password_api_v1_client_change_password_put",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ChangePasswordRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response",
+                  "anyOf": [
+                    {
+                      "$ref": "#/components/schemas/Response"
+                    },
+                    {
+                      "type": "null"
+                    }
+                  ],
+                  "title": "Response Change Own Password Api V1 Client Change Password Put"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error."
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request."
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client-keys/generate": {
+      "post": {
+        "tags": [
+          "Client Keys"
+        ],
+        "summary": "Generate Key",
+        "operationId": "generate_key_api_v1_client_keys_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GenerateKeyRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client-keys/list": {
+      "get": {
+        "tags": [
+          "Client Keys"
+        ],
+        "summary": "List Keys",
+        "operationId": "list_keys_api_v1_client_keys_list_get",
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/client-keys/destroy/{key_id}": {
+      "delete": {
+        "tags": [
+          "Client Keys"
+        ],
+        "summary": "Destroy Key",
+        "operationId": "destroy_key_api_v1_client_keys_destroy__key_id__delete",
+        "parameters": [
+          {
+            "name": "key_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Key Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/virtual-account/registration": {
+      "post": {
+        "tags": [
+          "ACB VA Banking"
+        ],
+        "summary": "Đăng ký tài khoản VA",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu đăng ký tài khoản VA.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.\n            Mã đăng ký dịch vụ phải trùng khớp với thông tin đăng ký trong hệ thống và còn đang hoạt động",
+        "operationId": "virtual_account_registration_api_v1_acb_virtual_account_registration_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/VirtualAccountRegistrationRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{acb_request_id}/virtual-account/verification": {
+      "post": {
+        "tags": [
+          "ACB VA Banking"
+        ],
+        "summary": "Xác thực đăng ký/hủy tài khoản định danh",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu thông tin tài khoản định danh.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.\n            Mã xác thực phải trùng khớp với mã hệ thống đã gửi cho khách hàng.",
+        "operationId": "virtual_account_verification_api_v1_acb__acb_request_id__virtual_account_verification_post",
+        "parameters": [
+          {
+            "name": "acb_request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Acb Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_virtual_account_verification_api_v1_acb__acb_request_id__virtual_account_verification_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/virtual-account/transactions": {
+      "get": {
+        "tags": [
+          "ACB VA Banking"
+        ],
+        "summary": "Danh sách giao dịch của VA",
+        "description": "Trả về giao dịch RTXN đã lưu theo `virtual_account_number`.\n            Hệ thống lấy VA nội bộ theo số VA, kiểm tra quyền sở hữu rồi join transaction.\n            Phân trang: `page`, `limit`.",
+        "operationId": "list_va_transactions_api_v1_acb_virtual_account_transactions_get",
+        "parameters": [
+          {
+            "name": "virtual_account_number",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Virtual Account number",
+              "title": "Virtual Account Number"
+            },
+            "description": "Virtual Account number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Page number",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Page number"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Page size",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "Page size"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{virtual_account_id}/virtual-account/delete": {
+      "post": {
+        "tags": [
+          "ACB VA Banking"
+        ],
+        "summary": "Hủy tài khoản VA",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu hủy tài khoản VA.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.\n            Mã đăng ký dịch vụ phải trùng khớp với thông tin đăng ký trong hệ thống và còn đang hoạt động",
+        "operationId": "delete_api_v1_acb__virtual_account_id__virtual_account_delete_post",
+        "parameters": [
+          {
+            "name": "virtual_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Virtual Account Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{bank_account_id}/virtual-account/retrieve": {
+      "get": {
+        "tags": [
+          "ACB VA Banking"
+        ],
+        "summary": "Truy vấn danh sách tài khoản VA",
+        "description": "Đối tác gọi API này của ACB để truy vấn danh sách tài khoản VA",
+        "operationId": "retrieve_api_v1_acb__bank_account_id__virtual_account_retrieve_get",
+        "parameters": [
+          {
+            "name": "bank_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Bank Account Id"
+            }
+          },
+          {
+            "name": "virtual_account_number",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "description": "Virtual Account number",
+              "title": "Virtual Account Number"
+            },
+            "description": "Virtual Account number"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "description": "Page number, default is 1",
+              "default": 1,
+              "title": "Page"
+            },
+            "description": "Page number, default is 1"
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "description": "Page size, default is 10",
+              "default": 10,
+              "title": "Limit"
+            },
+            "description": "Page size, default is 10"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{virtual_account_id}/notification/registration": {
+      "post": {
+        "tags": [
+          "ACB IPN Banking"
+        ],
+        "summary": "Đăng ký dịch vụ thông báo giao dịch",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu đăng ký dịch vụ thông báo giao dịch.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.",
+        "operationId": "notification_registration_api_v1_acb__virtual_account_id__notification_registration_post",
+        "parameters": [
+          {
+            "name": "virtual_account_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Virtual Account Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{acb_request_id}/notification/verification": {
+      "post": {
+        "tags": [
+          "ACB IPN Banking"
+        ],
+        "summary": "Xác thực đăng ký/cập nhật/hủy dịch vụ thông báo",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu đăng ký dịch vụ thông báo giao dịch.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.\n            Mã xác thực phải trùng khớp với mã hệ thống đã gửi cho khách hàng.",
+        "operationId": "notification_verification_api_v1_acb__acb_request_id__notification_verification_post",
+        "parameters": [
+          {
+            "name": "acb_request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Acb Request Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Body_notification_verification_api_v1_acb__acb_request_id__notification_verification_post"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{acb_notification_id}/notification/modification": {
+      "post": {
+        "tags": [
+          "ACB IPN Banking"
+        ],
+        "summary": "Cập nhật dịch vụ thông báo giao dịch",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu cập nhật dịch vụ thông báo giao dịch.\n            ACB sẽ nhận và kiểm tra thông tin đầu vào.\n            Yêu cầu:\n            Phải truyền đầy đủ các thông tin bắt buộc.",
+        "operationId": "notification_modification_api_v1_acb__acb_notification_id__notification_modification_post",
+        "parameters": [
+          {
+            "name": "acb_notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Acb Notification Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/NotificationRegistrationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/{acb_notification_id}/notification/delete": {
+      "post": {
+        "tags": [
+          "ACB IPN Banking"
+        ],
+        "summary": "Hủy đăng ký dịch vụ thông báo giao dịch",
+        "description": "Đối tác gọi API này của ACB để gửi yêu cầu hủy đăng ký dịch vụ thông báo giao dịch\n        ACB sẽ nhận và kiểm tra thông tin đầu vào.\n        Yêu cầu:\n        Phải truyền đầy đủ các thông tin bắt buộc.\n        Mã đăng ký dịch vụ trùng khớp với thông tin lưu trong hệ thống và còn đang hoạt động\n        Loại dịch vụ hủy trùng khớp với dịch vụ ACB cung cấp và được đăng ký dịch vụ tại ACB",
+        "operationId": "delete_api_v1_acb__acb_notification_id__notification_delete_post",
+        "parameters": [
+          {
+            "name": "acb_notification_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Acb Notification Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/qr-payment/generate": {
+      "post": {
+        "tags": [
+          "ACB QR Banking"
+        ],
+        "summary": "Khởi tạo QR Code",
+        "description": "Đây là chuẩn ACB cung cấp cho doanh nghiệp để doanh nghiệp xây dựng API theo chuẩn này với mục đích gọi sang hệ thống ACB cung cấp thông tin đơn hàng thanh toán cần tạo QRCode. Điều kiện cần:\n            \n            Số tài khoản hưởng là tài khoản của doanh nghiệp và đã có đăng ký Tài khoản định danh trên hệ thống ACB.\n            QR Code được doanh nghiệp thể hiện phải có các thông tin:\n            Dòng cảnh báo người thanh toán ”Quý khách vui lòng kiểm tra thông tin thanh tóan trước khi thực hiện giao dịch”.\n            Số tiền cần phải thanh toán in Đậm và kích cỡ lớn.",
+        "operationId": "qr_payment_generate_api_v1_acb_qr_payment_generate_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QRPaymentRequest"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/api/v1/acb/qr-payment/{qr_code_id}/cancellation": {
+      "delete": {
+        "tags": [
+          "ACB QR Banking"
+        ],
+        "summary": "Hủy QR Code",
+        "description": "Chuẩn kỹ thuật này được ACB cung cấp cho các doanh nghiệp để doanh nghiệp xây dựng API gọi về hệ thống ACB thực hiện hủy QR Code tạo nhưng chưa thực hiện thanh toán.",
+        "operationId": "qr_payment_cancellation_api_v1_acb_qr_payment__qr_code_id__cancellation_delete",
+        "parameters": [
+          {
+            "name": "qr_code_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Qr Code Id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/QRCancelRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK - The request has succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - The server cannot or will not process the request due to a client error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Authentication is required and has failed or has not been provided.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error - The server encountered an unexpected condition that prevented it from fulfilling the request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    },
+    "/health": {
+      "get": {
+        "tags": [
+          "Health"
+        ],
+        "summary": "Health Check",
+        "operationId": "health_check_health_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "Bearer Auth": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AdditionalInfo": {
+        "properties": {
+          "key": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Key",
+            "description": "Key for additional information"
+          },
+          "value": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Value",
+            "description": "Value for additional information"
+          }
+        },
+        "type": "object",
+        "required": [
+          "key",
+          "value"
+        ],
+        "title": "AdditionalInfo"
+      },
+      "Body_notification_verification_api_v1_acb__acb_request_id__notification_verification_post": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "Body_notification_verification_api_v1_acb__acb_request_id__notification_verification_post"
+      },
+      "Body_reset_client_password_api_v1_client__client_id__reset_password_put": {
+        "properties": {
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "password"
+        ],
+        "title": "Body_reset_client_password_api_v1_client__client_id__reset_password_put"
+      },
+      "Body_update_status_api_v1_client__client_id__status_put": {
+        "properties": {
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "required": [
+          "is_active"
+        ],
+        "title": "Body_update_status_api_v1_client__client_id__status_put"
+      },
+      "Body_virtual_account_verification_api_v1_acb__acb_request_id__virtual_account_verification_post": {
+        "properties": {
+          "code": {
+            "type": "string",
+            "title": "Code"
+          }
+        },
+        "type": "object",
+        "required": [
+          "code"
+        ],
+        "title": "Body_virtual_account_verification_api_v1_acb__acb_request_id__virtual_account_verification_post"
+      },
+      "ChangePasswordRequest": {
+        "properties": {
+          "old_password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Old Password"
+          },
+          "new_password": {
+            "type": "string",
+            "minLength": 1,
+            "title": "New Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "old_password",
+          "new_password"
+        ],
+        "title": "ChangePasswordRequest"
+      },
+      "ClientCreate": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Username",
+            "description": "Client username is required"
+          },
+          "password": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Password",
+            "description": "Client password is required"
+          },
+          "name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Name",
+            "description": "Client name is required"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password",
+          "name"
+        ],
+        "title": "ClientCreate"
+      },
+      "ClientServiceCodeBody": {
+        "properties": {
+          "service_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Service Code",
+            "description": "lms/rmp/...; null để bỏ map service."
+          }
+        },
+        "type": "object",
+        "title": "ClientServiceCodeBody"
+      },
+      "ClientWebhookBaseUrlBody": {
+        "properties": {
+          "webhook_base_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Webhook Base Url",
+            "description": "Ví dụ https://lms.example.com — không gồm path rtxn-ipn-callback / qr-ipn-callback"
+          }
+        },
+        "type": "object",
+        "title": "ClientWebhookBaseUrlBody",
+        "description": "Để trống hoặc null = xóa cấu hình, webhook dùng WEB_HOOK_MONA_URL (env)."
+      },
+      "DebitCreditLower": {
+        "type": "string",
+        "enum": [
+          "debit",
+          "credit"
+        ],
+        "title": "DebitCreditLower"
+      },
+      "GenerateKeyRequest": {
+        "properties": {
+          "name": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Name",
+            "default": "Default Key"
+          }
+        },
+        "type": "object",
+        "title": "GenerateKeyRequest"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "LoginRequest": {
+        "properties": {
+          "username": {
+            "type": "string",
+            "title": "Username"
+          },
+          "password": {
+            "type": "string",
+            "title": "Password"
+          }
+        },
+        "type": "object",
+        "required": [
+          "username",
+          "password"
+        ],
+        "title": "LoginRequest"
+      },
+      "MasterMeta": {
+        "properties": {
+          "clientId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Clientid"
+          },
+          "clientRequestId": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Clientrequestid"
+          },
+          "checksum": {
+            "type": "string",
+            "title": "Checksum"
+          }
+        },
+        "type": "object",
+        "required": [
+          "clientId",
+          "clientRequestId",
+          "checksum"
+        ],
+        "title": "MasterMeta"
+      },
+      "NotificationRegistrationRequest": {
+        "properties": {
+          "username": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 50
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Username",
+            "description": "Thông tin đăng nhập"
+          },
+          "receive_noti_realtime": {
+            "type": "boolean",
+            "title": "Receive Noti Realtime",
+            "description": "Nhận thông báo tức thì hoặc nhận thông báo cuối ngày"
+          }
+        },
+        "type": "object",
+        "required": [
+          "receive_noti_realtime"
+        ],
+        "title": "NotificationRegistrationRequest"
+      },
+      "Pagination": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "title": "Page"
+          },
+          "pageSize": {
+            "type": "integer",
+            "maximum": 1000,
+            "minimum": 1,
+            "title": "Pagesize"
+          },
+          "totalPage": {
+            "type": "integer",
+            "minimum": 1,
+            "title": "Totalpage"
+          }
+        },
+        "type": "object",
+        "required": [
+          "page",
+          "pageSize",
+          "totalPage"
+        ],
+        "title": "Pagination"
+      },
+      "PartnerWebhookConfigCreate": {
+        "properties": {
+          "service_code": {
+            "type": "string",
+            "maxLength": 50,
+            "minLength": 1,
+            "title": "Service Code"
+          },
+          "base_url": {
+            "type": "string",
+            "maxLength": 2048,
+            "minLength": 1,
+            "title": "Base Url"
+          },
+          "auth_header_name": {
+            "type": "string",
+            "maxLength": 255,
+            "minLength": 1,
+            "title": "Auth Header Name",
+            "default": "X-Webhook-Key"
+          },
+          "auth_secret": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Auth Secret"
+          },
+          "is_active": {
+            "type": "boolean",
+            "title": "Is Active",
+            "default": true
+          }
+        },
+        "type": "object",
+        "required": [
+          "service_code",
+          "base_url",
+          "auth_secret"
+        ],
+        "title": "PartnerWebhookConfigCreate"
+      },
+      "PartnerWebhookConfigUpdate": {
+        "properties": {
+          "base_url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 2048
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Base Url"
+          },
+          "auth_header_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Header Name"
+          },
+          "auth_secret": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 512
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Auth Secret"
+          },
+          "is_active": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Is Active"
+          }
+        },
+        "type": "object",
+        "title": "PartnerWebhookConfigUpdate"
+      },
+      "QRCancelRequest": {
+        "properties": {
+          "ownerNumber": {
+            "type": "string",
+            "title": "Ownernumber",
+            "description": "Owner Number"
+          },
+          "ownerType": {
+            "$ref": "#/components/schemas/QRCustomerTypeEnum",
+            "description": "Owner Type"
+          },
+          "traceNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tracenumber",
+            "description": "Unique identifier for the transaction"
+          },
+          "orderId": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Orderid",
+            "description": "Order identifier"
+          },
+          "amount": {
+            "type": "integer",
+            "maximum": 1000000000,
+            "minimum": 0,
+            "title": "Amount",
+            "description": "Transaction amount (min: 0, max: 1,000,000,000)"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ownerNumber",
+          "ownerType",
+          "orderId",
+          "amount"
+        ],
+        "title": "QRCancelRequest",
+        "example": {
+          "amount": 1234567,
+          "orderId": "123abc123abc",
+          "ownerNumber": "1234567890",
+          "ownerType": "PER",
+          "traceNumber": "0ca0f0c0-5177-4588-807f-e5f3dccd2551"
+        }
+      },
+      "QRCustomerTypeEnum": {
+        "type": "string",
+        "enum": [
+          "PER",
+          "ORG"
+        ],
+        "title": "QRCustomerTypeEnum"
+      },
+      "QRPaymentRequest": {
+        "properties": {
+          "ownerNumber": {
+            "type": "string",
+            "title": "Ownernumber",
+            "description": "Owner Number"
+          },
+          "ownerType": {
+            "$ref": "#/components/schemas/QRCustomerTypeEnum",
+            "description": "Owner Type"
+          },
+          "traceNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tracenumber",
+            "description": "Unique identifier for the transaction"
+          },
+          "merchantId": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Merchantid",
+            "description": "Merchant identifier"
+          },
+          "terminalId": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Terminalid",
+            "description": "Terminal identifier"
+          },
+          "userId": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Userid",
+            "description": "User identifier"
+          },
+          "orderId": {
+            "type": "string",
+            "minLength": 1,
+            "title": "Orderid",
+            "description": "Order identifier"
+          },
+          "virtualAccountPrefix": {
+            "type": "string",
+            "maxLength": 10,
+            "minLength": 1,
+            "title": "Virtualaccountprefix",
+            "description": "Virtual account prefix"
+          },
+          "beneficiaryName": {
+            "type": "string",
+            "maxLength": 100,
+            "minLength": 1,
+            "title": "Beneficiaryname",
+            "description": "Name of the beneficiary"
+          },
+          "amount": {
+            "type": "integer",
+            "maximum": 1000000000,
+            "minimum": 0,
+            "title": "Amount",
+            "description": "Transaction amount (min: 0, max: 1,000,000,000)"
+          },
+          "voucherCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vouchercode",
+            "description": "Voucher code"
+          },
+          "loyaltyCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Loyaltycode",
+            "description": "Loyalty program code"
+          },
+          "description": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255,
+                "minLength": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Description",
+            "description": "Transaction description"
+          },
+          "additionalInfo": {
+            "anyOf": [
+              {
+                "items": {
+                  "$ref": "#/components/schemas/AdditionalInfo"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Additionalinfo",
+            "description": "Additional information as key-value pairs"
+          }
+        },
+        "type": "object",
+        "required": [
+          "ownerNumber",
+          "ownerType",
+          "merchantId",
+          "terminalId",
+          "orderId",
+          "virtualAccountPrefix",
+          "beneficiaryName",
+          "amount"
+        ],
+        "title": "QRPaymentRequest",
+        "example": {
+          "additionalInfo": [
+            {
+              "key": "key",
+              "value": "value"
+            }
+          ],
+          "amount": 1234567,
+          "beneficiaryName": "ADAM 34682",
+          "description": "hoa don thanh toan",
+          "loyaltyCode": "123abc123abc",
+          "merchantId": "123abc123abc",
+          "orderId": "123abc123abc",
+          "ownerNumber": "1234567890",
+          "ownerType": "PER",
+          "terminalId": "123abc123abc",
+          "traceNumber": "0ca0f0c0-5177-4588-807f-e5f3dccd2551",
+          "userId": "acb34682",
+          "virtualAccountPrefix": "HAB",
+          "voucherCode": "123abc123abc"
+        }
+      },
+      "QrRootRequest": {
+        "properties": {
+          "requestTrace": {
+            "type": "string",
+            "title": "Requesttrace"
+          },
+          "requestDateTime": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Requestdatetime"
+          },
+          "requestParameters": {
+            "$ref": "#/components/schemas/RequestParameters"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestTrace",
+          "requestDateTime",
+          "requestParameters"
+        ],
+        "title": "QrRootRequest"
+      },
+      "RequestCode": {
+        "type": "string",
+        "enum": [
+          "TRANSACTION_UPDATE",
+          "TRANSACTION_HISTORY"
+        ],
+        "title": "RequestCode"
+      },
+      "RequestMeta": {
+        "properties": {
+          "requestType": {
+            "$ref": "#/components/schemas/RequestType"
+          },
+          "requestCode": {
+            "$ref": "#/components/schemas/RequestCode"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestType",
+          "requestCode"
+        ],
+        "title": "RequestMeta"
+      },
+      "RequestParameters": {
+        "properties": {
+          "masterMeta": {
+            "$ref": "#/components/schemas/MasterMeta"
+          },
+          "request": {
+            "$ref": "#/components/schemas/src__schemas__requests__qr_callback_request__Request"
+          }
+        },
+        "type": "object",
+        "required": [
+          "masterMeta",
+          "request"
+        ],
+        "title": "RequestParameters"
+      },
+      "RequestType": {
+        "type": "string",
+        "enum": [
+          "NOTIFICATION",
+          "QUERY"
+        ],
+        "title": "RequestType"
+      },
+      "Response": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "data": {
+            "anyOf": [
+              {},
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Data"
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "message"
+        ],
+        "title": "Response"
+      },
+      "RtxnRootRequest": {
+        "properties": {
+          "masterMeta": {
+            "$ref": "#/components/schemas/MasterMeta"
+          },
+          "requests": {
+            "$ref": "#/components/schemas/src__schemas__requests__rtxn_callback_request__Request"
+          },
+          "request_trace": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Request Trace"
+          }
+        },
+        "type": "object",
+        "required": [
+          "masterMeta",
+          "requests"
+        ],
+        "title": "RtxnRootRequest"
+      },
+      "TransactionChannel": {
+        "type": "string",
+        "enum": [
+          "MAPP",
+          "WEB",
+          "ATM",
+          "IBFT",
+          "API",
+          "BAT",
+          "VRU",
+          "WWW",
+          "ONLI",
+          "ACH",
+          "FSC",
+          "CCM",
+          "MG",
+          "SECU",
+          "SMS",
+          "ACHS",
+          "CCAT",
+          "AAP",
+          "CLMS",
+          "REMI",
+          "TB",
+          "SOBA",
+          "BIZ"
+        ],
+        "title": "TransactionChannel"
+      },
+      "TransactionEntityAttribute": {
+        "properties": {
+          "traceNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tracenumber"
+          },
+          "beneficiaryName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiaryname"
+          },
+          "beneficiaryAccountNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiaryaccountnumber"
+          },
+          "receiverBankName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Receiverbankname"
+          },
+          "remitterName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remittername"
+          },
+          "remitterAccountNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Remitteraccountnumber"
+          },
+          "issuerBankName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Issuerbankname"
+          },
+          "virtualAccount": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtualaccount"
+          },
+          "referenceNumber": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencenumber"
+          },
+          "partnerCustomerCode": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnercustomercode"
+          },
+          "partnerCustomerName": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnercustomername"
+          },
+          "partnerCustomerType": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Partnercustomertype"
+          },
+          "custom1": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom1"
+          },
+          "custom2": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom2"
+          },
+          "custom3": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom3"
+          },
+          "custom4": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom4"
+          },
+          "custom5": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom5"
+          },
+          "custom6": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom6"
+          },
+          "custom7": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom7"
+          },
+          "custom8": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom8"
+          },
+          "custom9": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom9"
+          },
+          "custom10": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Custom10"
+          }
+        },
+        "type": "object",
+        "title": "TransactionEntityAttribute"
+      },
+      "TransactionStatus": {
+        "type": "string",
+        "enum": [
+          "COMPLETED",
+          "PENDING",
+          "FAILED",
+          "ERRORCORRECTED"
+        ],
+        "title": "TransactionStatus"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "VirtualAccount": {
+        "properties": {
+          "vaPrefixCd": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vaprefixcd"
+          },
+          "vaNbr": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vanbr"
+          }
+        },
+        "type": "object",
+        "title": "VirtualAccount"
+      },
+      "VirtualAccountInfo": {
+        "properties": {
+          "virtual_account_prefix_code": {
+            "type": "string",
+            "title": "Virtual Account Prefix Code",
+            "description": "Đầu số tài khoản định danh"
+          },
+          "virtual_account_content": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtual Account Content",
+            "description": "Nội dung tài khoản định danh"
+          },
+          "virtual_account_explain": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Virtual Account Explain",
+            "description": "Nội dung diễn giải khi đăng ký"
+          },
+          "beneficiary_name_rule": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Beneficiary Name Rule",
+            "description": "Loại hiển thị tên đơn vị hưởng"
+          }
+        },
+        "type": "object",
+        "required": [
+          "virtual_account_prefix_code"
+        ],
+        "title": "VirtualAccountInfo"
+      },
+      "VirtualAccountRegistrationRequest": {
+        "properties": {
+          "bank_account_id": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "uuid"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Bank Account Id",
+            "description": "ID bank_account có sẵn (ưu tiên dùng khi chọn từ danh sách)"
+          },
+          "customer_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Customer Type",
+            "description": "Loại khách hàng (ví dụ: PERS)"
+          },
+          "account_number": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Account Number",
+            "description": "Số tài khoản thanh toán chính"
+          },
+          "phone_number": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Phone Number",
+            "description": "Số điện thoại khách hàng"
+          },
+          "virtual_account_info": {
+            "$ref": "#/components/schemas/VirtualAccountInfo"
+          },
+          "user_agreement": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "User Agreement",
+            "description": "Sự đồng ý của KH khi đăng ký dịch vụ"
+          }
+        },
+        "type": "object",
+        "required": [
+          "virtual_account_info"
+        ],
+        "title": "VirtualAccountRegistrationRequest"
+      },
+      "src__schemas__requests__qr_callback_request__Request": {
+        "properties": {
+          "requestMeta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          },
+          "requestParams": {
+            "$ref": "#/components/schemas/src__schemas__requests__qr_callback_request__RequestParams"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestMeta",
+          "requestParams"
+        ],
+        "title": "Request"
+      },
+      "src__schemas__requests__qr_callback_request__RequestParams": {
+        "properties": {
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/src__schemas__requests__qr_callback_request__Transaction"
+            },
+            "type": "array",
+            "title": "Transactions"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactions",
+          "pagination"
+        ],
+        "title": "RequestParams"
+      },
+      "src__schemas__requests__qr_callback_request__Transaction": {
+        "properties": {
+          "transactionStatus": {
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "transactionChannel": {
+            "$ref": "#/components/schemas/TransactionChannel"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Transactiondate"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Effectivedate"
+          },
+          "debitOrCredit": {
+            "$ref": "#/components/schemas/DebitCreditLower"
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "transactionEntityAttribute": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TransactionEntityAttribute"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "transactionContent": {
+            "type": "string",
+            "title": "Transactioncontent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactionStatus",
+          "transactionChannel",
+          "transactionDate",
+          "effectiveDate",
+          "debitOrCredit",
+          "amount",
+          "transactionContent"
+        ],
+        "title": "Transaction"
+      },
+      "src__schemas__requests__rtxn_callback_request__Request": {
+        "properties": {
+          "requestMeta": {
+            "$ref": "#/components/schemas/RequestMeta"
+          },
+          "requestParams": {
+            "$ref": "#/components/schemas/src__schemas__requests__rtxn_callback_request__RequestParams"
+          }
+        },
+        "type": "object",
+        "required": [
+          "requestMeta",
+          "requestParams"
+        ],
+        "title": "Request"
+      },
+      "src__schemas__requests__rtxn_callback_request__RequestParams": {
+        "properties": {
+          "transactions": {
+            "items": {
+              "$ref": "#/components/schemas/src__schemas__requests__rtxn_callback_request__Transaction"
+            },
+            "type": "array",
+            "title": "Transactions"
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/Pagination"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactions",
+          "pagination"
+        ],
+        "title": "RequestParams"
+      },
+      "src__schemas__requests__rtxn_callback_request__Transaction": {
+        "properties": {
+          "transactionStatus": {
+            "$ref": "#/components/schemas/TransactionStatus"
+          },
+          "transactionChannel": {
+            "$ref": "#/components/schemas/TransactionChannel"
+          },
+          "transactionCode": {
+            "type": "string",
+            "title": "Transactioncode"
+          },
+          "accountNumber": {
+            "type": "string",
+            "title": "Accountnumber"
+          },
+          "transactionDate": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Transactiondate"
+          },
+          "effectiveDate": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Effectivedate"
+          },
+          "debitOrCredit": {
+            "$ref": "#/components/schemas/DebitCreditLower"
+          },
+          "virtualAccount": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/VirtualAccount"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "amount": {
+            "type": "integer",
+            "title": "Amount"
+          },
+          "transactionEntityAttribute": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/TransactionEntityAttribute"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "transactionContent": {
+            "type": "string",
+            "title": "Transactioncontent"
+          }
+        },
+        "type": "object",
+        "required": [
+          "transactionStatus",
+          "transactionChannel",
+          "transactionCode",
+          "accountNumber",
+          "transactionDate",
+          "effectiveDate",
+          "debitOrCredit",
+          "amount",
+          "transactionContent"
+        ],
+        "title": "Transaction"
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "description": "access_token từ POST /api/v1/client/login"
+      },
+      "clientSecret": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-Client-Secret",
+        "description": "client_secret sinh từ POST /api/v1/client-keys/generate — bắt buộc cho POST/PUT/DELETE"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}

@@ -1,0 +1,133 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import Stats from '../../components/Stats.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/giao-duc';
+const title = 'Phần mềm quản lý học phí thu tự động: đóng tiền là xác nhận ngay';
+const description = 'Phần mềm quản lý học phí nối MONA Pay: mỗi học viên một tài khoản ảo ACB, đóng tiền là báo có và mở khoá ngay. Khánh Hùng Academy thu 40.000 học viên bằng cách này.';
+
+const steps = [
+  { title: 'Mỗi học viên, mỗi khoá có một số tài khoản ảo hoặc mã QR riêng', body: 'Phần mềm quản lý học phí gọi MONA Pay cấp số tài khoản ảo ACB theo đầu số của trung tâm, hoặc sinh mã VietQR đã điền sẵn số tiền và mã học viên. Phụ huynh không phải gõ nội dung chuyển khoản, chuyển nhầm nội dung cũng không sao vì số tài khoản đã nói lên ai đóng.' },
+  { title: 'Phụ huynh chuyển, tiền vào thẳng tài khoản ACB của trung tâm', body: 'Không ví trung gian, không giữ tiền, không chờ đối soát cuối ngày. ACB thấy tiền vào là báo cho MONA Pay biết giao dịch đó ngay lúc đó, kể cả 11 giờ đêm hay chủ nhật.' },
+  { title: 'MONA Pay báo về phần mềm và về nhóm Telegram', body: 'Webhook có chữ ký HMAC-SHA256 đi thẳng vào phần mềm quản lý học phí, phần mềm khớp học viên rồi ghi "đã đóng", mở khoá học, gửi biên nhận. Cùng lúc nhóm Telegram của phòng học vụ nhận một tin: ngân hàng, số tài khoản, số tiền, thời gian, nội dung.' },
+  { title: 'Kế toán đối chiếu bằng số liệu, không dò sao kê', body: 'Cuối tháng kế toán tra danh sách giao dịch theo từng tài khoản ảo trên dashboard my.monapay.vn hoặc qua API, tối đa 100 giao dịch một trang, khớp với danh sách thu của phần mềm. Giao dịch nào phần mềm chưa nhận được thì bấm gửi lại webhook ngay trong lịch sử.' },
+];
+
+const faq = [
+  { q: 'Trung tâm nhỏ, chưa có phần mềm quản lý học phí, dùng được không?', a: 'Được. Tạo tài khoản MONA Pay, nối ACB bằng 2 lần OTP, rồi bật thông báo Telegram cho nhóm học vụ. Học phí về là cả nhóm thấy, không ai phải mở app ngân hàng. Khi cần phần mềm quản lý học viên, tụi em có MONA EduCenter cho trung tâm, nối sẵn MONA Pay lúc bàn giao.' },
+  { q: 'Phụ huynh có phải cài app gì mới không?', a: 'Không. Phụ huynh dùng đúng app ngân hàng đang có, quét mã VietQR hoặc chuyển vào số tài khoản ảo của trung tâm. Tiền đi thẳng từ ngân hàng của phụ huynh vào tài khoản ACB của anh chị, MONA Pay chỉ đọc thông báo giao dịch.' },
+  { q: 'Nhiều học viên đóng cùng một mức học phí thì có nhầm không?', a: 'Đây đúng là chỗ trung tâm hay nhầm nhất khi dò sao kê bằng tay. Với tài khoản ảo riêng hoặc mã QR riêng cho từng học viên, ba giao dịch cùng 1.990.000 đ trong 10 phút vẫn khớp đúng ba người, vì nhận diện bằng số tài khoản, không bằng số tiền hay nội dung.' },
+  { q: 'Tiền học phí có nằm ở MONA Pay lúc nào không?', a: 'Không. MONA Pay không giữ tiền, không phải ví. Tiền vào thẳng tài khoản ACB đứng tên trung tâm, sao kê ngân hàng là sổ cái. MONA Pay chỉ nhận thông báo từ ACB rồi báo về phần mềm và Telegram.' },
+  { q: 'Trung tâm đang dùng tài khoản ngân hàng khác ACB thì sao?', a: 'ACB đang chạy: anh chị mở thêm một tài khoản ACB đứng tên trung tâm để nhận học phí là dùng được ngay. Các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; khi ngân hàng của trung tâm lên, nối thêm mà không phải sửa webhook hay Telegram.' },
+  { q: 'Phí sử dụng tính thế nào với trung tâm vài trăm học viên?', a: `MONA Pay ${PRICE_LINE}. Vài trăm hay vài chục nghìn giao dịch học phí một tháng đều không tốn đồng nào, không thu phần trăm trên số tiền. Phần mềm quản lý học phí là sản phẩm riêng của Mona.Software, báo giá qua ${SITE.hotline}.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Giáo dục: thu học phí tự động', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Ngành giáo dục · trung tâm, trường, khoá học online</span>
+      <h1>Phần mềm quản lý học phí<br class="br-d" /> <span class="accent">thu tự động, đóng tiền là biết ngay</span></h1>
+      <div class="answer-first">
+        <p>Phần mềm quản lý học phí nối với MONA Pay sẽ cấp cho mỗi học viên một số tài khoản ảo ACB hoặc mã VietQR riêng. Phụ huynh chuyển khoản xong, ACB báo cho MONA Pay, MONA Pay báo về phần mềm và nhóm Telegram của phòng học vụ trong vài giây. Không ai dò sao kê, không nhầm học viên cùng mức phí, tiền vào thẳng tài khoản trung tâm, dùng miễn phí.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/acb">Xem cách nối ACB</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện tụi em gặp ở trung tâm</span>
+      <h2>Thu học phí bằng chuyển khoản đang kẹt ở đâu?</h2>
+      <p class="lead">Khánh Hùng Academy của tụi em có 40.000 học viên, 760 học viên PRO. Trước khi có hệ thống này, thu học phí là việc của một người ngồi canh app ngân hàng. Trung tâm nào đến MONA làm phần mềm cũng kể đúng bốn chuyện dưới đây.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Phụ huynh chuyển xong nhắn "em chuyển rồi", học vụ đi dò</h3><p>Tin nhắn đến Zalo, ảnh chụp màn hình đến Messenger, còn tiền thì nằm trong app ngân hàng của chủ trung tâm. Học vụ hỏi mượn điện thoại sếp, dò từng dòng, tìm đúng số tiền, đúng tên. Tên viết không dấu, nội dung "ck hoc phi", ba mẹ chuyển thay con thì tên khác hẳn. Một buổi sáng đầu tháng có khi mất trọn cho việc này.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Nhiều học viên cùng một mức học phí</h3><p>Lớp IELTS cùng giá, lớp toán cùng giá. Tám giao dịch 2.500.000 đ trong một buổi, nội dung na ná nhau. Khớp nhầm là ghi "đã đóng" cho em chưa đóng, còn em đã đóng thì bị nhắc nợ. Phụ huynh gọi lên trung tâm, học vụ xin lỗi, kế toán lục lại sao kê. Chuyện này lặp mỗi kỳ thu.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Khoá học online: đóng tiền tối, sáng mới được mở khoá</h3><p>Học viên mua khoá lúc 11 giờ đêm, chuyển khoản xong ngồi chờ. Không ai trực để mở quyền học. Sáng hôm sau mở thì học viên đã nguội, có người đòi hoàn tiền. Khánh Hùng Academy từng đúng tình cảnh này trước khi tự động hoá phần mở khoá.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Cuối tháng kế toán đối chiếu bằng tay</h3><p>Danh sách thu trong phần mềm một bên, sao kê ngân hàng một bên, Excel ở giữa. Lệch một dòng là dò cả tối. Trường có nhiều cơ sở thì mỗi cơ sở một sao kê, một Excel, kế toán tổng gom lại còn khổ hơn.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Học phí về là phần mềm biết, học vụ biết, kế toán biết</h2>
+      <p class="lead">Đây là luồng chính khanhhung.academy đang thu học phí, tụi em chạy nhiều năm trước khi mở MONA Pay cho mọi trung tâm. Bốn bước, không có bước nào cần người ngồi canh.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Ba kiểu đơn vị giáo dục, ba cách dùng</span>
+      <h2>Trung tâm, trường, khoá học online dùng khác nhau chỗ nào?</h2>
+      <div class="grid grid-3" style="margin-top:1.5rem">
+        <div class="card"><h3>Trung tâm ngoại ngữ, kỹ năng, năng khiếu</h3><p>Học viên học theo kỳ, đóng theo tháng hoặc theo khoá. Cấp mỗi học viên một số tài khoản ảo cố định, phụ huynh lưu số đó trong app ngân hàng, tháng nào cũng chuyển vào đúng số đó. Học vụ nhìn nhóm Telegram là biết ai đã đóng, phần mềm quản lý học phí tự đánh dấu.</p></div>
+        <div class="card"><h3>Trường tư, trường quốc tế, cao đẳng, đại học</h3><p>Hàng nghìn khoản thu mỗi kỳ, nhiều loại phí: học phí, phí bán trú, phí xe, phí đồng phục. Mỗi khoản thu một mã QR động đúng số tiền, in trên thông báo thu hoặc gửi qua app phụ huynh. Webhook ký HMAC đi vào hệ thống quản lý của trường, kế toán tra theo tài khoản ảo để đối chiếu.</p></div>
+        <div class="card"><h3>Khoá học online, nền tảng dạy học</h3><p>Học viên mua khoá bất kể giờ nào. Trang thanh toán hiện mã VietQR gắn mã đơn, tiền vào là webhook về nền tảng, nền tảng mở khoá và gửi email trong cùng phút. Đây chính là cách Khánh Hùng Academy vận hành phần mở khoá cho 760 học viên PRO.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Phần mềm MONA cho ngành giáo dục</span>
+      <h2>Đã có phần mềm quản lý học viên chưa? Chưa thì tụi em có sẵn</h2>
+      <p class="lead">Mona.Software làm phần mềm cho giáo dục nhiều năm, và MONA Pay được nối sẵn vào các sản phẩm này lúc bàn giao, không phải nối thêm.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><h3>MONA EduCenter</h3><p>Phần mềm quản lý trung tâm: học viên, lớp, lịch học, học phí. Thu học phí qua MONA Pay, tiền vào là trạng thái học viên đổi. Xem tại <a href="https://mona.software">mona.software</a>.</p></div>
+        <div class="card"><h3>MONA LMS · Elearning · SkillHub</h3><p>Nền tảng dạy học và bán khoá học online. Học viên mua khoá bằng VietQR, tiền vào là mở khoá học ngay, kể cả nửa đêm. Khánh Hùng Academy chạy trên nền tảng nhà.</p></div>
+        <div class="card"><h3>UniMaster</h3><p>Quản lý đào tạo cho trường, cao đẳng, đại học: nhiều khoản thu, nhiều cơ sở, kế toán tổng hợp theo tài khoản ảo.</p></div>
+        <div class="card"><h3>Đang dùng phần mềm khác</h3><p>Phần mềm nào nhận được webhook đều nối được, theo <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a>. Không có người kỹ thuật thì đội MONA viết lớp nối cho anh chị, hoặc dùng đường không cần code: mã QR động cho từng khoản thu và thông báo Telegram cho học vụ.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Báo giá phần mềm quản lý học phí và học viên: gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>. Riêng MONA Pay thì {PRICE_LINE}.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Số cho phòng học vụ và kế toán</span>
+      <div style="margin-top:1rem"><Stats items={[
+        { value: '2 lần OTP', label: 'nối tài khoản ACB trong dashboard, xong là chạy' },
+        { value: '5 phút', label: 'gói tin lệch giờ quá 5 phút bị từ chối, chống giả thông báo' },
+        { value: '10 giây', label: 'phần mềm trả lời trong 10 giây là MONA Pay ghi nhận đã giao' },
+        { value: '0 đ', label: 'không thu phần trăm trên học phí, không giới hạn giao dịch' },
+      ]} /></div>
+      <div class="wrap narrow" style="margin-top:2rem;padding:0">
+        <p class="lead">{SITE.entity}</p>
+        <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc. Xem thêm <a href="/khach-hang">ca dùng thật</a> và <a href="/chia-se-bien-dong-so-du-telegram">cách báo biến động số dư qua Telegram</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ trung tâm và kế toán hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Kỳ thu học phí tới, học vụ không phải dò sao kê nữa" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, bật Telegram cho nhóm học vụ. Cần phần mềm quản lý học phí thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Bắt đầu nhanh trong 5 phút' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

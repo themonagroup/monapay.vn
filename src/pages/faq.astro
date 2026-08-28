@@ -1,0 +1,122 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS, APPLYING_BANKS } from '../data/banks';
+import { PRICING_MODE, PRICING_APPROVED, FREE_TX_PER_MONTH, PRICE_LINE, FAIR_USE } from '../data/pricing';
+const isFree = PRICING_MODE === 'free-all';
+
+const coBan = [
+  { q: 'MONA Pay là gì?',
+    a: `${SITE.entity} Nói đơn giản: khách chuyển khoản vào tài khoản ACB của anh chị, ACB báo cho MONA Pay, MONA Pay báo ngay cho website, phần mềm hoặc nhóm Telegram của anh chị để đơn hàng tự xác nhận, không cần ai ngồi canh app ngân hàng.` },
+  { q: 'Tiền của tôi có đi qua MONA Pay không?',
+    a: 'Không. Tiền vào thẳng tài khoản ngân hàng đứng tên anh chị, MONA Pay không giữ tiền, không rút, không chuyển. Việc duy nhất MONA Pay làm là đọc thông báo giao dịch ACB gửi về rồi báo lại cho hệ thống của anh chị qua webhook, Telegram và dashboard. Tụi em không có mật khẩu ngân hàng của anh chị; việc nối tài khoản xác thực bằng 2 lần OTP do ACB gửi về số điện thoại anh chị đã đăng ký.' },
+  { q: 'Ai đứng sau MONA Pay, có mới không?',
+    a: `MONA Pay là sản phẩm của ${SITE.company}, công ty làm web và phần mềm từ ${SITE.founded} với ${SITE.projects} dự án và ${SITE.retention} khách quay lại. Hệ thống này tụi em tự xây để thu tiền cho chính MONA (phí hosting mona.host, học phí Khánh Hùng Academy, đơn hàng Mona.Software), rồi từ 2022 tới nay hơn ${SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây trong web, phần mềm tụi em giao. Năm 2026 mới mở public tại monapay.vn cho mọi doanh nghiệp.` },
+  { q: 'MONA Pay khác gì app ngân hàng báo biến động số dư?',
+    a: 'App ngân hàng báo cho người đọc, MONA Pay báo cho phần mềm. Khi tiền vào, MONA Pay gửi một bản tin JSON (gọi là webhook) tới website hoặc phần mềm của anh chị ngay khi ACB thông báo, để đơn hàng tự chuyển sang trạng thái đã thanh toán. Thêm nữa, mỗi đơn hoặc mỗi khách có thể được cấp một số tài khoản ảo (VA) riêng, nên tiền vào số nào là biết đơn nào, không phụ thuộc khách gõ đúng nội dung chuyển khoản.' },
+  { q: 'Dữ liệu giao dịch của tôi được bảo vệ thế nào?',
+    a: `Mỗi webhook được ký HMAC-SHA256 kèm dấu thời gian, hệ thống của anh chị từ chối bản tin lệch quá ${SITE.tech.replayWindowMin} phút để chặn gửi lại giả mạo. Gọi API cần token đăng nhập cộng thêm client secret riêng, dashboard có xác thực 2 lớp. MONA Pay chỉ ghi nhận đúng những gì ACB gửi về cho một giao dịch: số tiền, nội dung, thời gian, mã giao dịch, số tài khoản nhận. Không có quyền chuyển tiền, không có mật khẩu ngân hàng.` },
+];
+
+const nganHang = [
+  { q: 'MONA Pay hỗ trợ ngân hàng nào?',
+    a: `${BANKS_LINE}, cả tài khoản cá nhân lẫn doanh nghiệp. Bảng trạng thái từng ngân hàng nằm tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>, đổi sang đang hoạt động là nối được ngay. Webhook, Telegram, API dùng chung cho mọi ngân hàng nên nối thêm sau không phải sửa tích hợp. Cần nhận ngay hôm nay mà chưa có ACB, mở một tài khoản ACB online rồi nối là dùng.` },
+  { q: 'Nối tài khoản ACB mất bao lâu, cần chuẩn bị gì?',
+    a: 'Cần 2 thứ: tài khoản ACB đứng tên anh chị (cá nhân hoặc doanh nghiệp) và số điện thoại đã đăng ký với ACB để nhận OTP. Trong dashboard, anh chị đi 4 bước: nhập số tài khoản và số điện thoại, nhập OTP lần 1 để tạo tài khoản ảo, đăng ký nhận thông báo giao dịch, nhập OTP lần 2. Toàn bộ mất vài phút, không cần ra quầy.' },
+  { q: 'Tài khoản ảo (VA) là gì, tại sao cần?',
+    a: 'Tài khoản ảo là số tài khoản phụ do ACB cấp theo đầu số anh chị đăng ký, tiền chuyển vào đó vẫn nằm trong tài khoản ACB thật của anh chị. Cái hay là anh chị có thể gắn mỗi đơn hàng hoặc mỗi khách hàng một số VA riêng: tiền vào số nào, hệ thống biết ngay đơn nào, không phụ thuộc khách có gõ đúng nội dung chuyển khoản hay không. Với mã VietQR động, khách quét là số tiền và số VA điền sẵn, gần như không có chuyện chuyển sai.' },
+  { q: 'Khách chuyển sai số tiền hoặc sai nội dung thì sao?',
+    a: 'MONA Pay báo đúng số tiền thực nhận và nội dung khách gõ, kèm mã giao dịch của ngân hàng. Nếu khách chuyển vào đúng số VA của đơn thì hệ thống vẫn nhận ra đơn đó dù nội dung sai; số tiền lệch thì website của anh chị tự quyết định: đánh dấu đơn thiếu tiền, hoặc báo cho kế toán xử lý. Toàn bộ giao dịch đều xem lại được trên dashboard, có lọc theo ngày.' },
+];
+
+const tichHop = [
+  { q: 'Tích hợp MONA Pay vào website mất bao lâu?',
+    a: `Nếu đã có lập trình viên, phần việc gói trong 3 điểm: tạo một địa chỉ nhận POST JSON, kiểm tra chữ ký HMAC, trả HTTP 200 trong vòng ${SITE.tech.webhookTimeoutSec} giây. Tụi em có sẵn code mẫu cURL, PHP và Node, dán vào là chạy, nên thường mất vài phút tới một buổi tuỳ hệ thống. Nếu anh chị làm web tại MONA thì đội kỹ thuật cài luôn, không cần tự làm.` },
+  { q: 'Webhook là gì, website của tôi phải làm gì?',
+    a: 'Webhook là cách MONA Pay chủ động gọi sang website của anh chị mỗi khi có tiền vào, thay vì website phải hỏi đi hỏi lại. Website chỉ cần mở một địa chỉ nhận dữ liệu (ví dụ https://web-cua-anh-chi.vn/webhook/monapay), đọc 7 trường trong bản tin (số tiền, nội dung, thời gian, mã giao dịch, số tài khoản nhận, ngân hàng, loại giao dịch), rồi cập nhật đơn hàng. Anh chị đăng ký địa chỉ này trong dashboard mục Webhooks, có nút gửi thử để kiểm tra ngay.' },
+  { q: 'Webhook gửi thất bại thì sao, có bị mất giao dịch không?',
+    a: `Không mất. Giao dịch luôn nằm trong dashboard và tra được qua API bất kể webhook có tới nơi hay không. MONA Pay coi là gửi thành công khi hệ thống anh chị trả HTTP 200, 201 hoặc 202 trong ${SITE.tech.webhookTimeoutSec} giây; nếu không, lần gửi được ghi log với nhãn lỗi cụ thể (hết giờ, lỗi SSL, lỗi DNS, HTTP 5xx...) và anh chị bấm gửi lại từ dashboard. Gửi lại tự động theo lịch, tối đa 7 lần, đang được tụi em triển khai và sẽ công bố lịch cụ thể trong tài liệu. Mã giao dịch không đổi qua các lần gửi, nên hệ thống của anh chị dùng nó làm khoá chống ghi trùng.` },
+  { q: 'AI agent như Claude Code, Codex, Cursor có tự tích hợp MONA Pay được không?',
+    a: 'Được, và tụi em thiết kế cho đúng việc đó. Toàn bộ tài liệu có bản máy đọc: <a href="/llms.txt">/llms.txt</a> liệt kê mọi trang, mỗi trang tài liệu có bản .md, và <a href="/openapi.json">/openapi.json</a> mô tả API. Trong dashboard có khối prompt sao chép sẵn, dán vào agent là nó tự viết phần nhận webhook và kiểm tra chữ ký. Một việc vẫn cần người: OTP nối ACB phải nhập từ điện thoại của anh chị; còn đăng ký tài khoản, lấy key, cấu hình webhook thì agent tự làm hết qua API, không cần ai duyệt. Chi tiết tại <a href="/ai-agent">trang dành cho AI agent</a>.' },
+  { q: 'Có API để tự tạo mã QR, tra giao dịch không?',
+    a: `Có. API v1 gồm tạo và huỷ mã VietQR động theo đơn hàng (số tiền, mã đơn, nội dung), đăng ký tài khoản ảo, tra danh sách giao dịch theo trang (tối đa ${SITE.tech.listMaxLimit} giao dịch một lần gọi), cấu hình webhook và Telegram. Mọi phản hồi cùng một khung: success, message, data. Đăng nhập lấy token Bearer, thao tác ghi kèm thêm client secret riêng. Tài liệu tại <a href="/docs">/docs</a>.` },
+  { q: 'Tôi dùng WordPress hoặc WooCommerce thì làm thế nào?',
+    a: 'Plugin MONA Pay cho WooCommerce đang được xây, chưa có trên kho wordpress.org. Hiện có 2 đường: khách làm web tại MONA thì đội kỹ thuật nối sẵn; còn web tự làm thì lập trình viên tạo một endpoint PHP nhận webhook theo code mẫu (khoảng 30 dòng) rồi cập nhật trạng thái đơn. Hướng dẫn riêng tại <a href="/cong-thanh-toan-woocommerce">/cong-thanh-toan-woocommerce</a>.' },
+];
+
+const gia = [
+  { q: 'MONA Pay có miễn phí không?',
+    a: isFree
+      ? `Có, ${PRICE_LINE}, đầy đủ tính năng: tài khoản ảo, VietQR, webhook, Telegram, API. Không thu phần trăm trên số tiền, không phí mở tài khoản. Giới hạn duy nhất là fair-use chống lạm dụng (${FAIR_USE.rateLimit}). Chi tiết tại <a href="/bang-gia">/bang-gia</a>.`
+      : PRICING_APPROVED
+      ? `Có. Gói Miễn phí cho ${FREE_TX_PER_MONTH} giao dịch mỗi tháng với đầy đủ tính năng: tài khoản ảo, VietQR, webhook, Telegram, API. Các gói trả phí tính theo số giao dịch mỗi tháng, niêm yết công khai tại <a href="/bang-gia">/bang-gia</a>.`
+      : `Có. Gói Miễn phí cho ${FREE_TX_PER_MONTH} giao dịch mỗi tháng với đầy đủ tính năng: tài khoản ảo, VietQR, webhook, Telegram, API. Các gói trả phí tính theo số giao dịch mỗi tháng, tụi em niêm yết công khai trên trang <a href="/bang-gia">/bang-gia</a> khi ra mắt; trong lúc chờ, gọi ${SITE.hotline} để hỏi trước.` },
+  { q: 'Đăng ký xong dùng ngay được không?',
+    a: `Được. Anh chị tạo tài khoản tại <a href="${SITE.appRegister}">my.monapay.vn</a> là dùng ngay, tài khoản tự kích hoạt, không cần ai duyệt. Sau đó anh chị tự nối ACB (2 lần OTP từ ACB, vài phút), tự tạo API key và webhook trong dashboard. Cần người MONA là chỉ khi anh chị muốn tụi em làm thay phần tích hợp.` },
+  { q: 'Cần hỗ trợ kỹ thuật thì liên hệ đâu?',
+    a: `Tổng đài ${SITE.hotline} trong giờ hành chính, có người trực, hoặc email ${SITE.email}. Với ca tích hợp phức tạp, kỹ sư MONA làm việc trực tiếp với lập trình viên của anh chị. Đội này là đội đã làm ${SITE.projects} dự án web và phần mềm, không phải tổng đài đọc kịch bản.` },
+];
+
+const quocTe = [
+  { q: 'PayPal hay Stripe có dùng để thu tiền khách trong nước được không?',
+    a: `Hai cổng đó sinh ra để nhận tiền từ nước ngoài. PayPal Việt Nam thu 4,40% cộng phí cố định theo tiền tệ cho giao dịch thương mại từ ngoài lãnh thổ Việt Nam, tiền nằm trong ví PayPal, rút về ngân hàng Việt Nam mất 60.000đ mỗi lần khi không quy đổi tiền tệ, rút lỗi bị trả lại mất thêm 70.000đ (biểu phí chính thức, tụi em kiểm ngày 28/08/2026). Stripe chưa mở đăng ký cho doanh nghiệp tại Việt Nam (trang quốc gia hỗ trợ của Stripe ngày 28/08/2026 có Singapore, Thái Lan, Malaysia, Indonesia, không có Việt Nam). Khách trong nước quen quét VietQR và chuyển khoản, nên MONA Pay làm đúng việc đó: tiền vào thẳng tài khoản ACB của anh chị, ${PRICE_LINE}.` },
+  { q: 'Vừa bán trong nước vừa bán ra nước ngoài thì dùng gì?',
+    a: 'Dùng song song, không mâu thuẫn. Khách nước ngoài trả bằng thẻ hoặc USD thì đi PayPal, khách trong nước chuyển khoản thì đi MONA Pay. Đơn nội địa được webhook MONA Pay xác nhận tự động, đơn quốc tế theo thông báo của PayPal. Nhiều khách MONA làm web bán hàng chạy đúng kiểu này.' },
+  { q: 'So với cổng thanh toán quốc tế thì MONA Pay thiếu gì?',
+    a: 'MONA Pay không nhận thẻ Visa, Mastercard của khách nước ngoài và không đổi ngoại tệ. MONA Pay chỉ làm một việc: xác nhận tiền chuyển khoản nội địa theo thời gian thực rồi báo về web, phần mềm, Telegram. Bảng so chi tiết từng hạng mục ở <a href="/cong-thanh-toan-quoc-te">so với cổng thanh toán quốc tế</a>.' },
+];
+
+const groups = [
+  { id: 'faq-co-ban', eyebrow: 'Cơ bản', title: 'MONA Pay là gì, tiền có đi qua không?', items: coBan },
+  { id: 'faq-ngan-hang', eyebrow: 'Ngân hàng', title: 'Hỗ trợ ngân hàng nào, nối ACB ra sao?', items: nganHang },
+  { id: 'faq-tich-hop', eyebrow: 'Tích hợp', title: 'Tích hợp vào web, phần mềm và AI agent thế nào?', items: tichHop },
+  { id: 'faq-gia', eyebrow: 'Giá và hỗ trợ', title: 'Giá bao nhiêu, cần giúp thì gọi ai?', items: gia },
+  { id: 'faq-quoc-te', eyebrow: 'So với cổng quốc tế', title: 'PayPal, Stripe có hợp thu tiền trong nước không?', items: quocTe },
+];
+const total = groups.reduce((n, g) => n + g.items.length, 0);
+---
+<Base
+  title="Cổng thanh toán MONA Pay là gì? 21 câu hỏi thường gặp"
+  description="Cổng thanh toán MONA Pay là gì, tiền có đi qua không, hỗ trợ ngân hàng nào, nối ACB mất bao lâu, webhook lỗi thì sao, giá, so với PayPal, Stripe: 21 câu trả lời."
+  path="/faq">
+  <section class="hero">
+    <div class="wrap narrow">
+      <span class="eyebrow">Hỏi đáp</span>
+      <h1>Cổng thanh toán MONA Pay là gì?<br class="br-d" /> <span class="accent">{total} câu anh chị hay hỏi trước khi dùng</span></h1>
+      <div class="answer-first">
+        <p>Trang này trả lời {total} câu anh chị hay hỏi về MONA Pay: tiền có đi qua MONA Pay không (không), hỗ trợ ngân hàng nào (ACB), tích hợp mất bao lâu (vài phút tới một buổi với lập trình viên có sẵn), có miễn phí không ({PRICE_LINE}), PayPal hay Stripe có hợp thu tiền trong nước không. Mỗi câu trả lời ngắn, có số cụ thể, đủ để anh chị quyết.</p>
+      </div>
+      <nav class="faq-toc" aria-label="Nhóm câu hỏi">
+        {groups.map((g) => <a href={'#' + g.id}>{g.eyebrow} ({g.items.length})</a>)}
+      </nav>
+    </div>
+  </section>
+
+  {groups.map((g, i) => (
+    <section class={i % 2 === 1 ? 'section-alt' : ''}>
+      <div class="wrap narrow">
+        <Faq id={g.id} eyebrow={g.eyebrow} title={g.title} items={g.items} />
+      </div>
+    </section>
+  ))}
+
+  <section>
+    <div class="wrap narrow">
+      <h2>Chưa thấy câu của anh chị?</h2>
+      <p class="lead">Gọi tổng đài {SITE.hotline} trong giờ hành chính, hoặc email {SITE.email}. Câu nào hỏi nhiều, tụi em bổ sung thẳng vào trang này. Lập trình viên cần chi tiết kỹ thuật thì đọc <a href="/docs">tài liệu tích hợp</a>, mỗi trang đều có bản .md cho AI agent đọc.</p>
+    </div>
+  </section>
+
+  <CtaBand title="Dùng thử miễn phí, tiền vẫn nằm trong tài khoản ACB của anh chị" body={`Tạo tài khoản là dùng ngay, nối ACB trong vài phút, ${PRICE_LINE}.`} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.4rem)}
+  @media (max-width:767px){.br-d{display:none}}
+  .faq-toc{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.2rem}
+  .faq-toc a{font-size:.9rem;font-weight:600;padding:.4em .9em;border-radius:999px;background:var(--surface);border:1px solid var(--border);color:var(--ink)}
+  .faq-toc a:hover{border-color:var(--primary);color:var(--primary);text-decoration:none}
+</style>

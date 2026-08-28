@@ -1,0 +1,24 @@
+---
+import { SITE } from '../data/site';
+interface Props { title: string; body?: string; primary?: { href: string; label: string }; secondary?: { href: string; label: string } }
+const { title, body, primary = { href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }, secondary = { href: '/docs', label: 'Đọc tài liệu tích hợp' } } = Astro.props;
+---
+<section>
+  <div class="wrap">
+    <div class="cta-band">
+      <div>
+        <h2>{title}</h2>
+        {body && <p set:html={body} />}
+        <div class="btn-row">
+          <a class="btn btn-primary" href={primary.href}>{primary.label}</a>
+          <a class="btn btn-outline" href={secondary.href}>{secondary.label}</a>
+        </div>
+      </div>
+      <div>
+        <p style="margin:0 0 .2rem;opacity:.85">Gọi tổng đài MONA, có người trực</p>
+        <p class="hotline" style="margin:0"><a href={SITE.hotlineTel} style="color:#fff">{SITE.hotline}</a></p>
+        <p style="margin:.4rem 0 0;opacity:.85"><a href={'mailto:' + SITE.email} style="color:#fff">{SITE.email}</a></p>
+      </div>
+    </div>
+  </div>
+</section>

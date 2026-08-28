@@ -1,0 +1,43 @@
+---
+import { getCollection } from 'astro:content';
+import Base from '../../layouts/Base.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import { SITE } from '../../data/site';
+const posts = (await getCollection('posts')).sort((a, b) => b.data.date.split('/').reverse().join('') .localeCompare(a.data.date.split('/').reverse().join('')));
+const CAT: Record<string, string> = { 'huong-dan': 'Hướng dẫn', 'so-sanh': 'So sánh', 'chuyen-mona': 'Chuyện MONA', 'kien-thuc': 'Kiến thức' };
+const groups = Object.keys(CAT).map((k) => ({ k, label: CAT[k], items: posts.filter((p) => p.data.category === k) })).filter((g) => g.items.length);
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'CollectionPage', name: 'Blog MONA Pay', url: SITE.url + '/blog', inLanguage: 'vi', isPartOf: { '@id': SITE.url + '/#website' } }];
+---
+<Base title="Blog MONA Pay: thanh toán tự động, tự báo có, gắn cổng thanh toán" description="Bài viết từ đội MONA: cách nhận tiền chuyển khoản tự động, tự báo có tiền vào, gắn cổng thanh toán vào website, thu tiền Việt lẫn ngoại tệ, và chuyện MONA Pay mở ra cho mọi doanh nghiệp." path="/blog" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Blog</span>
+    <h1>Thanh toán tự động, kể bằng kinh nghiệm <span class="accent">thu tiền thật của MONA</span></h1>
+    <div class="answer-first"><p>Blog MONA Pay là nơi tụi em viết từ những ca thu tiền thật của The MONA Group: phí hosting, học phí, đơn phần mềm, web bán hàng của khách MONA. Mỗi bài trả lời thẳng một câu chủ doanh nghiệp hay hỏi về thanh toán tự động, tự báo có, gắn cổng thanh toán, thu tiền Việt lẫn ngoại tệ, và có số, có cách làm, có chỗ tụi em từng vấp.</p></div>
+  </div></section>
+  {groups.map((g) => (
+    <section class={g.k === 'so-sanh' ? 'section-alt' : ''}><div class="wrap">
+      <h2>{g.label}</h2>
+      <div class="grid grid-3">
+        {g.items.map((p) => (
+          <a class="card post-card" href={'/blog/' + p.id}>
+            {p.data.ogImage && <img class="post-thumb" src={p.data.ogImage} alt="" width="1536" height="1024" loading="lazy" />}
+            <span class="badge">{g.label}</span>
+            <h3>{p.data.h1 || p.data.title}</h3>
+            <p>{p.data.description}</p>
+            <span class="post-date">{p.data.date}</span>
+          </a>
+        ))}
+      </div>
+    </div></section>
+  ))}
+  {!posts.length && <section><div class="wrap narrow"><p>Bài đầu tiên đang lên. Trong lúc chờ, anh chị đọc <a href="/docs">tài liệu tích hợp</a> hoặc <a href="/faq">hỏi đáp</a>.</p></div></section>}
+  <CtaBand title="Tạo tài khoản miễn phí, nối ACB trong vài phút" />
+</Base>
+<style>
+  .post-card{display:block;color:inherit;text-decoration:none !important}
+  .post-card:hover{transform:translateY(-2px);box-shadow:var(--shadow-lg)}
+  .post-thumb{width:calc(100% + 3.2rem);margin:-1.6rem -1.6rem 1rem;border-radius:var(--radius) var(--radius) 0 0;height:auto}
+  .post-card h3{margin:.6rem 0 .4rem;font-size:1.1rem}
+  .post-card p{color:var(--text-soft);font-size:.93rem}
+  .post-date{font-size:.82rem;color:var(--text-soft)}
+</style>

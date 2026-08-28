@@ -1,0 +1,65 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+import { BANKS, LIVE_BANKS, APPLYING_BANKS, PLANNED_BANKS, STATUS_LABEL } from '../data/banks';
+const title = 'Ngân hàng hỗ trợ MONA Pay: ACB đang chạy, các ngân hàng khác đang kết nối';
+const description = `MONA Pay nhận thông báo tiền vào qua API đối tác của ngân hàng: ${LIVE_BANKS.map((b) => b.name).join(', ')} đang hoạt động, ${APPLYING_BANKS.length} ngân hàng đang đăng ký kết nối. Bảng trạng thái cập nhật tại trang này, thêm ngân hàng không phải sửa code.`;
+const faq = [
+  { q: 'Hiện MONA Pay nhận tiền được ở ngân hàng nào?', a: `${LIVE_BANKS.map((b) => b.name).join(', ')} đang hoạt động thật: tài khoản ảo, VietQR động, thông báo giao dịch. ${APPLYING_BANKS.map((b) => b.name).join(', ')} đang trong quá trình đăng ký kết nối API đối tác. Trạng thái từng ngân hàng cập nhật ngay tại trang này.` },
+  { q: 'Tài khoản của tôi ở ngân hàng chưa hỗ trợ thì làm sao?', a: 'Cách nhanh nhất là mở một tài khoản ACB đứng tên doanh nghiệp hoặc cá nhân để nhận tiền (mở online tại acb.com.vn), nối vào MONA Pay trong vài phút, tiền vẫn nằm ở ngân hàng của anh chị. Khi ngân hàng của anh chị lên trạng thái đang hoạt động, anh chị nối thêm, không phải làm lại webhook hay Telegram vì cấu hình không phụ thuộc ngân hàng.' },
+  { q: 'Khi thêm ngân hàng mới, phần tích hợp đã làm có phải sửa không?', a: 'Không. Webhook, Telegram, API key và mã QR động là lớp chung của MONA Pay; ngân hàng chỉ là nguồn thông báo. Payload webhook có trường bank_name, phần mềm của anh chị đọc trường đó là phân biệt được tiền về ngân hàng nào. Thêm ngân hàng là thêm một dòng cấu hình phía tụi em.' },
+  { q: 'Vì sao ACB đi trước?', a: 'Vì ACB có chương trình API đối tác cho tài khoản ảo và thông báo giao dịch, và tụi em đã chạy thật với ACB từ 2022 cho hơn 6.000 khách hàng mới của MONA. Các ngân hàng khác mở API đối tác muộn hơn hoặc cần hồ sơ doanh nghiệp, tụi em đang nộp lần lượt.' },
+  { q: 'Bao giờ có ngân hàng tiếp theo?', a: 'Mỗi ngân hàng có quy trình duyệt đối tác riêng, thường tính bằng tuần tới vài tháng. Tụi em không hứa ngày; bảng trạng thái ở trên đổi từ "đang đăng ký kết nối" sang "đang hoạt động" là dùng được ngay. Cần gấp, gọi 1900 636 648 để tụi em tư vấn đường nhận tiền phù hợp trong lúc chờ.' },
+];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'Ngân hàng hỗ trợ MONA Pay', itemListElement: BANKS.map((b, i) => ({ '@type': 'ListItem', position: i + 1, name: `${b.name} (${STATUS_LABEL[b.status]})` })) }];
+---
+<Base title={title} description={description} path="/ngan-hang" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Ngân hàng hỗ trợ</span>
+    <h1>Ngân hàng hỗ trợ MONA Pay:<br class="br-d" /> <span class="accent">{LIVE_BANKS.map((b) => b.name).join(', ')} đang chạy, các ngân hàng khác đang kết nối</span></h1>
+    <div class="answer-first"><p>MONA Pay nhận thông báo tiền vào qua API đối tác của từng ngân hàng. Hiện {LIVE_BANKS.map((b) => b.name).join(', ')} đang hoạt động thật (tài khoản ảo, VietQR động, thông báo giao dịch), {APPLYING_BANKS.length} ngân hàng đang trong quá trình đăng ký kết nối. Webhook, Telegram, API của anh chị dùng chung cho mọi ngân hàng, thêm ngân hàng không phải sửa tích hợp.</p></div>
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>Bảng trạng thái kết nối, cập nhật tại trang này</h2>
+    <div class="table-wrap"><table>
+      <thead><tr><th>Ngân hàng</th><th>Trạng thái</th><th>Tài khoản ảo</th><th>VietQR động</th><th>Thông báo giao dịch</th><th>Ghi chú</th></tr></thead>
+      <tbody>
+        {BANKS.map((b) => (
+          <tr>
+            <td><strong>{b.name}</strong><br /><span style="color:var(--text-soft);font-size:.85rem">{b.fullName}</span></td>
+            <td><span class={'badge ' + (b.status === 'live' ? 'badge-ok' : b.status === 'dang-dang-ky' ? 'badge-warn' : '')}>{STATUS_LABEL[b.status]}{b.status === 'live' && b.since ? ` từ ${b.since}` : ''}</span></td>
+            <td>{b.features?.va ? <span class="check">✓</span> : <span style="color:var(--text-soft)">—</span>}</td>
+            <td>{b.features?.qr ? <span class="check">✓</span> : <span style="color:var(--text-soft)">—</span>}</td>
+            <td>{b.features?.notify ? <span class="check">✓</span> : <span style="color:var(--text-soft)">—</span>}</td>
+            <td style="font-size:.9rem">{b.status === 'live' ? <a href={'/' + b.slug}>Xem trang {b.name}</a> : (b.note || 'Sẽ cập nhật khi có kết quả.')}</td>
+          </tr>
+        ))}
+      </tbody>
+    </table></div>
+    <p style="color:var(--text-soft);font-size:.92rem">Kiểm lần cuối {SITE.tech.lastVerified}. Thêm ngân hàng là thêm một dòng phía tụi em; phần tích hợp của anh chị giữ nguyên.</p>
+  </div></section>
+
+  <section class="section-alt"><div class="wrap">
+    <h2>Thiết kế cho nhiều ngân hàng ngay từ đầu</h2>
+    <div class="grid grid-3">
+      <div class="card"><div class="icon">1</div><h3>Ngân hàng chỉ là nguồn thông báo</h3><p>Mỗi ngân hàng nối vào MONA Pay qua API đối tác riêng, nhưng ra tới anh chị chỉ còn một chuẩn: payload webhook có <code>bank_name</code>, <code>account_number</code>, <code>amount</code>, <code>transaction_code</code>. Thêm ngân hàng, phần mềm của anh chị không đổi dòng nào.</p></div>
+      <div class="card"><div class="icon">2</div><h3>Một cấu hình, nhiều tài khoản</h3><p>Anh chị nối nhiều tài khoản ở nhiều ngân hàng vào cùng một tài khoản MONA Pay, cấu hình webhook, Telegram theo từng tài khoản ảo hoặc cho tất cả. Chi nhánh A nhận ở ngân hàng này, chi nhánh B ở ngân hàng khác vẫn về một dashboard.</p></div>
+      <div class="card"><div class="icon">3</div><h3>Chạy thật với {LIVE_BANKS[0].name} từ {LIVE_BANKS[0].since}</h3><p>{SITE.storyLine} Nền đã chịu tải thật, việc còn lại với mỗi ngân hàng mới là hồ sơ đối tác, không phải viết lại hệ thống.</p></div>
+    </div>
+  </div></section>
+
+  <section><div class="wrap narrow">
+    <h2>Trong lúc chờ ngân hàng của anh chị lên</h2>
+    <p>Đa số khách MONA chọn cách thực dụng: mở thêm một tài khoản {LIVE_BANKS[0].name} để nhận tiền (mở online, không mất phí mở tài khoản theo biểu phí ngân hàng công bố, anh chị kiểm với ngân hàng), nối vào MONA Pay trong vài phút, tiền vẫn nằm ở ngân hàng, tụi em chỉ đọc thông báo. Khi ngân hàng chính của anh chị chuyển sang đang hoạt động, nối thêm là xong, webhook và Telegram dùng lại nguyên. {PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}.</p>
+    <p>{SITE.entity}</p>
+    <div class="btn-row"><a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a><a class="btn btn-outline" href="/acb">Cách nối ACB</a></div>
+  </div></section>
+
+  <section class="section-alt"><div class="wrap narrow"><Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi về ngân hàng hỗ trợ" /></div></section>
+  <CtaBand title="Nối ngân hàng hôm nay, thêm ngân hàng sau không phải sửa gì" body="Tạo tài khoản, nối ACB 4 bước, cấu hình webhook hoặc Telegram một lần dùng cho mọi ngân hàng." />
+</Base>
+<style>.br-d{display:inline}@media (max-width:767px){.br-d{display:none}}.hero h1{font-size:clamp(1.7rem,3vw,2.3rem)}</style>

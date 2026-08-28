@@ -1,0 +1,218 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS, APPLYING_BANKS } from '../data/banks';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'API ACB: biến động số dư, tài khoản ảo ACB theo thời gian thực';
+const description = 'Nối tài khoản ACB vào MONA Pay qua 4 bước, nhận thông báo tiền vào bằng webhook, Telegram hoặc dashboard. Tài khoản ảo, VietQR, chữ ký HMAC, tiền vẫn ở ACB.';
+
+const support = [
+  { f: 'Thông báo tiền vào', ok: true, note: 'ACB báo ngay khi tiền chạm tài khoản, MONA Pay chuyển tiếp trong cùng lúc' },
+  { f: 'Tài khoản ảo (VA)', ok: true, note: 'ACB cấp dải số theo đầu số đăng ký, mỗi đơn hoặc mỗi khách 1 số riêng' },
+  { f: 'VietQR động đúng số tiền', ok: true, note: 'Tạo qua dashboard hoặc API, khách quét là chuyển đúng số và nội dung' },
+  { f: 'Webhook có chữ ký HMAC-SHA256', ok: true, note: `Header ${SITE.tech.hmacHeader} + ${SITE.tech.tsHeader}, từ chối nếu lệch quá ${SITE.tech.replayWindowMin} phút` },
+  { f: 'Báo vào nhóm Telegram', ok: true, note: 'Theo từng tài khoản ảo hoặc mọi tài khoản, sửa được mẫu tin' },
+  { f: 'Tài khoản cá nhân và doanh nghiệp', ok: true, note: 'Chọn loại khách hàng lúc nối, cả hai đều được ACB cấp tài khoản ảo' },
+  { f: 'Thông báo tiền ra', ok: false, note: 'Hiện chỉ báo giao dịch tiền vào' },
+  { f: 'Số dư sau giao dịch', ok: false, note: 'Chưa có trong gói tin, đối soát bằng mã giao dịch và số tiền' },
+];
+
+const steps = [
+  { title: 'Nhập số tài khoản ACB, số điện thoại và loại khách hàng', body: '<p>Trong dashboard MONA Pay, anh chị nhập số tài khoản thanh toán ACB đứng tên mình, số điện thoại đã đăng ký với ACB và chọn cá nhân hay doanh nghiệp. Tài khoản phải là của anh chị, tụi em không nối được tài khoản người khác.</p><p class="screen">Màn hình: <strong>Ngân hàng &amp; VA → Nối tài khoản ACB</strong> (bước 1/4 của wizard).</p>' },
+  { title: 'Nhập OTP lần 1 do ACB gửi để tạo tài khoản ảo', body: '<p>ACB gửi mã OTP về số điện thoại đó. Anh chị nhập vào là ACB xác nhận đồng ý cho MONA Pay tạo dải tài khoản ảo trên tài khoản của anh chị. Bước này là của ngân hàng, tụi em không thấy OTP.</p><p class="screen">Màn hình: <strong>Ngân hàng &amp; VA → Xác thực OTP tạo tài khoản ảo</strong> (bước 2/4).</p>' },
+  { title: 'Đăng ký nhận thông báo giao dịch, nhập OTP lần 2', body: '<p>Có tài khoản ảo rồi vẫn chưa có thông báo. Anh chị bấm đăng ký nhận thông báo giao dịch, ACB gửi OTP lần 2 để xác nhận cho phép báo giao dịch về MONA Pay. Nhiều người tưởng xong ở bước 2 nên tụi em ghi rõ: phải qua đủ 2 lần OTP.</p><p class="screen">Màn hình: <strong>Ngân hàng &amp; VA → Đăng ký nhận thông báo → OTP lần 2</strong> (bước 3/4).</p>' },
+  { title: 'Chọn kênh nhận: webhook, Telegram, hoặc cả hai', body: '<p>Từ đây tiền vào tài khoản ảo hay tài khoản chính đều có thông báo. Anh chị dán đường dẫn webhook của phần mềm vào mục Webhooks, bật chữ ký HMAC, bấm gửi thử. Muốn kế toán thấy luôn thì thêm bot vào nhóm Telegram. Không có phần mềm thì chỉ dùng Telegram và dashboard cũng chạy.</p><p class="screen">Màn hình: <strong>Webhooks</strong> hoặc <strong>Telegram</strong> (bước 4/4, có nút Gửi thử).</p>' },
+];
+
+// ACB cung cấp gì ↔ MONA Pay làm gì (kiểm theo hệ thống đang chạy 28/08/2026)
+const roles = [
+  { acb: 'Cấp dải tài khoản ảo theo đầu số đăng ký, mỗi số trỏ về tài khoản thật của anh chị', mona: 'Gọi API ACB để đăng ký dải số thay anh chị, gắn mỗi số ảo cho 1 đơn hoặc 1 khách, lưu lại để khớp tiền' },
+  { acb: 'Gửi thông báo mỗi khi có giao dịch tiền vào tài khoản hoặc tài khoản ảo', mona: 'Nhận thông báo, ghi vào dashboard, khớp với đơn theo số tài khoản ảo hoặc mã QR' },
+  { acb: 'Sinh mã QR thanh toán có sẵn số tiền và nội dung', mona: 'Tạo QR theo từng đơn qua dashboard hoặc API, đưa cho khách quét, tự huỷ khi đơn xong' },
+  { acb: 'Gửi OTP về số điện thoại chủ tài khoản để xác nhận 2 việc: tạo tài khoản ảo và cho phép báo giao dịch', mona: 'Đưa anh chị qua đủ 2 lần OTP trong 1 wizard 4 bước, không bỏ sót bước đăng ký nhận thông báo' },
+  { acb: 'Giữ tiền. Tiền vào là nằm trong tài khoản ACB của anh chị, ngân hàng không chuyển đi đâu', mona: 'Bắn webhook ký HMAC-SHA256 về phần mềm, tin Telegram vào nhóm, có nút gửi lại và lịch sử từng lần gửi. Không chạm tới tiền' },
+];
+
+// Anh chị cần gì phía ACB
+const needs = [
+  { t: 'Tài khoản thanh toán ACB đứng tên anh chị', d: 'Cá nhân hay doanh nghiệp đều được. Tài khoản phải do chính anh chị (hoặc pháp nhân của anh chị) đứng tên, vì ACB gửi OTP về số điện thoại chủ tài khoản.' },
+  { t: 'Số điện thoại đã đăng ký với ACB', d: 'ACB gửi OTP về số này 2 lần: lần 1 khi tạo tài khoản ảo, lần 2 khi đăng ký nhận thông báo giao dịch. Số điện thoại phải đang dùng được lúc nối.' },
+  { t: 'Số tài khoản ACB', d: 'Nhập vào bước 1 của wizard. Nếu có nhiều tài khoản, chọn đúng tài khoản anh chị muốn nhận tiền bán hàng.' },
+  { t: 'Chưa có tài khoản ACB?', d: 'Mở tại ACB rồi quay lại nối. Thủ tục mở tài khoản, phí dịch vụ phía ngân hàng theo biểu phí ACB, anh chị hỏi ACB trực tiếp tại <a href="https://acb.com.vn" rel="noopener">acb.com.vn</a>. Tụi em không thu thêm gì ở phía MONA Pay.' },
+];
+
+const howto = {
+  '@context': 'https://schema.org', '@type': 'HowTo',
+  name: 'Nối tài khoản ACB vào MONA Pay trong 4 bước',
+  description: 'Nhập số tài khoản ACB, xác thực 2 lần OTP do ACB gửi, chọn kênh nhận thông báo tiền vào (webhook, Telegram, dashboard).',
+  totalTime: 'PT5M',
+  supply: [{ '@type': 'HowToSupply', name: 'Tài khoản thanh toán ACB đứng tên anh chị' }, { '@type': 'HowToSupply', name: 'Số điện thoại đã đăng ký với ACB để nhận OTP' }, { '@type': 'HowToSupply', name: 'Tài khoản MONA Pay' }],
+  step: steps.map((st, i) => ({ '@type': 'HowToStep', position: i + 1, name: st.title, text: st.body.replace(/<[^>]+>/g, ' ').replace(/\s+/g, ' ').trim(), url: SITE.url + '/acb#buoc-' + (i + 1) })),
+};
+
+const uses = [
+  { t: 'Shop bán hàng online', d: 'Mỗi đơn 1 mã QR đúng số tiền. Khách quét, chuyển, đơn tự sang "đã thanh toán", nhân viên chỉ việc gói hàng. Hết cảnh khách gửi ảnh chuyển khoản qua Zalo rồi chờ kiểm.' },
+  { t: 'Trung tâm, khoá học, câu lạc bộ', d: 'Mỗi học viên 1 tài khoản ảo hoặc 1 QR theo hoá đơn. Học phí vào là phần mềm mở khoá học, gửi biên nhận. Cuối tháng đối soát bằng mã giao dịch, không dò tay theo tên người chuyển.' },
+  { t: 'Phần mềm quản lý tự viết', d: 'Nhận webhook JSON vào hệ thống của anh chị, kiểm chữ ký, khớp đơn theo số tài khoản ảo. Tài liệu có code mẫu PHP, Node và prompt cho AI agent.' },
+  { t: 'Kế toán, chủ doanh nghiệp', d: 'Không cần phần mềm gì thêm: tiền vào là nhóm Telegram công ty có tin ngay, dashboard lưu đủ số tiền, nội dung, mã giao dịch để xuất đối soát.' },
+];
+
+const faq = [
+  { q: 'Tôi cần chuẩn bị gì để nối tài khoản ACB?', a: 'Ba thứ: tài khoản thanh toán ACB đứng tên anh chị (cá nhân hoặc doanh nghiệp), số điện thoại đã đăng ký với ACB để nhận OTP, và tài khoản MONA Pay (đăng ký xong dùng ngay, không cần ai duyệt). Không cần ra quầy, không cần ký giấy với ngân hàng, toàn bộ 4 bước làm trên dashboard.' },
+  { q: 'Tiền có nằm ở MONA Pay lúc nào không?', a: 'Không lúc nào. Tài khoản ảo chỉ là số định danh ACB gắn lên tài khoản thật của anh chị, tiền chuyển vào số ảo là vào thẳng tài khoản thật. MONA Pay chỉ nhận thông báo giao dịch từ ACB, không có quyền chuyển, rút hay giữ tiền.' },
+  { q: 'Tài khoản ảo ACB là gì, khác gì số tài khoản thường?', a: 'ACB cấp cho anh chị một dải số theo đầu số đăng ký. Mỗi số trong dải trỏ về cùng tài khoản thật nhưng anh chị gắn được cho từng đơn, từng khách. Nhờ vậy tiền vào số nào là biết ngay của đơn nào, không phụ thuộc khách gõ đúng nội dung chuyển khoản.' },
+  { q: 'Bao lâu sau khi khách chuyển thì tôi nhận được thông báo?', a: `Ngay khi ACB báo có tiền, MONA Pay gửi webhook và tin Telegram trong cùng lúc. Phần mềm của anh chị trả HTTP 200 trong ${SITE.tech.webhookTimeoutSec} giây là ghi nhận thành công. Lần chạy thử cuối ngày 28/08/2026 với 50.000 đ tiền thật, webhook về đúng chữ ký ngay sau khi ACB báo.` },
+  { q: 'Tôi có tài khoản Vietcombank, MB, Techcombank thì sao?', a: `${BANKS_LINE}. Trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>. Trong lúc chờ, mở một tài khoản ACB cá nhân hoặc doanh nghiệp (làm online được), nối vào MONA Pay là dùng; khi ngân hàng của anh chị lên đang hoạt động, nối thêm mà không phải sửa webhook hay Telegram.` },
+  { q: 'Dùng ACB qua MONA Pay có mất phí gì với ngân hàng không?', a: `Phía MONA Pay: ${PRICE_LINE}, không có gói trả phí ẩn. Phí dịch vụ của ACB (nếu có, tuỳ loại tài khoản anh chị đang dùng) do ACB thu theo biểu phí của ngân hàng, tụi em không cộng thêm và không thu phần trăm trên số tiền.` },
+];
+---
+<Base title={title} description={description} path="/acb" jsonld={[howto]}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Ngân hàng ACB</span>
+      <h1>API ACB: tiền vào tài khoản,<br class="br-d" /> <span class="accent">phần mềm biết ngay</span></h1>
+      <div class="answer-first">
+        <p>Để nhận thông báo tiền vào tài khoản ACB theo thời gian thực, anh chị nối tài khoản ACB vào MONA Pay qua 4 bước trong dashboard (nhập số tài khoản, xác thực 2 lần OTP do ACB gửi), rồi chọn kênh nhận: webhook về phần mềm, tin nhắn Telegram, hoặc xem trên dashboard. Tiền vẫn nằm ở ACB, MONA Pay chỉ đọc thông báo giao dịch.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/api/tai-khoan-ao-va">Tài liệu tài khoản ảo ACB</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="link-section">
+    <div class="wrap">
+      <div class="link-card">
+        <div class="link-logos" aria-label="MONA Pay kết nối ACB">
+          <img src="/brand/monapay-logo-light.svg" alt="MONA Pay" width="203" height="44" />
+          <span class="link-arrow" aria-hidden="true">⇄</span>
+          <img src="/brand/acb-logo.svg" alt="Ngân hàng ACB" width="106" height="44" />
+        </div>
+        <p class="link-caption"><strong>MONA Pay kết nối ACB qua bộ API dành cho đối tác của ACB</strong>: tài khoản ảo, thông báo giao dịch và QR thanh toán. Kết nối đang chạy thật, lần kiểm gần nhất ngày {SITE.tech.lastVerified} bằng 50.000 đ tiền thật: chuyển khoản vào tài khoản ảo, ACB báo, MONA Pay bắn webhook đúng chữ ký.</p>
+        <p class="link-note">ACB là Ngân hàng TMCP Á Châu, hoạt động từ năm 1993, hội sở tại TP.HCM. Tiền của anh chị nằm ở ACB; MONA Pay chỉ nhận thông báo giao dịch do ACB gửi, không có quyền chuyển, rút hay giữ tiền.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Phân vai</span>
+      <h2>ACB cung cấp gì,<br class="br-d" /> MONA Pay làm gì cho anh chị</h2>
+      <p class="lead">Hai bên chia việc rõ: ngân hàng lo phần tiền và xác thực, MONA Pay lo phần nối vào phần mềm và báo cho người. Bảng dưới đây là đúng những gì đang chạy.</p>
+      <div class="table-wrap">
+        <table class="roles">
+          <thead><tr><th>ACB cung cấp</th><th>MONA Pay làm</th></tr></thead>
+          <tbody>
+            {roles.map((r) => (
+              <tr>
+                <td><span class="badge">ACB</span> {r.acb}</td>
+                <td><span class="badge badge-cta">MONA Pay</span> {r.mona}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">ACB qua MONA Pay làm được gì</span>
+      <h2>Bảng tính năng, cái nào chưa có tụi em ghi chưa có</h2>
+      <p class="lead">ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn {SITE.customersSince2022} khách hàng của MONA nên mở trước; các ngân hàng khác đang kết nối, xem <a href="/ngan-hang">bảng trạng thái</a>. Bảng dưới đây kiểm theo hệ thống đang chạy ngày {SITE.tech.lastVerified}.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tính năng</th><th>Trạng thái</th><th>Ghi chú</th></tr></thead>
+          <tbody>
+            {support.map((s) => (
+              <tr>
+                <td><strong>{s.f}</strong></td>
+                <td>{s.ok ? <span class="check">✓ Có</span> : <span class="cross">✗ Chưa</span>}</td>
+                <td>{s.note}</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Chuẩn bị</span>
+      <h2>Anh chị cần gì phía ACB<br class="br-d" /> trước khi nối</h2>
+      <p class="lead">Chỉ 3 thứ, đều là thứ anh chị đang có nếu đã dùng ACB. Không cần ra quầy, không cần ký hợp đồng riêng với ngân hàng cho việc này.</p>
+      <div class="grid grid-2">
+        {needs.map((n) => (
+          <div class="card"><h3>{n.t}</h3><p set:html={n.d} /></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Hướng dẫn nối</span>
+      <h2>Nối tài khoản ACB trong 4 bước,<br class="br-d" /> qua 2 lần OTP của ngân hàng</h2>
+      <p class="lead">Làm trên dashboard MONA Pay, không cần ra quầy. Điểm hay vấp là OTP lần 2: tạo tài khoản ảo xong vẫn phải đăng ký nhận thông báo giao dịch thì ACB mới báo tiền về.</p>
+      <div id="buoc-1"></div>
+      <Steps items={steps} />
+      <div class="callout ok" style="margin-top:1.4rem">
+        <p><strong>Cần chuẩn bị:</strong> tài khoản thanh toán ACB đứng tên anh chị · số điện thoại đã đăng ký với ACB để nhận OTP · tài khoản MONA Pay (đăng ký xong dùng ngay, không cần chờ duyệt).</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Dùng cho việc gì</span>
+      <h2>4 kiểu công việc hay nối ACB vào MONA Pay nhất</h2>
+      <div class="grid grid-2">
+        {uses.map((u) => (
+          <div class="card"><h3>{u.t}</h3><p>{u.d}</p></div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <span class="eyebrow">Vì sao ACB trước</span>
+      <h2>ACB đi trước, các ngân hàng khác nối sau</h2>
+      <p>ACB (Ngân hàng TMCP Á Châu) hoạt động từ năm 1993, hội sở tại TP.HCM, là ngân hàng có chương trình API cho đối tác về tài khoản ảo và thông báo giao dịch mà tụi em nối vào. Tụi em chọn ACB trước vì đây là ngân hàng hệ thống này đã chạy lâu nhất, từ 2022 cho hơn {SITE.customersSince2022} khách hàng của MONA.</p>
+      <p>Trước khi có tên MONA Pay, hệ thống này thu tiền hosting và máy chủ ở <a href="https://mona.host">mona.host</a>, thu học phí, thu đơn phần mềm cho chính MONA, rồi từ 2022 thu tiền cho hơn {SITE.customersSince2022} khách hàng mới của MONA trong web, phần mềm tụi em giao. Toàn bộ chạy trên ACB, nên khi mở public năm 2026, ACB là ngân hàng đã được thử lâu nhất, ổn định nhất, tụi em đưa ra trước.</p>
+      <p>Các ngân hàng khác tụi em đang đăng ký kết nối theo chương trình API đối tác của từng bên: {APPLYING_BANKS.map((b) => b.name).join(', ')}. Trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; tụi em không hứa ngày, lên là công bố. Webhook, Telegram, API của anh chị dùng chung cho mọi ngân hàng nên nối thêm sau không phải sửa gì.</p>
+      <p>Đọc tiếp: <a href="/docs/api/tai-khoan-ao-va">API tài khoản ảo</a> · <a href="/docs/api/qr-thanh-toan">API QR thanh toán</a> · <a href="/chia-se-bien-dong-so-du-telegram">Báo biến động số dư qua Telegram</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp về ACB" title="Câu hỏi thường gặp khi nối tài khoản ACB" />
+    </div>
+  </section>
+
+  <CtaBand title="Có tài khoản ACB là nối được ngay hôm nay" body="Tạo tài khoản MONA Pay, nối ACB trong 4 bước, nhận thông báo tiền vào qua webhook hoặc Telegram. Cần người ngồi cùng thì gọi tổng đài, kỹ sư MONA trực." secondary={{ href: '/docs/bat-dau-nhanh', label: 'Bắt đầu nhanh trong 5 phút' }} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .link-section{padding:0 0 56px}
+  .link-card{background:var(--surface);border-radius:var(--radius);padding:2rem 2.2rem;box-shadow:var(--shadow);text-align:center;max-width:860px;margin:0 auto}
+  .link-logos{display:flex;align-items:center;justify-content:center;gap:2rem;flex-wrap:wrap;margin-bottom:1.4rem}
+  .link-logos img{height:44px;width:auto}
+  .link-arrow{font-size:2rem;font-weight:800;color:var(--cta);line-height:1}
+  .link-caption{font-size:1.05rem;color:var(--ink);margin:0 0 .6rem}
+  .link-note{color:var(--text-soft);font-size:.95rem;margin:0}
+  @media (max-width:600px){.link-logos{flex-direction:column;gap:.8rem}.link-arrow{transform:rotate(90deg)}.link-card{padding:1.5rem 1.2rem}}
+  table.roles td{width:50%}
+  table.roles .badge{margin-right:.35rem}
+  .screen{font-size:.92rem;color:var(--text-soft);margin:0}
+</style>

@@ -1,0 +1,44 @@
+---
+import Base from './Base.astro';
+import { DOCS_NAV } from '../data/docs-nav';
+import { SITE } from '../data/site';
+interface Props { title: string; description: string; slug: string; updated?: string }
+const { title, description, slug, updated } = Astro.props;
+const path = slug === 'index' ? '/docs' : '/docs/' + slug;
+const mdPath = (slug === 'index' ? '/docs/index' : '/docs/' + slug) + '.md';
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'TechArticle', headline: title, description, inLanguage: 'vi',
+  url: SITE.url + path, dateModified: updated ? updated.split('/').reverse().join('-') : undefined,
+  author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' },
+  isPartOf: { '@type': 'WebSite', '@id': SITE.url + '/#website' },
+}, {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Tài liệu', item: SITE.url + '/docs' },
+    ...(slug !== 'index' ? [{ '@type': 'ListItem', position: 3, name: title, item: SITE.url + path }] : []),
+  ],
+}];
+---
+<Base title={title.length > 52 ? title : title + ' | MONA Pay'} description={description} path={path} jsonld={jsonld}>
+  <div class="wrap docs-shell">
+    <aside class="docs-nav" aria-label="Mục lục tài liệu">
+      <a class="btn btn-primary" href={SITE.appRegister} style="width:100%;justify-content:center;margin-bottom:.4rem">Lấy API key miễn phí</a>
+      {DOCS_NAV.map((g) => (
+        <div>
+          <h4>{g.group}</h4>
+          <ul>{g.items.map((i) => { const h = i.slug === 'index' ? '/docs' : '/docs/' + i.slug; return <li><a href={h} aria-current={h === path ? 'page' : undefined}>{i.label}</a></li>; })}</ul>
+        </div>
+      ))}
+    </aside>
+    <article class="docs-body prose-md">
+      <h1>{title}</h1>
+      <div class="docs-meta">
+        {updated && <span>Cập nhật {updated}</span>}
+        <a href={mdPath}>Bản markdown (.md)</a>
+        <a href="/llms.txt">llms.txt</a>
+        <a href="/openapi.json">openapi.json</a>
+      </div>
+      <slot />
+    </article>
+  </div>
+</Base>

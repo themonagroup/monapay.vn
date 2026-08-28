@@ -1,0 +1,115 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Cổng thanh toán Sapo: nhận chuyển khoản VietQR, tự xác nhận đơn';
+const description = 'Cổng thanh toán Sapo với MONA Pay: khách quét VietQR động đúng số tiền, tiền vào thẳng tài khoản ACB, Telegram báo trong vài giây, đơn tự xác nhận. Miễn phí.';
+
+const stepsNoi = [
+  { title: 'Nối ACB vào MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng ngay. Wizard 4 bước, 2 lần OTP do ACB gửi. Xong là tiền vào ACB có thông báo về MONA Pay.' },
+  { title: 'Mỗi đơn Sapo một mã VietQR động', body: 'Lớp nối gọi API tạo QR của MONA Pay: số tiền đúng đơn, nội dung là mã đơn. Khách quét app ngân hàng bất kỳ.' },
+  { title: 'Webhook có chữ ký về lớp nối', body: 'MONA Pay gửi JSON ký HMAC-SHA256, từ chối gói lệch quá 5 phút. Lớp nối trả HTTP 200 trong 10 giây, lỗi thì có nút gửi lại trong dashboard.' },
+  { title: 'Lớp nối đổi trạng thái đơn trên Sapo', body: 'Đọc mã đơn, so số tiền, gọi API quản lý đơn của Sapo đánh dấu đã thanh toán. Đội MONA viết cho khách hoặc dev của anh chị tự viết. Kiểm với Sapo xem gói đang dùng có mở API đơn hàng không.' },
+];
+const stepsTam = [
+  { title: 'Khách chọn chuyển khoản trên Sapo', body: 'Đơn nằm ở trạng thái chờ thanh toán, không cần cài gì thêm.' },
+  { title: 'Gắn VietQR động từ dashboard MONA Pay', body: 'Tạo QR theo số tiền và mã đơn, gắn vào trang cảm ơn hoặc tin nhắn chốt đơn.' },
+  { title: 'Telegram báo, nhân viên đổi trạng thái đơn', body: 'Tin về nhóm trong vài giây với số tiền, nội dung, thời gian. Không ai phải canh app ngân hàng.' },
+];
+const faq = [
+  { q: 'Sapo có nhận chuyển khoản tự xác nhận được không?', a: 'Được. Đường đầy đủ dùng lớp nối nhận webhook MONA Pay rồi gọi API Sapo đổi trạng thái đơn. Đường tạm không cần code: VietQR động cộng Telegram báo tiền vào, nhân viên đổi trạng thái tay.' },
+  { q: 'Ai viết lớp nối Sapo?', a: 'Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs. MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án.' },
+  { q: 'Tiền có qua Sapo hay MONA Pay không?', a: 'Không. Tiền vào thẳng tài khoản ACB của anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về.' },
+  { q: 'Phí bao nhiêu?', a: `MONA Pay ${PRICE_LINE}. Không phần trăm, không phí rút. Để đối chiếu, PayPal Việt Nam thu 4,40% cộng phí cố định và 60.000đ mỗi lần rút về ngân hàng trong nước (biểu phí công bố, kiểm 28/08/2026).` },
+  { q: 'Cần tài khoản ngân hàng nào?', a: 'Tài khoản thanh toán ACB đứng tên anh chị và số điện thoại nhận OTP. Các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>.' },
+];
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'vi', url: SITE.url + '/cong-thanh-toan-sapo', author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' }, isPartOf: { '@id': SITE.url + '/#website' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán Sapo', item: SITE.url + '/cong-thanh-toan-sapo' },
+  ] },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-sapo" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Sapo · chuyển khoản ACB</span>
+      <h1>Cổng thanh toán Sapo:<br class="hb" /> <span class="accent">khách quét VietQR, đơn tự xác nhận</span></h1>
+      <div class="answer-first">
+        <p>Cổng thanh toán Sapo với MONA Pay làm việc như sau: mỗi đơn một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và lớp nối đánh dấu đơn trên Sapo đã thanh toán. Không phần trăm, miễn phí hoàn toàn, tiền không qua ai.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/api/qr-thanh-toan">Tài liệu VietQR động</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện shop Sapo hay gặp</span>
+      <h2>Bán trên Sapo, khâu tiền về<br class="br-d" /> vẫn phải ngồi đối chiếu</h2>
+      <p class="lead">Khách MONA dùng Sapo để quản lý bán hàng nhiều kênh, nhưng khâu xác nhận chuyển khoản vẫn là người mở app ngân hàng, dò số tiền, dò nội dung. Ngày 30 đơn mất hơn một tiếng, đơn tối nằm chờ tới sáng, nhân viên muốn tự xác nhận thì phải được xem tài khoản ngân hàng của chủ.</p>
+      <div class="grid grid-3">
+        <div class="card"><div class="icon">1</div><h3>Đối chiếu tay từng đơn</h3><p>Ảnh biên lai qua chat, soi số tiền, soi giờ. Nhiều khách chuyển cùng số tiền là đoán.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Đơn tối nằm chờ</h3><p>Chuyển 21h, sáng mai mới xác nhận. Khách cần gấp bỏ sang shop khác.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Không muốn đưa app ngân hàng cho nhân viên</h3><p>Muốn nhân viên tự xác nhận là phải cho xem tài khoản. Chủ shop nào cũng ngại.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Đường đầy đủ</span>
+      <h2>Lớp nối Sapo với MONA Pay<br class="br-d" /> tự đổi trạng thái đơn</h2>
+      <p class="lead">MONA Pay chưa có ứng dụng trên kho ứng dụng Sapo. Đơn tự đổi trạng thái nhờ một lớp nối nhỏ: nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Sapo. Đội MONA viết cho khách hoặc dev của anh chị tự viết.</p>
+      <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Đường tạm, không cần code</span>
+      <h2>Chưa có dev thì dùng VietQR động<br class="br-d" /> cộng Telegram báo tiền vào</h2>
+      <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">So sánh</span>
+      <h2>Ba cách nhận tiền cho shop Sapo</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>
+          <tbody>
+            <tr><td>Phí mỗi giao dịch</td><td>Phần trăm theo hợp đồng, không niêm yết công khai</td><td>PayPal 4,40% + phí cố định; Stripe chưa mở cho doanh nghiệp Việt Nam (kiểm 28/08/2026)</td><td>0đ</td></tr>
+            <tr><td>Tiền về đâu</td><td>Ví hoặc tài khoản đối soát rồi mới về ngân hàng</td><td>Số dư cổng, rút về ngân hàng 60.000đ/lần (PayPal)</td><td>Thẳng vào tài khoản ACB</td></tr>
+            <tr><td>Khách cần gì</td><td>Ví hoặc app tương ứng</td><td>Thẻ quốc tế</td><td>App ngân hàng bất kỳ</td></tr>
+            <tr><td>Đăng ký</td><td>Ký hợp đồng merchant</td><td>Tuỳ cổng</td><td>Đăng ký dùng ngay, nối ACB 4 bước</td></tr>
+          </tbody>
+        </table>
+      </div>
+      <p style="margin-top:1.2rem">Cùng nguyên lý với <a href="/cong-thanh-toan-haravan">Haravan</a>, <a href="/cong-thanh-toan-kiotviet">KiotViet</a> và <a href="/cong-thanh-toan-woocommerce">WooCommerce</a>. Chi tiết nối ngân hàng ở trang <a href="/acb">ACB</a>, cách viết phần nhận webhook ở <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ shop Sapo hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Đơn Sapo của anh chị tự xác nhận từ tuần này" body="Tạo tài khoản, nối ACB 4 bước, tạo VietQR động. Cần lớp nối thì gọi tụi em, vài ngày là xong." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
+</Base>
+<style>
+  .hb,.br-d{display:inline}
+  @media (max-width:767px){.hb,.br-d{display:none}}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.5rem)}
+</style>

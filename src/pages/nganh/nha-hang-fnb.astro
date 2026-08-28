@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/nha-hang-fnb';
+const title = 'Nhà hàng, quán ăn nhận chuyển khoản: khách quét QR, quầy biết ngay';
+const description = 'Nhà hàng, quán ăn nhận chuyển khoản qua mã VietQR động đúng số tiền từng bàn, tiền vào tài khoản ACB là quầy và nhóm Telegram biết ngay. Miễn phí, không giữ tiền.';
+
+const steps = [
+  { title: 'Mỗi hoá đơn một mã QR đúng số tiền', body: 'Phần mềm bán hàng hoặc dashboard MONA Pay sinh mã VietQR động cho từng bàn, từng đơn mang đi: số tiền điền sẵn, nội dung là mã hoá đơn. Khách quét bằng app ngân hàng của họ, không gõ gì, không sai số lẻ.' },
+  { title: 'Tiền vào thẳng tài khoản ACB của quán', body: 'Không ví trung gian, không chờ đối soát T+1, không phí phần trăm. ACB thấy tiền vào là báo cho MONA Pay ngay, kể cả giờ cao điểm trưa hay 10 giờ đêm.' },
+  { title: 'Quầy và nhóm Telegram nhận thông báo cùng lúc', body: 'Webhook có chữ ký đi vào phần mềm bán hàng để đóng hoá đơn, tin Telegram bay vào nhóm quầy với số tiền, thời gian, nội dung. Nhân viên nhìn màn hình quầy hoặc điện thoại quán, không cần mượn điện thoại chủ.' },
+  { title: 'Cuối ca, chủ quán đối chiếu bằng số liệu', body: 'Danh sách giao dịch theo ngày trên dashboard my.monapay.vn khớp với báo cáo ca của phần mềm bán hàng. Giao dịch nào phần mềm chưa nhận thì bấm gửi lại webhook trong lịch sử, không phải lục sao kê.' },
+];
+
+const faq = [
+  { q: 'Quán nhỏ chưa có phần mềm bán hàng thì dùng thế nào?', a: 'Dùng đường không cần code: tạo mã QR động cho từng hoá đơn trong dashboard MONA Pay, hoặc để một mã QR tài khoản ảo cố định ở quầy rồi bật thông báo Telegram cho nhóm quán. Tiền vào là cả nhóm thấy, nhân viên đóng hoá đơn bằng tay nhưng không phải chụp màn hình gửi chủ.' },
+  { q: 'Khách chuyển thiếu vài nghìn, hoặc chuyển nhầm nội dung thì sao?', a: 'Mã QR động đã điền sẵn số tiền nên khách bấm là đúng số. Nếu khách vẫn sửa, thông báo vẫn về với số tiền thật, phần mềm hoặc nhân viên quầy thấy lệch ngay trong tin Telegram, không phải đợi cuối ca mới phát hiện.' },
+  { q: 'Giờ cao điểm 50 bàn cùng thanh toán, hệ thống có rối không?', a: 'Nhận diện bằng mã QR riêng từng hoá đơn, không bằng số tiền hay nội dung, nên 50 giao dịch trong 10 phút vẫn khớp đúng 50 hoá đơn. Mỗi giao dịch có mã riêng, gửi lại 3 lần cũng chỉ đóng 1 hoá đơn.' },
+  { q: 'Tiền có nằm ở MONA Pay hay ví nào không?', a: 'Không. Tiền từ ngân hàng khách vào thẳng tài khoản ACB đứng tên quán, sao kê ngân hàng là sổ cái. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về phần mềm và Telegram.' },
+  { q: 'Quán có nhiều chi nhánh, chia thông báo thế nào?', a: 'Mỗi chi nhánh một tài khoản ảo hoặc một nhóm Telegram riêng, webhook và tin nhắn cấu hình theo từng tài khoản ảo. Chủ chuỗi nhìn dashboard thấy tất cả, quản lý chi nhánh chỉ thấy nhóm của mình.' },
+  { q: 'Phí sử dụng cho quán tính thế nào?', a: `MONA Pay ${PRICE_LINE}. Quán vài chục hay vài nghìn hoá đơn một ngày đều không mất phần trăm nào trên tiền bán hàng. Phần mềm nhà hàng Nhahang AI của Mona.Software báo giá riêng qua ${SITE.hotline}.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Nhà hàng, quán ăn', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Ngành F&amp;B · nhà hàng, quán cà phê, quán ăn, chuỗi</span>
+      <h1>Nhà hàng, quán ăn nhận chuyển khoản:<br class="br-d" /> <span class="accent">khách quét QR, quầy biết ngay</span></h1>
+      <div class="answer-first">
+        <p>Nhà hàng, quán ăn nhận thanh toán chuyển khoản qua MONA Pay bằng mã VietQR động đúng số tiền từng hoá đơn. Khách quét bằng app ngân hàng, tiền vào thẳng tài khoản ACB của quán, ACB báo cho MONA Pay, MONA Pay báo về phần mềm bán hàng và nhóm Telegram của quầy trong vài giây. Không chụp màn hình, không mượn điện thoại chủ, không phí phần trăm.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/api/qr-thanh-toan">Xem mã QR động</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện ở quầy thu ngân</span>
+      <h2>Quán nhận chuyển khoản đang mất thời gian ở đâu?</h2>
+      <p class="lead">Khách đến MONA làm phần mềm nhà hàng hay kể cùng một cảnh: khách chìa màn hình "chuyển rồi nè", thu ngân nhìn ảnh, rồi gọi cho chủ hỏi tiền vào chưa. Bốn chỗ kẹt lặp đi lặp lại.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Thu ngân tin vào ảnh chụp màn hình</h3><p>Ảnh chuyển khoản dễ sửa, thu ngân không có cách kiểm. Tài khoản nhận tiền là của chủ quán, điện thoại chủ không ở quầy. Đông khách thì cho qua, cuối ca mới biết thiếu tiền và không nhớ bàn nào.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Giờ cao điểm, nhiều bàn cùng số tiền</h3><p>Ba bàn cùng ăn combo 250.000 đ, ba giao dịch về trong 5 phút, nội dung "ck", "thanh toan", trống. Ai trả bàn nào không rõ, hoá đơn nào đóng trước cũng không rõ. Đối chiếu cuối ca thành ra đoán.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Đơn mang đi, đơn qua điện thoại chờ tiền mới nấu</h3><p>Khách đặt qua Zalo, quán bảo chuyển khoản trước. Bếp phải chờ chủ xác nhận có tiền mới làm, chủ đang bận thì đơn treo 15 phút. Khách huỷ, quán mất đơn, bếp thì đã sơ chế.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Chuỗi nhiều chi nhánh, một app ngân hàng</h3><p>Tất cả chi nhánh chuyển về một tài khoản, quản lý chi nhánh không có quyền xem. Chủ chuỗi thành tổng đài xác nhận tiền cho cả chuỗi, cuối tháng kế toán tách giao dịch theo chi nhánh bằng tay.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Từ lúc khách quét mã tới lúc hoá đơn đóng, không ai phải hỏi "tiền vào chưa"</h2>
+      <p class="lead">Cùng một luồng nhận tiền tụi em dùng cho hosting, học phí và cho hơn {SITE.customersSince2022} khách hàng của MONA từ 2022, đưa vào quầy thu ngân: mã QR riêng từng hoá đơn, thông báo về đúng chỗ.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Phần mềm MONA cho nhà hàng</span>
+      <h2>Nhahang AI: phần mềm nhà hàng của Mona.Software, nối sẵn MONA Pay</h2>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><h3>Thanh toán tại bàn và đơn mang đi</h3><p><a href="https://mona.software">Nhahang AI</a> sinh mã QR đúng số tiền cho từng hoá đơn, tiền vào là hoá đơn đóng, bếp và quầy thấy cùng lúc. Bàn giao là chạy, không phải nối thêm gì.</p></div>
+        <div class="card"><h3>Đang dùng phần mềm bán hàng khác</h3><p>Phần mềm nào nhận được webhook đều nối được theo <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a>. Không có người kỹ thuật thì đội MONA viết lớp nối, hoặc dùng mã QR động trong dashboard cộng thông báo Telegram, đủ cho quán một hai điểm bán.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Báo giá phần mềm nhà hàng: gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>. MONA Pay thì {PRICE_LINE}.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc. Xem thêm <a href="/chia-se-bien-dong-so-du-telegram">báo biến động số dư qua Telegram</a> và <a href="/acb">cách nối tài khoản ACB</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ quán hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Ca tối nay thu ngân không phải nhìn ảnh chụp màn hình nữa" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, tạo mã QR cho quầy, bật Telegram cho nhóm quán. Cần phần mềm nhà hàng thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/chia-se-bien-dong-so-du-telegram', label: 'Báo tiền vào qua Telegram' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

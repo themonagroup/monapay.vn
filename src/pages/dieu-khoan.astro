@@ -1,0 +1,54 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+const title = 'Điều khoản sử dụng MONA Pay: miễn phí, không giữ tiền, trách nhiệm';
+const description = 'Điều khoản dùng MONA Pay: dịch vụ đọc thông báo giao dịch và báo về cho doanh nghiệp, miễn phí, không giữ tiền; trách nhiệm hai bên, giới hạn fair-use, ngừng dịch vụ, giải quyết tranh chấp.';
+const updated = '29/08/2026';
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: title, url: SITE.url + '/dieu-khoan', dateModified: '2026-08-29', inLanguage: 'vi', isPartOf: { '@id': SITE.url + '/#website' } }];
+---
+<Base title={title} description={description} path="/dieu-khoan" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Pháp lý</span>
+    <h1>Điều khoản sử dụng <span class="accent">MONA Pay</span></h1>
+    <div class="answer-first"><p>Dùng MONA Pay nghĩa là anh chị đồng ý các điều khoản dưới đây: dịch vụ đọc thông báo giao dịch từ ngân hàng anh chị nối và báo về cho anh chị; {PRICE_LINE}; tiền không đi qua MONA Pay; anh chị chịu trách nhiệm về tài khoản, khoá ký và hệ thống nhận webhook của mình. Bản này cập nhật {updated}.</p></div>
+  </div></section>
+  <section><div class="wrap narrow legal">
+    <h2>1. Dịch vụ</h2>
+    <p>{SITE.entity} MONA Pay do {SITE.company} cung cấp. Dịch vụ gồm: đăng ký tài khoản ảo và thông báo giao dịch với ngân hàng thay anh chị, sinh mã VietQR, nhận thông báo tiền vào, gửi webhook và tin Telegram, dashboard theo dõi, API và tài liệu.</p>
+    <h2>2. Tiền không đi qua MONA Pay</h2>
+    <p>Khách của anh chị chuyển tiền thẳng vào tài khoản ngân hàng của anh chị. MONA Pay không giữ, không chuyển, không hoàn tiền và không đứng giữa bất kỳ dòng tiền nào. Tranh chấp về khoản tiền (chuyển nhầm, hoàn trả) giải quyết giữa anh chị, khách của anh chị và ngân hàng.</p>
+    <h2>3. Tài khoản và điều kiện dùng</h2>
+    <ul>
+      <li>Anh chị là chủ hợp pháp của tài khoản ngân hàng nối vào MONA Pay và số điện thoại nhận OTP.</li>
+      <li>Anh chị giữ bí mật mật khẩu, API key, khoá ký HMAC; mọi thao tác từ tài khoản của anh chị coi là do anh chị thực hiện. Nghi ngờ lộ khoá thì thu hồi ngay trong dashboard và báo {SITE.hotline}.</li>
+      <li>Không dùng MONA Pay cho hoạt động trái pháp luật, không gửi dữ liệu giả, không dò quét hay tấn công hệ thống.</li>
+    </ul>
+    <h2>4. Phí</h2>
+    <p>MONA Pay {PRICE_LINE}. Tụi em không thu phần trăm trên số tiền, không phí mở tài khoản, không phí nối ngân hàng. Dịch vụ kèm theo (kỹ sư MONA viết lớp nối, hỗ trợ ưu tiên, hoá đơn) báo giá riêng và chỉ tính khi anh chị đồng ý. Nếu sau này có gói thu phí, tụi em thông báo trước ít nhất 30 ngày trên dashboard và trang <a href="/bang-gia">bảng giá</a>; tài khoản đang dùng không bị tự động chuyển sang trả phí.</p>
+    <h2>5. Giới hạn fair-use</h2>
+    <p>Miễn phí không giới hạn số giao dịch. Tụi em chỉ can thiệp khi có hành vi bất thường: bắn API dồn dập, tạo tài khoản hàng loạt, dùng hệ thống để tấn công bên khác. Khi đó tụi em có thể giới hạn tốc độ hoặc tạm khoá, và liên hệ anh chị qua email đã đăng ký.</p>
+    <h2>6. Trách nhiệm của MONA Pay</h2>
+    <ul>
+      <li>Nhận và chuyển tiếp thông báo giao dịch đúng như ngân hàng gửi; ký webhook bằng HMAC-SHA256 để anh chị xác minh; lưu lịch sử gửi để anh chị gửi lại.</li>
+      <li>Thông báo giao dịch phụ thuộc vào ngân hàng: nếu ngân hàng gửi chậm, thiếu hoặc gián đoạn, MONA Pay không thể tạo ra thông báo thay. Anh chị nên đối soát định kỳ bằng API giao dịch hoặc sao kê ngân hàng, đặc biệt với đơn giá trị lớn.</li>
+      <li>Tụi em cố gắng duy trì dịch vụ liên tục nhưng không cam kết mức uptime cụ thể trong giai đoạn miễn phí; sự cố sẽ được thông báo trên dashboard.</li>
+      <li>Trách nhiệm của MONA Pay giới hạn ở việc khắc phục dịch vụ; tụi em không chịu trách nhiệm cho thiệt hại gián tiếp phát sinh từ việc hệ thống của anh chị xử lý sai một thông báo, hoặc từ việc anh chị không xác minh chữ ký webhook.</li>
+    </ul>
+    <h2>7. Trách nhiệm của anh chị</h2>
+    <ul>
+      <li>Máy chủ nhận webhook trả HTTP 200, 201 hoặc 202 trong 10 giây; xác minh chữ ký; chống trùng bằng mã giao dịch.</li>
+      <li>Kiểm tra thông tin tài khoản ngân hàng, đầu số tài khoản ảo, nội dung mã QR trước khi đưa cho khách.</li>
+      <li>Tuân thủ quy định của ngân hàng và pháp luật Việt Nam về hoạt động thu tiền của anh chị.</li>
+    </ul>
+    <h2>8. Ngừng dịch vụ</h2>
+    <p>Anh chị có thể ngắt kết nối ngân hàng hoặc yêu cầu đóng tài khoản bất kỳ lúc nào. Tụi em có thể tạm khoá tài khoản vi phạm mục 3 hoặc 5 sau khi đã liên hệ; nếu MONA Pay ngừng cung cấp dịch vụ, tụi em thông báo trước ít nhất 60 ngày để anh chị chuyển đổi.</p>
+    <h2>9. Dữ liệu</h2>
+    <p>Cách tụi em thu thập, dùng và lưu dữ liệu ghi tại <a href="/chinh-sach-bao-mat">Chính sách bảo mật</a>, là một phần của điều khoản này.</p>
+    <h2>10. Luật áp dụng và tranh chấp</h2>
+    <p>Điều khoản này theo pháp luật Việt Nam. Có vấn đề, anh chị gọi {SITE.hotline} hoặc email {SITE.email} để tụi em xử lý trước; không thoả thuận được thì đưa ra toà án có thẩm quyền tại Việt Nam.</p>
+    <h2>11. Liên hệ</h2>
+    <p>{SITE.company} · Tổng đài {SITE.hotline} (giờ hành chính) · <a href={'mailto:' + SITE.email}>{SITE.email}</a> · <a href="/lien-he">Trang liên hệ</a>.</p>
+  </div></section>
+</Base>
+<style>.legal h2{font-size:1.35rem;margin-top:2rem}.legal li{margin:.4rem 0}</style>

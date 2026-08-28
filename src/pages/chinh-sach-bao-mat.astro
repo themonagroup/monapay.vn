@@ -1,0 +1,59 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const title = 'Chính sách bảo mật MONA Pay: dữ liệu nào tụi em đọc, giữ bao lâu';
+const description = 'MONA Pay chỉ đọc thông báo giao dịch từ ngân hàng, không giữ tiền, không truy cập số dư ngoài thông báo. Trang này nói rõ dữ liệu thu thập, mục đích, thời gian lưu, quyền của anh chị và cách liên hệ.';
+const updated = '29/08/2026';
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'WebPage', name: title, url: SITE.url + '/chinh-sach-bao-mat', dateModified: '2026-08-29', inLanguage: 'vi', isPartOf: { '@id': SITE.url + '/#website' } }];
+---
+<Base title={title} description={description} path="/chinh-sach-bao-mat" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Pháp lý</span>
+    <h1>Chính sách bảo mật <span class="accent">MONA Pay</span></h1>
+    <div class="answer-first"><p>MONA Pay chỉ đọc thông báo giao dịch mà ngân hàng gửi cho tài khoản anh chị đã nối, rồi báo lại cho anh chị qua webhook, Telegram và dashboard. Tụi em không giữ tiền, không chuyển tiền, không xem số dư ngoài nội dung thông báo. Dữ liệu thu thập, mục đích và thời gian lưu ghi rõ dưới đây, cập nhật {updated}.</p></div>
+  </div></section>
+  <section><div class="wrap narrow legal">
+    <h2>1. MONA Pay là gì và ai chịu trách nhiệm</h2>
+    <p>{SITE.entity} Đơn vị vận hành là {SITE.company} (từ năm {SITE.founded}), liên hệ qua {SITE.hotline} hoặc <a href={'mailto:' + SITE.email}>{SITE.email}</a>.</p>
+    <h2>2. Dữ liệu tụi em thu thập</h2>
+    <ul>
+      <li><strong>Thông tin tài khoản MONA Pay:</strong> tên đăng nhập, mật khẩu (lưu dạng băm, không đọc lại được), tên hiển thị, thông tin liên hệ anh chị tự nhập.</li>
+      <li><strong>Thông tin nối ngân hàng:</strong> số tài khoản, tên chủ tài khoản, số điện thoại nhận OTP, đầu số tài khoản ảo, mã yêu cầu đăng ký do ngân hàng trả về. Mã OTP chỉ đi qua để xác thực với ngân hàng, không lưu.</li>
+      <li><strong>Thông báo giao dịch:</strong> số tiền, thời gian, nội dung chuyển khoản, số tài khoản/tài khoản ảo nhận, mã giao dịch, tên người chuyển nếu ngân hàng gửi kèm. Đây là dữ liệu cần để khớp đơn và báo cho anh chị.</li>
+      <li><strong>Cấu hình anh chị tự đặt:</strong> địa chỉ webhook, khoá ký HMAC, nhóm Telegram, mẫu tin nhắn, API key (lưu dạng băm).</li>
+      <li><strong>Nhật ký kỹ thuật:</strong> lịch sử gửi webhook (mã HTTP, thời gian phản hồi, nhãn lỗi), địa chỉ IP và trình duyệt khi đăng nhập, để hỗ trợ và chống lạm dụng.</li>
+    </ul>
+    <h2>3. Dữ liệu tụi em không có</h2>
+    <p>MONA Pay không giữ tiền của anh chị hay của khách anh chị, không thực hiện lệnh chuyển tiền, không truy cập số dư hay sao kê ngoài các thông báo giao dịch đến tài khoản đã nối. Mã OTP, mật khẩu ngân hàng, thông tin thẻ không đi qua và không lưu ở MONA Pay.</p>
+    <h2>4. Mục đích sử dụng</h2>
+    <ul>
+      <li>Nhận thông báo từ ngân hàng, khớp với tài khoản ảo hoặc mã QR của anh chị, bắn webhook và tin Telegram theo cấu hình.</li>
+      <li>Hiển thị giao dịch, lịch sử gửi, thống kê trên dashboard để anh chị đối soát.</li>
+      <li>Hỗ trợ kỹ thuật qua tổng đài {SITE.hotline} khi anh chị yêu cầu.</li>
+      <li>Phát hiện và chặn hành vi bất thường (bắn API dồn dập, tạo tài khoản hàng loạt) theo giới hạn fair-use.</li>
+    </ul>
+    <p>Tụi em không bán, không cho thuê, không dùng dữ liệu giao dịch của anh chị để quảng cáo hay chia sẻ cho bên thứ ba ngoài các bên nêu ở mục 5.</p>
+    <h2>5. Bên thứ ba có tiếp xúc dữ liệu</h2>
+    <ul>
+      <li><strong>Các ngân hàng anh chị nối (danh sách tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>):</strong> nguồn phát thông báo giao dịch, xử lý theo quy định của từng ngân hàng.</li>
+      <li><strong>Telegram:</strong> khi anh chị bật thông báo Telegram, nội dung tin (số tiền, nội dung, thời gian) được gửi tới nhóm anh chị chỉ định qua máy chủ Telegram.</li>
+      <li><strong>Máy chủ nhận webhook của anh chị:</strong> tụi em gửi dữ liệu giao dịch tới địa chỉ anh chị cấu hình; bảo mật phía đó do anh chị quản lý (tụi em ký HMAC-SHA256 để anh chị xác minh).</li>
+      <li><strong>Hạ tầng của MONA:</strong> máy chủ đặt tại Việt Nam do The MONA Group vận hành, kết nối mã hoá HTTPS.</li>
+    </ul>
+    <h2>6. Thời gian lưu</h2>
+    <p>Dữ liệu giao dịch và nhật ký webhook lưu trong suốt thời gian tài khoản còn hoạt động để anh chị đối soát và gửi lại khi cần. Khi anh chị yêu cầu đóng tài khoản, tụi em ngắt kết nối ngân hàng, xoá cấu hình webhook, Telegram, API key và xoá dữ liệu giao dịch trong vòng 30 ngày, trừ phần phải giữ theo yêu cầu của pháp luật hoặc để xử lý tranh chấp đang mở.</p>
+    <h2>7. Quyền của anh chị</h2>
+    <ul>
+      <li>Xem, tải xuống (CSV) và đối chiếu toàn bộ giao dịch trên dashboard.</li>
+      <li>Sửa thông tin tài khoản, đổi mật khẩu, bật xác thực 2 lớp, thu hồi API key bất kỳ lúc nào.</li>
+      <li>Ngắt kết nối ngân hàng, xoá cấu hình, hoặc yêu cầu đóng tài khoản và xoá dữ liệu bằng cách gọi {SITE.hotline} hoặc gửi email từ địa chỉ đã đăng ký tới {SITE.email}.</li>
+    </ul>
+    <h2>8. Bảo mật kỹ thuật</h2>
+    <p>Mật khẩu và API key lưu dạng băm. Webhook ký HMAC-SHA256 kèm dấu thời gian, từ chối yêu cầu lệch quá 5 phút để chống phát lại. Toàn bộ kết nối qua HTTPS. Máy chủ chạy dịch vụ bằng tài khoản không đặc quyền, tường lửa chỉ mở cổng cần thiết. Khi phát hiện sự cố ảnh hưởng dữ liệu của anh chị, tụi em thông báo qua email đã đăng ký và hotline.</p>
+    <h2>9. Thay đổi chính sách</h2>
+    <p>Khi chính sách đổi, tụi em cập nhật ngày ở đầu trang và thông báo trên dashboard trước khi áp dụng với các thay đổi ảnh hưởng tới quyền của anh chị.</p>
+    <h2>10. Liên hệ</h2>
+    <p>{SITE.company} · Tổng đài {SITE.hotline} (giờ hành chính) · <a href={'mailto:' + SITE.email}>{SITE.email}</a> · <a href="/lien-he">Trang liên hệ</a>.</p>
+  </div></section>
+</Base>
+<style>.legal h2{font-size:1.35rem;margin-top:2rem}.legal li{margin:.4rem 0}</style>

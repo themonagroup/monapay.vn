@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/cho-thue-tro';
+const title = 'Thu tiền phòng trọ tự động: mỗi phòng 1 tài khoản ảo, báo có ngay';
+const description = 'Chủ trọ, chủ toà nhà thu tiền phòng, điện nước, cọc bằng tài khoản ảo ACB riêng từng phòng. Khách chuyển là báo có, sổ thu tự ghi, không dò sao kê, miễn phí.';
+
+const steps = [
+  { title: 'Mỗi phòng một số tài khoản ảo cố định', body: 'Phần mềm quản lý trọ hoặc dashboard MONA Pay cấp cho từng phòng một số tài khoản ảo ACB theo đầu số của anh chị. Khách lưu số đó một lần, tháng nào cũng chuyển vào đúng số đó, không cần ghi nội dung.' },
+  { title: 'Tiền vào thẳng tài khoản ACB của chủ trọ', body: 'Không ví trung gian, không phí phần trăm. Khách chuyển 3 triệu tiền phòng hay 250 nghìn tiền điện đều vào tài khoản anh chị ngay, ACB báo cho MONA Pay tức thì.' },
+  { title: 'Sổ thu tự đánh dấu, nhóm Telegram nhận tin', body: 'Webhook có chữ ký đi vào phần mềm, phòng 302 chuyển sang "đã đóng tháng 9", quản lý toà nhà nhận tin Telegram với số tiền và thời gian. Không ai phải hỏi chủ nhà.' },
+  { title: 'Cuối tháng đối chiếu bằng danh sách theo phòng', body: 'Dashboard my.monapay.vn liệt kê giao dịch theo từng tài khoản ảo, tức theo từng phòng. Phòng nào chưa đóng nhìn là thấy, không phải lọc sao kê rồi đoán tên người chuyển.' },
+];
+
+const faq = [
+  { q: 'Chủ trọ nhỏ 10 phòng, không có phần mềm, dùng được không?', a: 'Được. Tạo tài khoản MONA Pay, nối ACB bằng 2 lần OTP, cấp mỗi phòng một tài khoản ảo trong dashboard, bật thông báo Telegram. Tiền vào là điện thoại báo phòng nào đóng, cuối tháng nhìn danh sách theo phòng là biết ai chưa đóng.' },
+  { q: 'Khách chuyển từ tài khoản người thân, ghi nội dung lung tung thì sao?', a: 'Vẫn khớp đúng phòng, vì nhận diện bằng số tài khoản ảo của phòng đó, không bằng tên người chuyển hay nội dung. Đây là chỗ khác hẳn so với dò sao kê.' },
+  { q: 'Tiền phòng và tiền điện nước cùng một phòng tách thế nào?', a: 'Đơn giản nhất là một tài khoản ảo cho phòng, phần mềm tách theo số tiền và kỳ. Muốn tách rõ hơn thì mỗi khoản một mã QR động đúng số tiền gửi qua Zalo, khách quét là khớp đúng khoản.' },
+  { q: 'Tiền có nằm ở MONA Pay không?', a: 'Không. Tiền vào thẳng tài khoản ACB đứng tên anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về phần mềm và Telegram, không giữ tiền, không thu phần trăm.' },
+  { q: 'Toà nhà nhiều tầng, nhiều quản lý, chia quyền thế nào?', a: 'Webhook và thông báo Telegram cấu hình theo từng tài khoản ảo, nên mỗi quản lý tầng có nhóm Telegram riêng cho các phòng mình phụ trách. Chủ nhà nhìn dashboard thấy tất cả.' },
+  { q: 'Phí sử dụng thế nào?', a: `MONA Pay ${PRICE_LINE}. Mười phòng hay vài trăm phòng, bao nhiêu giao dịch cũng không tính phí. Phần mềm quản lý cho thuê của MONA báo giá riêng qua ${SITE.hotline}.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cho thuê trọ, toà nhà', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Cho thuê trọ, căn hộ dịch vụ, toà nhà văn phòng</span>
+      <h1>Thu tiền phòng trọ tự động:<br class="br-d" /> <span class="accent">mỗi phòng một tài khoản, đóng là báo có</span></h1>
+      <div class="answer-first">
+        <p>Chủ trọ, chủ toà nhà thu tiền phòng, điện nước, cọc qua MONA Pay bằng tài khoản ảo ACB riêng cho từng phòng. Khách chuyển vào số của phòng mình, tiền vào thẳng tài khoản chủ nhà, sổ thu tự đánh dấu và nhóm Telegram quản lý báo có trong vài giây. Không dò sao kê đầu tháng, không nhầm phòng cùng giá, miễn phí.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/api/tai-khoan-ao-va">Xem tài khoản ảo</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện đầu tháng của chủ nhà</span>
+      <h2>Thu tiền trọ bằng chuyển khoản đang mất công ở đâu?</h2>
+      <p class="lead">Chủ trọ đến MONA làm phần mềm quản lý cho thuê kể cùng một cảnh mùng 5 hằng tháng: mở app ngân hàng, lọc sao kê, ghi tay vào sổ, nhắn nhắc từng phòng. Bốn chỗ kẹt tụi em thấy nhiều nhất.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Nhiều phòng cùng giá, tên người chuyển không phải tên khách thuê</h3><p>Hai mươi phòng cùng 3.000.000 đ, tiền về từ tài khoản bố mẹ, người yêu, người ở ghép. Nội dung "tien phong", "ck", trống. Chủ nhà nhìn sao kê rồi đoán phòng nào đã đóng, đoán sai là nhắc nhầm khách đã đóng.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Tiền phòng, tiền điện, tiền nước, tiền cọc trộn vào nhau</h3><p>Một phòng chuyển 3 lần trong tháng cho 3 khoản. Sổ ghi tay thiếu một khoản là cuối năm không biết phòng đó còn nợ gì. Khách cãi, chủ nhà lục sao kê cả năm.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Toà nhà có quản lý, nhưng tài khoản là của chủ</h3><p>Quản lý toà nhà không được xem app ngân hàng của chủ. Khách hỏi "đóng rồi sao chưa ghi", quản lý phải gọi chủ hỏi. Chủ đi vắng thì cả toà nhà chờ.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Nhắc nợ bằng tay từng phòng</h3><p>Mùng 5 chủ nhà nhắn từng phòng chưa đóng. Danh sách "chưa đóng" lại lấy từ việc dò sao kê ở trên, sai một phòng là mất lòng khách tốt.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Mỗi phòng một số tài khoản, đóng tiền là sổ tự ghi</h2>
+      <p class="lead">Tài khoản ảo cố định theo phòng là cách giải gốc cho cảnh trên: không phụ thuộc tên người chuyển, không phụ thuộc nội dung. Bốn bước.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Phần mềm MONA cho cho thuê</span>
+      <h2>Phần mềm quản lý cho thuê của MONA, nối sẵn MONA Pay</h2>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><h3>Phòng, hợp đồng, điện nước, thu tiền, nhắc nợ</h3><p>MONA làm phần mềm quản lý cho thuê trọ, căn hộ, toà nhà (xem thêm tại <a href="https://mona.software">mona.software</a> và <a href="https://mona.house">mona.house</a>): tài khoản ảo theo phòng, tiền vào là sổ thu ghi, danh sách chưa đóng tự lập.</p></div>
+        <div class="card"><h3>Đang dùng phần mềm khác hoặc Excel</h3><p>Nối qua <a href="/docs/webhooks/tich-hop-webhook">webhook</a> nếu phần mềm nhận được. Chưa có phần mềm thì dashboard MONA Pay cộng <a href="/chia-se-bien-dong-so-du-telegram">thông báo Telegram</a> đã đủ cho vài chục phòng.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Báo giá phần mềm: gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>. MONA Pay thì {PRICE_LINE}.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc. Xem thêm <a href="/acb">cách nối tài khoản ACB</a>.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ trọ, chủ toà nhà hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Tháng sau không phải dò sao kê tiền phòng nữa" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, cấp mỗi phòng một tài khoản ảo, bật Telegram. Cần phần mềm quản lý cho thuê thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/chia-se-bien-dong-so-du-telegram', label: 'Báo tiền vào qua Telegram' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

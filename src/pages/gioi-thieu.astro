@@ -1,0 +1,118 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Stats from '../components/Stats.astro';
+import { SITE } from '../data/site';
+import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS, APPLYING_BANKS } from '../data/banks';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Giới thiệu MONA Pay, cổng thanh toán của The MONA Group';
+const description = 'MONA Pay là hệ thống nhận và xác nhận tiền chuyển khoản The MONA Group tự viết, từ 2022 hơn 6.000 khách hàng mới của MONA đã thu tiền qua đây, năm 2026 mở public cho mọi doanh nghiệp.';
+
+const rungs = [
+  { n: '1', t: 'Tự viết để tự dùng', d: 'Tụi em cần thu tiền hosting ở mona.host, học phí Khánh Hùng Academy, đơn phần mềm Mona.Software mà không muốn thuê thêm người ngồi mở app ngân hàng đối chiếu. Tụi em viết hệ thống nhận thông báo giao dịch ACB rồi bắn về phần mềm của mình. Nó chạy thật từ đó tới giờ.' },
+  { n: '2', t: `Hơn ${SITE.customersSince2022} khách hàng dùng từ 2022`, d: `Khách làm web bán hàng, phần mềm quản lý tại MONA đều kẹt một khâu giống nhau: khách của họ chuyển khoản xong phải nhắn báo, nhân viên mở app kiểm rồi mới xác nhận đơn. Từ năm 2022 tụi em nhúng luôn hệ thống này vào sản phẩm giao khách; tới nay hơn ${SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây. Nó đã chịu tải thật, không phải bản thử.` },
+  { n: '3', t: 'Mở public năm 2026', d: 'Trước đây muốn dùng phải là khách làm web, làm phần mềm tại MONA. Năm 2026 tụi em đặt tên MONA Pay, mở tại monapay.vn cho bất kỳ ai đăng ký cũng dùng được, kèm tài liệu đầy đủ cho lập trình viên và cho AI agent.' },
+  { n: '4', t: 'Miễn phí hoàn toàn, tiền không qua tụi em', d: `MONA Pay ${PRICE_LINE}, không thu phần trăm trên số tiền, không có gói trả phí ẩn. Tiền vào thẳng tài khoản ngân hàng của anh chị, MONA Pay chỉ đọc thông báo. Hai nỗi lo lớn nhất khi dùng cổng thanh toán, tốn phí và tiền kẹt ở trung gian, tụi em gỡ cả hai.` },
+];
+
+const brands = [
+  { n: 'Mona.Media', u: 'https://mona.media', d: 'Thiết kế website, SEO tổng thể, quảng cáo, thương hiệu, nội dung. Phần lớn web bán hàng khách MONA có MONA Pay cài sẵn từ đây.' },
+  { n: 'Mona.Software', u: 'https://mona.software', d: 'Phần mềm quản lý theo yêu cầu (CRM, ERP, HRM) và hơn 10 sản phẩm đóng gói: quản lý trung tâm, LMS, bán hàng, spa, nhà hàng. MONA Pay là khâu thu tiền của các phần mềm này.' },
+  { n: 'Mona.Host', u: 'https://mona.host', d: 'Hosting, VPS, tên miền, SSL. Nơi MONA Pay chạy thật lâu nhất: thu tiền gia hạn hosting và máy chủ tự động.' },
+];
+
+const stats = [
+  { value: String(SITE.founded), label: 'năm thành lập The MONA Group' },
+  { value: SITE.projects, label: 'dự án đã giao cho khách hàng' },
+  { value: SITE.retention, label: 'khách làm xong quay lại làm tiếp' },
+  { value: SITE.customersSince2022, label: 'khách hàng mới của MONA đã thu tiền qua hệ thống này từ 2022' },
+];
+
+const faq = [
+  { q: 'MONA Pay có phải sản phẩm mới ra mắt không?', a: `Tên thì mới, hệ thống thì không. Nó là cổng xác nhận chuyển khoản The MONA Group tự viết để thu tiền cho mình, rồi từ 2022 tới nay hơn ${SITE.customersSince2022} khách hàng mới của MONA đã dùng trong web và phần mềm tụi em giao. Năm 2026 tụi em mới đặt tên MONA Pay và mở public tại monapay.vn.` },
+  { q: 'MONA Pay khác ví điện tử hay cổng thanh toán thẻ chỗ nào?', a: 'Ví và cổng thẻ giữ tiền của anh chị một thời gian rồi mới chuyển về, thu phí theo phần trăm. MONA Pay không giữ tiền: khách chuyển thẳng vào tài khoản ngân hàng của anh chị, tụi em chỉ đọc thông báo giao dịch từ ngân hàng và báo lại cho phần mềm. Phí tính theo số giao dịch, không theo số tiền.' },
+  { q: 'Ai đứng sau MONA Pay, có lâu dài không?', a: `The MONA Group, thành lập năm ${SITE.founded}, ${SITE.projects} dự án web và phần mềm đã giao, ${SITE.retention} khách quay lại. Tụi em dùng MONA Pay để thu tiền cho chính mình mỗi ngày, hơn ${SITE.customersSince2022} khách hàng của MONA cũng đang thu tiền qua đây, nên không có chuyện bỏ sản phẩm này. Tổng đài ${SITE.hotline} có người trực trong giờ làm việc.` },
+  { q: 'Vì sao tài liệu MONA Pay viết cho cả AI đọc?', a: 'Vì lập trình viên bây giờ dùng Claude Code, Codex, Cursor để viết phần tích hợp. Tụi em làm sẵn llms.txt, bản .md cho mọi trang tài liệu, openapi.json và prompt copy được, để AI đọc đúng và viết code đúng ngay lần đầu. Người không rành kỹ thuật cũng lợi: dán prompt cho AI là xong, khỏi thuê ngoài.' },
+];
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'AboutPage', name: title, description, url: SITE.url + '/gioi-thieu', inLanguage: 'vi',
+  about: { '@id': SITE.url + '/#organization' }, isPartOf: { '@id': SITE.url + '/#website' },
+}];
+---
+<Base title={title} description={description} path="/gioi-thieu" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Giới thiệu</span>
+      <h1>Tụi em tự xây để thu tiền cho mình,<br class="br-d" /> <span class="accent">nay mở cho anh chị</span></h1>
+      <div class="answer-first">
+        <p>MONA Pay là hệ thống nhận và xác nhận tiền chuyển khoản mà The MONA Group tự viết để thu tiền cho chính mình, rồi từ năm 2022 nhúng vào web và phần mềm giao cho khách: tới nay hơn {SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây. Năm 2026 tụi em mở public tại monapay.vn để mọi doanh nghiệp, hộ kinh doanh và người tự làm sản phẩm đều dùng được.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Câu chuyện</span>
+      <h2>4 nấc từ công cụ tự dùng<br class="br-d" /> tới cổng thanh toán mở cho mọi người</h2>
+      <div class="grid grid-2">
+        {rungs.map((r) => (
+          <div class="card">
+            <div class="icon">{r.n}</div>
+            <h3>{r.t}</h3>
+            <p>{r.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <span class="eyebrow">Vì sao mở public năm 2026</span>
+      <h2>Hai lý do tụi em quyết định mở hệ thống này cho mọi người</h2>
+      <h3>Ngân hàng Việt Nam đã mở cửa API</h3>
+      <p>Vài năm trước, muốn nhận thông báo giao dịch tự động phải là đối tác lớn của ngân hàng. Giờ chính sách Open API đã thoáng hơn nhiều, các ngân hàng có chương trình kết nối rõ ràng. Hệ thống tụi em đã chạy ổn với ACB từ 2022 cho hơn {SITE.customersSince2022} khách hàng, đủ điều kiện để mở rộng thay vì giữ riêng cho khách MONA; các ngân hàng khác tụi em đang đăng ký kết nối, trạng thái xem tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>.</p>
+      <h3>Không chỉ doanh nghiệp lớn mới cần thu tiền tự động</h3>
+      <p>Trước đây tụi em phục vụ khách làm web, làm phần mềm quy mô công ty. Nhưng người bán hàng online một mình, hộ kinh doanh, người tự làm phần mềm cũng ngồi canh app ngân hàng y như vậy, thậm chí khổ hơn vì không có nhân viên. Mở public và {PRICE_LINE} là để những người này dùng được, không phải thuê MONA làm web mới có.</p>
+      <h3>Tụi em cam kết gì</h3>
+      <ul>
+        <li><strong>Tiền không qua MONA Pay.</strong> Vào thẳng tài khoản ngân hàng của anh chị, tụi em chỉ đọc thông báo. Không có quyền chuyển, rút, giữ.</li>
+        <li><strong>Giá niêm yết công khai, làm đúng giá.</strong> Bảng giá ghi sao thu vậy, không thu phần trăm trên số tiền, không phụ phí lúc vượt mức mà không báo.</li>
+        <li><strong>Cái gì chưa có thì ghi chưa có.</strong> Tài liệu ghi rõ ngân hàng hiện hỗ trợ, tính năng đang triển khai, không viết như đã xong.</li>
+        <li><strong>Tổng đài có người.</strong> {SITE.hotline}, kỹ sư MONA trực trong giờ làm việc, web hay phần mềm làm tại MONA thì tụi em cài luôn.</li>
+      </ul>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <img src="/brand/mona-logo-the-mona-dark.svg" alt="THE MONA" width="246" height="40" style="height:40px;width:auto;margin-bottom:1.2rem" />
+      <h2>The MONA Group, làm web và phần mềm từ năm {SITE.founded}</h2>
+      <p class="lead">Ba mảng của tụi em bổ cho nhau, MONA Pay là khâu thu tiền chung của cả ba.</p>
+      <figure class="photo"><img src="/img/mona/mona-hop-khach-hang-doanh-nghiep.jpg" alt="Đội MONA họp với khách hàng doanh nghiệp, trình bày giải pháp trên màn hình lớn" width="1400" height="1050" loading="lazy" /><figcaption>Buổi làm việc với khách hàng doanh nghiệp tại văn phòng khách: web, phần mềm và khâu thu tiền bàn cùng một lúc.</figcaption></figure>
+      <div class="grid grid-3">
+        {brands.map((b) => (
+          <div class="card"><h3><a href={b.u}>{b.n}</a></h3><p>{b.d}</p></div>
+        ))}
+      </div>
+      <div style="margin-top:1.5rem"><Stats items={stats} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi hay gặp về MONA Pay và The MONA Group" />
+    </div>
+  </section>
+
+  <CtaBand title="Dùng thử cái hơn 6.000 khách hàng của MONA đã dùng từ 2022" body={`Tạo tài khoản là dùng ngay, ${PRICE_LINE}, nối ACB trong 4 bước. Muốn xem ai đang dùng và dùng vào việc gì, đọc trang khách hàng.`} secondary={{ href: '/khach-hang', label: 'Xem ca dùng thật' }} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+</style>

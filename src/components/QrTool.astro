@@ -1,0 +1,115 @@
+---
+// Tool tạo mã QR ngân hàng (VietQR) — dùng chung cho /tao-ma-qr-ngan-hang (chọn tự do) và /tao-ma-qr/<bank> (bank chọn sẵn, khoá).
+// Lõi: /js/vietqr-core.js (MonaQR + BANKS + buildVietQR, đã pass round-trip). Chạy hoàn toàn trên trình duyệt, không gửi dữ liệu đi đâu.
+interface Props { bin?: string; bankName?: string }
+const { bin = '', bankName = '' } = Astro.props;
+---
+<div class="qr-tool" data-qr-tool data-bin={bin} data-bank={bankName}>
+  <form class="qr-form" id="qrForm" autocomplete="off">
+    <label>Ngân hàng nhận tiền
+      <select id="bank" required></select>
+      {bin && <span class="opt">Trang này tạo mã cho {bankName}. Ngân hàng khác: <a href="/tao-ma-qr-ngan-hang">tool chung 36 ngân hàng</a>.</span>}
+    </label>
+    <label>Số tài khoản
+      <input id="account" inputmode="numeric" placeholder="Ví dụ 123456789" required maxlength="19" />
+    </label>
+    <label>Tên chủ tài khoản <span class="opt">(in dưới mã, không nằm trong QR)</span>
+      <input id="owner" placeholder="NGUYEN VAN A" maxlength="50" />
+    </label>
+    <label>Số tiền (đồng) <span class="opt">(để trống = mã tĩnh, khách tự nhập)</span>
+      <input id="amount" inputmode="numeric" placeholder="Ví dụ 2.500.000" />
+    </label>
+    <label>Nội dung chuyển khoản <span class="opt">(tối đa 25 ký tự, tự bỏ dấu)</span>
+      <input id="note" placeholder="DH10234" maxlength="25" />
+    </label>
+    <div class="btn-row" style="margin-top:.6rem">
+      <button class="btn btn-primary" type="submit">Tạo mã QR</button>
+      <button class="btn btn-ghost" type="button" id="btnDownload" disabled>Tải PNG</button>
+    </div>
+    <p class="qr-note" id="qrMsg"></p>
+  </form>
+  <div class="qr-out">
+    <div class="qr-card">
+      <canvas id="qrCanvas" width="320" height="320" aria-label="Mã QR ngân hàng"></canvas>
+      <div class="qr-meta">
+        <b id="metaBank">{bin ? `${bankName}: nhập số tài khoản` : 'Chọn ngân hàng và nhập số tài khoản'}</b>
+        <span id="metaOwner"></span>
+        <span id="metaAmount"></span>
+      </div>
+      <img src="/brand/monapay-logo-light.svg" alt="MONA Pay" class="qr-brand" width="110" height="24" />
+    </div>
+    <p class="qr-hint">{bin ? `Mở app ${bankName} hoặc app ngân hàng bất kỳ, quét thử ngay trên màn hình để kiểm tra trước khi in.` : 'Mở app ngân hàng bất kỳ, quét thử ngay trên màn hình để kiểm tra trước khi in.'}</p>
+  </div>
+</div>
+<script is:inline src="/js/vietqr-core.js"></script>
+<script is:inline>
+(function(){
+  var $ = function(id){ return document.getElementById(id); };
+  var root = document.querySelector('[data-qr-tool]');
+  var lockBin = root ? (root.getAttribute('data-bin') || '') : '';
+  var bankSel = $('bank'), acc = $('account'), owner = $('owner'), amount = $('amount'), note = $('note'), msg = $('qrMsg'), canvas = $('qrCanvas'), btnDl = $('btnDownload');
+  var sorted = BANKS.slice().sort(function(a,b){ return a[0].localeCompare(b[0]); });
+  var popular = ['ACB','Vietcombank','Techcombank','MB Bank','BIDV','VietinBank','Agribank','VPBank','TPBank','Sacombank'];
+  popular.forEach(function(n){ var b = BANKS.find(function(x){ return x[0] === n; }); if (b) bankSel.appendChild(new Option(b[0] + ' (' + b[1] + ')', b[1])); });
+  bankSel.appendChild(new Option('──────────', '', false, false)).disabled = true;
+  sorted.forEach(function(b){ if (popular.indexOf(b[0]) === -1) bankSel.appendChild(new Option(b[0] + ' (' + b[1] + ')', b[1])); });
+  var q = new URLSearchParams(location.search).get('bank'); if (q) bankSel.value = q;
+  if (lockBin) { bankSel.value = lockBin; bankSel.setAttribute('aria-readonly', 'true'); bankSel.addEventListener('change', function(){ bankSel.value = lockBin; }); }
+  function strip(s){ return s.normalize('NFD').replace(/[̀-ͯ]/g,'').replace(/đ/g,'d').replace(/Đ/g,'D'); }
+  note.addEventListener('input', function(){ var v = strip(note.value).replace(/[^A-Za-z0-9 ]/g,''); if (v !== note.value) note.value = v; });
+  amount.addEventListener('input', function(){ var d = amount.value.replace(/\D/g,'').slice(0,10); amount.value = d ? Number(d).toLocaleString('vi-VN') : ''; });
+  acc.addEventListener('input', function(){ acc.value = acc.value.replace(/\D/g,''); });
+  function draw(text){
+    var ecc = 'M', qr; try { qr = MonaQR.make(text, ecc); } catch(e){ return false; }
+    var count = qr.size, quiet = 4, px = 640, mod = Math.floor(px / (count + quiet*2)), real = mod * (count + quiet*2);
+    canvas.width = real; canvas.height = real; var ctx = canvas.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,real,real); ctx.fillStyle = '#1B0C11';
+    for (var r=0;r<count;r++) for (var c=0;c<count;c++) if (qr.modules[r][c]) ctx.fillRect((quiet+c)*mod,(quiet+r)*mod,mod,mod);
+    return true;
+  }
+  $('qrForm').addEventListener('submit', function(e){
+    e.preventDefault();
+    var bin = lockBin || bankSel.value, a = acc.value.trim(), amt = amount.value.replace(/\D/g,''), n = strip(note.value).trim().slice(0,25);
+    if (!bin) { msg.textContent = 'Chọn ngân hàng nhận tiền.'; return; }
+    if (a.length < 6) { msg.textContent = 'Số tài khoản phải từ 6 số.'; return; }
+    if (amt && Number(amt) > 1000000000) { msg.textContent = 'Số tiền tối đa 1.000.000.000 đồng.'; return; }
+    var text = buildVietQR(bin, a, amt, n);
+    if (!draw(text)) { msg.textContent = 'Không tạo được mã, thử rút ngắn nội dung.'; return; }
+    var bname = bankSel.options[bankSel.selectedIndex].text.replace(/ \(\d+\)$/,'');
+    $('metaBank').textContent = bname + ' · ' + a;
+    $('metaOwner').textContent = owner.value.trim().toUpperCase();
+    $('metaAmount').textContent = amt ? Number(amt).toLocaleString('vi-VN') + ' đ' + (n ? ' · ' + n : '') : (n ? n : 'Khách tự nhập số tiền');
+    msg.textContent = 'Đã tạo mã ' + (amt ? 'động (điền sẵn số tiền)' : 'tĩnh') + '. Quét thử bằng app ngân hàng trước khi dùng.';
+    btnDl.disabled = false;
+  });
+  btnDl.addEventListener('click', function(){
+    var card = document.createElement('canvas'); var W = 720, H = 900; card.width = W; card.height = H; var ctx = card.getContext('2d');
+    ctx.fillStyle = '#fff'; ctx.fillRect(0,0,W,H);
+    ctx.drawImage(canvas, 40, 40, 640, 640);
+    ctx.fillStyle = '#261118'; ctx.font = 'bold 30px "Be Vietnam Pro", Arial, sans-serif'; ctx.textAlign = 'center';
+    ctx.fillText($('metaBank').textContent, W/2, 730);
+    ctx.font = '600 26px "Be Vietnam Pro", Arial, sans-serif'; ctx.fillText($('metaOwner').textContent, W/2, 772);
+    ctx.fillStyle = '#971B38'; ctx.font = 'bold 28px "Be Vietnam Pro", Arial, sans-serif'; ctx.fillText($('metaAmount').textContent, W/2, 816);
+    ctx.fillStyle = '#6F5960'; ctx.font = '20px "Be Vietnam Pro", Arial, sans-serif'; ctx.fillText('Tạo tại monapay.vn · quét bằng app ngân hàng bất kỳ', W/2, 866);
+    var a = document.createElement('a'); a.download = 'vietqr-' + ($('metaBank').textContent.split(' · ')[1] || 'ma') + '.png'; a.href = card.toDataURL('image/png'); a.click();
+  });
+})();
+</script>
+<style>
+  .qr-tool{display:grid;grid-template-columns:1.1fr .9fr;gap:2rem;align-items:start;margin-top:1.5rem}
+  @media (max-width:900px){.qr-tool{grid-template-columns:1fr}}
+  .qr-form{background:var(--surface);border-radius:var(--radius);padding:1.5rem;box-shadow:var(--shadow);display:grid;gap:.9rem}
+  .qr-form label{display:grid;gap:.35rem;font-weight:600;font-size:.95rem;color:var(--ink)}
+  .qr-form .opt{font-weight:400;color:var(--text-soft);font-size:.85rem}
+  .qr-form input,.qr-form select{font:inherit;padding:.7em .9em;border:1px solid var(--border);border-radius:10px;background:#fff;color:var(--ink)}
+  .qr-form input:focus,.qr-form select:focus{outline:2px solid var(--cta);border-color:var(--cta)}
+  .qr-form select[aria-readonly="true"]{background:var(--muted);pointer-events:none}
+  .qr-note{margin:0;font-size:.9rem;color:var(--text-soft);min-height:1.4em}
+  .btn[disabled]{opacity:.5;cursor:not-allowed}
+  .qr-card{background:#fff;border-radius:var(--radius);padding:1.2rem;box-shadow:var(--shadow-lg);text-align:center}
+  .qr-card canvas{width:min(320px,100%);height:auto;margin:0 auto;display:block;border-radius:12px}
+  .qr-meta{display:grid;gap:.15rem;margin:.9rem 0 .6rem}
+  .qr-meta b{color:var(--ink)} .qr-meta span{color:var(--text-soft);font-size:.95rem} .qr-meta span:last-child{color:var(--primary);font-weight:700}
+  .qr-brand{height:22px;width:auto;margin:0 auto;opacity:.8}
+  .qr-hint{font-size:.9rem;color:var(--text-soft);text-align:center;margin-top:.8rem}
+</style>

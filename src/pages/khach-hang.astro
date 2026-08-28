@@ -1,0 +1,119 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Khách hàng dùng cổng thanh toán MONA Pay vào việc gì';
+const description = 'Ca dùng thật của MONA Pay: thu tiền hosting mona.host, học phí Khánh Hùng Academy, đơn phần mềm Mona.Software, web bán hàng khách MONA. Kể đúng cấu hình dùng.';
+
+const cases = [
+  {
+    tag: 'Ca 1 · chính tụi em', t: 'Thu tiền hosting, VPS, tên miền ở mona.host',
+    ctx: 'Mona.Host bán hosting, máy chủ, tên miền, SSL. Hoá đơn gia hạn phát sinh đều đặn mỗi ngày, số tiền lẻ, khách hay chuyển sát giờ hết hạn.',
+    before: 'Khách chuyển khoản rồi nhắn Zalo hoặc email báo đã chuyển. Kế toán mở app ngân hàng dò theo số tiền và tên người chuyển, tìm ra rồi mới kích hoạt tay. Khách chuyển tối hoặc cuối tuần là chờ tới giờ làm việc.',
+    after: 'Mỗi hoá đơn có mã QR động đúng số tiền hoặc số tài khoản ảo riêng. Tiền vào là ACB báo, MONA Pay bắn webhook về hệ thống quản lý hosting, dịch vụ tự gia hạn, khách nhận biên nhận ngay, kể cả 2 giờ sáng. Nhóm Telegram kế toán thấy cùng lúc.',
+    cfg: ['Tài khoản ảo theo hoá đơn', 'VietQR động', 'Webhook ký HMAC về phần mềm quản lý', 'Telegram nhóm kế toán'],
+  },
+  {
+    tag: 'Ca 2 · chính tụi em', t: 'Thu học phí Khánh Hùng Academy',
+    ctx: 'Khánh Hùng Academy là thương hiệu đào tạo của người sáng lập MONA, hơn 40.000 học viên. Học viên mua khoá bất kể giờ giấc, chuyển khoản là kênh chính.',
+    before: 'Học viên chuyển khoản theo nội dung hướng dẫn, nhưng gõ sai, gõ thiếu, gõ tên mình thay vì mã đơn là chuyện mỗi ngày. Đội hỗ trợ ngồi đối chiếu tay, mở khoá học thủ công, học viên chờ.',
+    after: 'Mỗi đơn mua khoá sinh một mã QR động có sẵn số tiền và nội dung, học viên quét là chuyển đúng. Tiền vào, webhook về hệ thống học tập, khoá học tự mở trong cùng lúc. Đối soát cuối ngày theo mã giao dịch, không theo tên người chuyển.',
+    cfg: ['VietQR động theo đơn', 'Webhook ký HMAC về hệ thống học tập', 'Dashboard đối soát theo mã giao dịch'],
+  },
+  {
+    tag: 'Ca 3 · phần mềm giao khách', t: 'Khâu thu tiền trong phần mềm Mona.Software',
+    ctx: 'Mona.Software giao phần mềm quản lý cho khách: quản lý trung tâm, quản lý học viên, bán hàng, spa, nhà hàng. Khách của khách chuyển khoản vào tài khoản của chủ phần mềm, không phải của MONA.',
+    before: 'Phần mềm có màn hình công nợ nhưng người dùng vẫn phải mở app ngân hàng, xem có tiền chưa rồi bấm "đã thu" bằng tay. Sai sót và chậm nằm ở chỗ đó.',
+    after: 'Chủ phần mềm nối tài khoản ACB của chính họ vào MONA Pay. Mỗi học viên hoặc mỗi đơn có tài khoản ảo hoặc QR riêng. Tiền vào là phần mềm tự ghi "đã thu", tự đổi trạng thái công nợ. Người dùng chỉ còn xem báo cáo.',
+    cfg: ['Tài khoản ảo theo học viên hoặc theo đơn', 'Webhook về phần mềm, khớp bằng số tài khoản ảo', 'Telegram cho chủ doanh nghiệp'],
+  },
+  {
+    tag: 'Ca 4 · web bán hàng', t: 'Website WordPress, WooCommerce làm tại MONA',
+    ctx: 'Phần lớn web bán hàng MONA làm cho khách chạy WordPress và WooCommerce. Chuyển khoản là cách thanh toán phổ biến nhất ở Việt Nam, nhưng WooCommerce mặc định không biết tiền đã vào hay chưa.',
+    before: 'Đơn treo ở trạng thái chờ thanh toán. Khách chụp màn hình chuyển khoản gửi Zalo, nhân viên kiểm rồi vào trang quản trị đổi trạng thái tay. Ngày nhiều đơn là sót, là đổi nhầm.',
+    after: 'Đội MONA cài webhook MONA Pay vào web, đơn nào cũng có QR đúng số tiền. Khách chuyển xong, đơn tự sang "đang xử lý", nhân viên chỉ gói hàng. Web không làm tại MONA thì lập trình viên của anh chị nối theo code mẫu PHP trong tài liệu, hoặc dán prompt cho AI làm.',
+    cfg: ['VietQR động theo đơn WooCommerce', 'Webhook PHP nhận và kiểm chữ ký HMAC', 'Telegram cho chủ shop'],
+  },
+];
+
+const faq = [
+  { q: 'Sao không ghi tên khách và số liệu doanh thu?', a: 'Vì đó là số của khách, tụi em không mang ra quảng cáo. Ca 1 và ca 2 là của chính MONA nên kể thẳng tên. Ca 3 và ca 4 tụi em kể đúng cấu hình đã dùng để anh chị soi xem giống việc của mình không, còn muốn nói chuyện với khách đang dùng thì gọi tổng đài, tụi em kết nối khi khách đồng ý.' },
+  { q: 'Doanh nghiệp nhỏ hoặc bán hàng một mình dùng được không?', a: `Được, và đây là lý do tụi em mở public. MONA Pay ${PRICE_LINE}, đủ mọi tính năng. Không có phần mềm thì chỉ cần nối ACB và thêm bot vào Telegram, tiền vào là có tin nhắn, dashboard lưu đủ để đối soát.` },
+  { q: 'Tôi đang làm web hoặc phần mềm tại MONA, có phải tự tích hợp không?', a: 'Không. Web và phần mềm làm tại MONA được cài MONA Pay sẵn, anh chị chỉ cần nối tài khoản ACB của mình qua 4 bước trong dashboard. Dự án đang chạy mà chưa có, báo người phụ trách dự án hoặc gọi tổng đài, tụi em cài thêm.' },
+  { q: 'Muốn thành ca dùng tiếp theo thì bắt đầu từ đâu?', a: `Tạo tài khoản tại my.monapay.vn là dùng ngay, không cần ai duyệt, nối ACB, rồi chọn webhook hoặc Telegram. Có lập trình viên thì đọc tài liệu bắt đầu nhanh, không có thì gọi ${SITE.hotline}, kỹ sư MONA hướng dẫn từng bước.` },
+];
+---
+<Base title={title} description={description} path="/khach-hang">
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Khách hàng</span>
+      <h1>Ai đang dùng MONA Pay<br class="br-d" /> <span class="accent">và dùng vào việc gì</span></h1>
+      <div class="answer-first">
+        <p>MONA Pay đang thu tiền thật cho chính The MONA Group (hosting mona.host, học phí Khánh Hùng Academy, đơn phần mềm Mona.Software) và nằm sẵn trong web bán hàng, phần mềm quản lý tụi em giao cho khách. Dưới đây là 4 ca dùng thật, ẩn tên khách, kể đúng cấu hình đã dùng để anh chị soi xem giống việc của mình không.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">4 ca dùng thật</span>
+      <h2>Trước và sau khi có MONA Pay,<br class="br-d" /> kể đúng cấu hình đã dùng</h2>
+      <div class="cases">
+        {cases.map((c) => (
+          <article class="card case">
+            <span class="badge">{c.tag}</span>
+            <h3>{c.t}</h3>
+            <p class="case-ctx">{c.ctx}</p>
+            <div class="case-grid">
+              <div class="case-col before"><h4>Trước</h4><p>{c.before}</p></div>
+              <div class="case-col after"><h4>Sau</h4><p>{c.after}</p></div>
+            </div>
+            <div class="case-cfg"><b>Cấu hình dùng:</b> {c.cfg.map((x) => <span class="badge badge-cta">{x}</span>)}</div>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <span class="eyebrow">Điểm chung</span>
+      <h2>4 ca khác ngành nhưng chung một chỗ kẹt</h2>
+      <figure class="photo"><img src="/img/mona/mona-trinh-bay-giai-phap-cho-khach.jpg" alt="Nhân viên MONA trình bày giải pháp cho khách hàng trong phòng họp" width="1400" height="980" loading="lazy" /><figcaption>Tụi em trình bày giải pháp cho khách: phần thu tiền tự động luôn là câu hỏi đầu tiên của chủ doanh nghiệp.</figcaption></figure>
+      <p>Hosting, khoá học, phần mềm quản lý, shop online, ngành nào cũng có một người ngồi mở app ngân hàng, dò số tiền, dò tên người chuyển, rồi mới dám xác nhận. Chậm thì khách chờ, nhiều đơn thì sót, cuối tháng kế toán đối chiếu lại từ đầu. MONA Pay thay đúng một khâu đó: ngân hàng báo có tiền, phần mềm tự biết của đơn nào, tự xác nhận, người chỉ còn xem báo cáo.</p>
+      <p>Cấu hình cũng lặp lại: tài khoản ảo hoặc QR động để biết tiền của ai, webhook có chữ ký HMAC (từ chối nếu lệch quá {SITE.tech.replayWindowMin} phút) để phần mềm tin được tin báo, Telegram để người không dùng phần mềm vẫn thấy. Anh chị chọn đúng 2 hoặc 3 món này là đủ, không cần cả bộ.</p>
+      <p>Đọc tiếp: <a href="/cong-thanh-toan-woocommerce">Cổng thanh toán WooCommerce</a> · <a href="/chia-se-bien-dong-so-du-telegram">Báo biến động số dư qua Telegram</a> · <a href="/docs/bat-dau-nhanh">Bắt đầu nhanh trong 5 phút</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi hay gặp về ca dùng và khách hàng" />
+    </div>
+  </section>
+
+  <CtaBand title="Muốn tụi em cài vào web hoặc phần mềm của anh chị?" body="Web, phần mềm làm tại MONA thì tụi em cài sẵn. Làm ở nơi khác thì lập trình viên của anh chị nối theo tài liệu, hoặc gọi tổng đài để kỹ sư MONA hướng dẫn." secondary={{ href: '/docs', label: 'Đọc tài liệu tích hợp' }} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .cases{display:grid;gap:1.25rem}
+  .case h3{margin-top:.6rem}
+  .case-ctx{color:var(--text)}
+  .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin:.6rem 0 1rem}
+  @media (max-width:700px){.case-grid{grid-template-columns:1fr}}
+  .case-col{border-radius:var(--radius-sm);padding:1rem 1.1rem}
+  .case-col h4{margin:0 0 .4rem;font-size:.85rem;text-transform:uppercase;letter-spacing:.05em}
+  .case-col p{margin:0}
+  .before{background:var(--muted)}
+  .before h4{color:var(--text-soft)}
+  .after{background:var(--cta-subtle)}
+  .after h4{color:var(--cta)}
+  .case-cfg{display:flex;flex-wrap:wrap;gap:.45rem;align-items:center;font-size:.92rem}
+  .case-cfg b{color:var(--ink);margin-right:.2rem}
+</style>

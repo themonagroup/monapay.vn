@@ -1,0 +1,26 @@
+---
+import { getCollection, render } from 'astro:content';
+import Post from '../../layouts/Post.astro';
+export async function getStaticPaths() {
+  const posts = await getCollection('posts');
+  return posts.map((p) => ({ params: { slug: p.id }, props: { p } }));
+}
+const { p } = Astro.props;
+const { Content } = await render(p);
+// FAQ schema sinh từ mục "## Câu hỏi thường gặp" (### câu hỏi + đoạn trả lời) trong markdown → không lệch nội dung
+const body = p.body ?? '';
+const faq: { q: string; a: string }[] = [];
+const sec = ('\n' + body).split(/\n##\s(?!#)/).find((x) => /^câu hỏi thường gặp|^hỏi đáp/i.test(x.trim()));
+if (sec) {
+  const parts = sec.split(/\n###\s/).slice(1);
+  for (const part of parts) {
+    const nl = part.indexOf('\n');
+    const q = (nl === -1 ? part : part.slice(0, nl)).replace(/[*_`]/g, '').trim();
+    const a = (nl === -1 ? '' : part.slice(nl + 1)).replace(/\[([^\]]+)\]\([^)]*\)/g, '$1').replace(/[*_`>]/g, '').replace(/\s+/g, ' ').trim();
+    if (q && a) faq.push({ q, a });
+  }
+}
+---
+<Post title={p.data.title} description={p.data.description} slug={p.id} date={p.data.date} updated={p.data.updated} keyword={p.data.keyword} category={p.data.category} h1={p.data.h1} ogImage={p.data.ogImage} faq={faq}>
+  <Content />
+</Post>

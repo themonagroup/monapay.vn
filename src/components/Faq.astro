@@ -1,0 +1,21 @@
+---
+// FAQ on-page + FAQPage JSON-LD (schema sinh từ cùng data → không lệch nội dung)
+interface Props { items: { q: string; a: string }[]; title?: string; eyebrow?: string; id?: string }
+const { items, title = 'Câu hỏi thường gặp', eyebrow, id = 'faq' } = Astro.props;
+const strip = (s: string) => s.replace(/<[^>]+>/g, '');
+const schema = {
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: items.map((i) => ({ '@type': 'Question', name: i.q, acceptedAnswer: { '@type': 'Answer', text: strip(i.a) } })),
+};
+---
+<div class="faq" id={id}>
+  {eyebrow && <span class="eyebrow">{eyebrow}</span>}
+  {title && <h2>{title}</h2>}
+  {items.map((i) => (
+    <details>
+      <summary>{i.q}</summary>
+      <div class="faq-a" set:html={i.a.startsWith('<') ? i.a : `<p>${i.a}</p>`} />
+    </details>
+  ))}
+</div>
+<script type="application/ld+json" set:html={JSON.stringify(schema)} />

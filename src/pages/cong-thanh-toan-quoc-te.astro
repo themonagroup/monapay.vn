@@ -1,0 +1,144 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Cổng thanh toán quốc tế tại Việt Nam: PayPal, Stripe hợp việc gì';
+const description = 'Cổng thanh toán quốc tế tại Việt Nam: PayPal thu 4,40% + phí cố định, Stripe chưa mở cho doanh nghiệp Việt (28/08/2026). Hợp bán ra nước ngoài, trong nước dùng VietQR.';
+
+const faq = [
+  { q: 'Cổng thanh toán quốc tế là gì?', a: 'Là dịch vụ trung gian đứng giữa khách và người bán để xử lý thanh toán bằng thẻ quốc tế hoặc ví điện tử toàn cầu, tiêu biểu là PayPal và Stripe. Tiền của khách vào tài khoản của cổng trước, người bán rút về ngân hàng sau. Vì đứng giữa nên cổng thu phí theo phần trăm mỗi giao dịch, ví dụ PayPal Việt Nam thu 4,40% cộng phí cố định cho giao dịch thương mại từ ngoài lãnh thổ Việt Nam.' },
+  { q: 'Cổng thanh toán quốc tế nào dùng được tại Việt Nam?', a: 'PayPal cho đăng ký tài khoản doanh nghiệp tại Việt Nam và có biểu phí riêng cho thị trường Việt Nam. Stripe tới ngày 28/08/2026 chưa có Việt Nam trong danh sách quốc gia mở đăng ký (có Singapore, Thái Lan, Malaysia, Indonesia). Với khách trong nước, chuyển khoản qua VietQR vẫn là cách thu tiền phổ biến, và MONA Pay giúp xác nhận tự động phần này.' },
+  { q: 'Bán hàng cho khách trong nước có cần cổng thanh toán quốc tế không?', a: 'Không cần. Khách Việt Nam quen quét mã VietQR bằng ứng dụng ngân hàng, tiền vào thẳng tài khoản của anh chị trong vài giây và không mất phần trăm nào. Cổng quốc tế chỉ cần khi khách ở nước ngoài, trả bằng thẻ quốc tế hoặc ví toàn cầu.' },
+  { q: 'Phí cổng thanh toán quốc tế khoảng bao nhiêu?', a: 'PayPal Việt Nam công bố 4,40% cộng phí cố định theo tiền tệ (0,30 USD hoặc 0,35 EUR) cho mỗi giao dịch thương mại từ ngoài lãnh thổ Việt Nam, thêm 60.000đ mỗi lần rút về ngân hàng Việt Nam và 3% đến 4% khi quy đổi tiền tệ. Stripe tính theo phần trăm cộng phí cố định mỗi giao dịch, niêm yết theo từng nước trên stripe.com. Số PayPal tụi em kiểm ngày 28/08/2026 tại trang biểu phí chính thức.' },
+  { q: 'Đăng ký cổng thanh toán quốc tế cần gì?', a: 'PayPal cần tài khoản doanh nghiệp, email, tài khoản ngân hàng để rút tiền và giấy tờ xác minh theo yêu cầu của họ. Stripe cần pháp nhân đặt tại một nước họ hỗ trợ, nghĩa là doanh nghiệp Việt Nam không đăng ký trực tiếp được. Chuyển khoản nội địa qua MONA Pay chỉ cần tài khoản ACB đứng tên anh chị, đăng ký xong dùng ngay.' },
+  { q: 'Nhận thanh toán từ nước ngoài thì nên dùng gì?', a: 'PayPal là lựa chọn đăng ký được ngay từ Việt Nam, đổi lại phí 4,40% cộng phí cố định và 60.000đ mỗi lần rút. Doanh nghiệp có pháp nhân ở nước ngoài thì dùng thêm Stripe. Còn phần khách trong nước, tách riêng sang chuyển khoản VietQR để không mất phần trăm.' },
+  { q: 'MONA Pay có phải cổng thanh toán quốc tế không?', a: 'Không. MONA Pay là cổng thanh toán và API ngân hàng cho thị trường Việt Nam: nhận và xác nhận tiền chuyển khoản nội địa qua tài khoản ảo ACB, VietQR, webhook và Telegram. Tiền không đi qua MONA Pay, vào thẳng tài khoản ngân hàng của anh chị, ' + PRICE_LINE + '.' },
+];
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: title, description, inLanguage: 'vi', url: SITE.url + '/cong-thanh-toan-quoc-te',
+  datePublished: '2026-08-28', dateModified: '2026-08-28',
+  author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' },
+  about: ['cổng thanh toán quốc tế', 'PayPal Việt Nam', 'Stripe Việt Nam', 'chuyển khoản VietQR'],
+}, {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán quốc tế', item: SITE.url + '/cong-thanh-toan-quoc-te' },
+  ],
+}];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-quoc-te" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Cổng thanh toán quốc tế · PayPal · Stripe</span>
+      <h1>Cổng thanh toán quốc tế tại Việt Nam:<br class="br-d" /> <span class="accent">hợp việc gì, không hợp việc gì</span></h1>
+      <div class="answer-first">
+        <p>Cổng thanh toán quốc tế như PayPal, Stripe hợp khi anh chị bán ra nước ngoài và khách trả bằng thẻ quốc tế. Thu tiền khách trong nước thì không hợp: PayPal thu 4,40% cộng phí cố định mỗi giao dịch, thêm 60.000đ mỗi lần rút về ngân hàng Việt Nam, còn Stripe tới 28/08/2026 chưa mở đăng ký cho doanh nghiệp Việt. Khách Việt quét VietQR, tiền vào thẳng tài khoản, MONA Pay xác nhận tự động và {PRICE_LINE}.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Thu tiền trong nước miễn phí</a>
+        <a class="btn btn-outline" href="/paypal-viet-nam">Xem chi tiết PayPal</a>
+        <a class="btn btn-ghost" href="/stripe-viet-nam">Xem chi tiết Stripe</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Khái niệm</span>
+      <h2>Cổng thanh toán quốc tế là gì,<br class="br-d" /> dùng khi nào</h2>
+      <p class="lead">Cổng thanh toán quốc tế là dịch vụ đứng giữa khách và người bán để xử lý thanh toán bằng thẻ Visa, Mastercard hoặc ví điện tử toàn cầu. Khách trả tiền cho cổng, cổng giữ trong ví của người bán, người bán rút về ngân hàng khi cần. Vì đứng giữa dòng tiền nên cổng thu phí theo phần trăm mỗi giao dịch cộng một khoản cố định, và thu thêm khi quy đổi tiền tệ.</p>
+      <p>Ở Việt Nam, câu hỏi "cổng thanh toán quốc tế tại Việt Nam dùng cái nào" gần như luôn quy về hai cái tên: PayPal và Stripe. Hai cổng này sinh ra để phục vụ dòng tiền xuyên biên giới, nên hợp đúng 3 tình huống dưới đây.</p>
+      <div class="grid grid-3">
+        <div class="card"><div class="icon">1</div><h3>Bán ra nước ngoài</h3><p>Khách ở Mỹ, châu Âu, Úc mua hàng hoặc dịch vụ của anh chị và trả bằng thẻ quốc tế hoặc tài khoản PayPal. Không có cổng quốc tế thì khách không có cách nào trả.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Freelancer, agency nhận tiền từ khách ngoại</h3><p>Nhận thanh toán hợp đồng từ khách nước ngoài theo từng dự án. PayPal là kênh đăng ký được ngay từ Việt Nam, đổi lại phí 4,40% cộng phí cố định mỗi lần nhận.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Phần mềm bán theo tháng cho thị trường ngoại</h3><p>Ứng dụng, khoá học, dịch vụ đăng ký thu USD định kỳ. Stripe mạnh ở mảng này nhưng cần pháp nhân đặt tại nước Stripe hỗ trợ.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Bảng so sánh</span>
+      <h2>PayPal, Stripe và chuyển khoản nội địa:<br class="br-d" /> đặt cạnh nhau cho dễ chọn</h2>
+      <p>Số của PayPal lấy từ biểu phí PayPal Việt Nam, tụi em kiểm ngày 28/08/2026. Danh sách quốc gia của Stripe lấy từ trang stripe.com/global cùng ngày. Cột cuối là cách thu tiền khách trong nước bằng chuyển khoản qua MONA Pay.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>PayPal</th><th>Stripe</th><th>Chuyển khoản nội địa (MONA Pay)</th></tr></thead>
+          <tbody>
+            <tr><td>Doanh nghiệp Việt Nam đăng ký</td><td>Được, có tài khoản doanh nghiệp cho thị trường Việt Nam</td><td>Chưa. Việt Nam không có trong danh sách quốc gia mở đăng ký (28/08/2026)</td><td>Đăng ký xong dùng ngay, chỉ cần tài khoản ACB đứng tên anh chị</td></tr>
+            <tr><td>Phí mỗi giao dịch</td><td>4,40% + phí cố định theo tiền tệ (0,30 USD, 0,35 EUR) với giao dịch thương mại từ ngoài Việt Nam</td><td>Phần trăm + phí cố định, niêm yết theo từng nước trên stripe.com</td><td>0đ. Ngân hàng cũng không thu phí người nhận chuyển khoản</td></tr>
+            <tr><td>Tiền về đâu</td><td>Ví PayPal, rút về ngân hàng Việt Nam mất 60.000đ mỗi lần</td><td>Tài khoản ngân hàng tại nước đã đăng ký Stripe</td><td>Thẳng tài khoản ACB của anh chị, không qua trung gian</td></tr>
+            <tr><td>Quy đổi tiền tệ</td><td>Phí 4,00% khi gửi thanh toán hoặc nhận hoàn tiền, 3,00% các trường hợp khác</td><td>Theo nước đăng ký</td><td>Không có, khách trả bằng tiền Việt</td></tr>
+            <tr><td>Khách Việt Nam trả bằng</td><td>Thẻ quốc tế hoặc tài khoản PayPal, phần lớn khách lẻ không có</td><td>Thẻ quốc tế</td><td>Quét mã VietQR bằng ứng dụng ngân hàng bất kỳ</td></tr>
+            <tr><td>Xác nhận đơn tự động</td><td>Có, qua IPN của PayPal</td><td>Có, qua webhook của Stripe</td><td>Có, webhook ký HMAC-SHA256 và tin Telegram trong vài giây</td></tr>
+            <tr><td>Hợp với</td><td>Bán ra nước ngoài, freelancer</td><td>Doanh nghiệp có pháp nhân ở nước Stripe hỗ trợ</td><td>Mọi web, phần mềm bán cho khách trong nước</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Vì sao</span>
+      <h2>Cổng quốc tế không hợp thu tiền khách trong nước<br class="br-d" /> vì 4 lý do rất thực tế</h2>
+      <div class="grid grid-2">
+        <div class="card"><h3>Mất phần trăm trên mỗi đơn</h3><p>Đơn 1.000.000đ qua PayPal mất 44.000đ phí phần trăm, chưa tính phí cố định. Bán 300 đơn một tháng là mất hơn 13 triệu đồng cho việc mà chuyển khoản làm được với 0đ.</p></div>
+        <div class="card"><h3>Tiền nằm trong ví, rút mới về</h3><p>Tiền khách trả không vào tài khoản ngân hàng ngay. Anh chị phải bấm rút, PayPal thu 60.000đ mỗi lần rút về ngân hàng Việt Nam, và thu thêm 3,00% nếu phải đổi USD sang tiền Việt.</p></div>
+        <div class="card"><h3>Khách Việt không có thói quen đó</h3><p>Khách lẻ trong nước mở ứng dụng ngân hàng, quét mã QR, xong. Bắt họ tạo tài khoản PayPal hay nhập số thẻ quốc tế là mất đơn ngay ở bước thanh toán.</p></div>
+        <div class="card"><h3>Đăng ký không dễ, có cổng còn chưa mở</h3><p>Stripe chưa mở cho doanh nghiệp Việt Nam. PayPal đăng ký được nhưng cần xác minh và có thể bị giữ tiền khi họ thấy giao dịch bất thường, dòng tiền của anh chị phụ thuộc vào quyết định của bên thứ ba.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Thu tiền trong nước</span>
+      <h2>Chuyển khoản VietQR tự xác nhận:<br class="br-d" /> cách thu tiền không mất phần trăm</h2>
+      <p class="lead">{SITE.entity}</p>
+      <p>Tiền không đi qua MONA Pay. Khách quét VietQR, tiền vào thẳng tài khoản ACB của anh chị, ACB báo cho MONA Pay, MONA Pay bắn webhook về website hoặc phần mềm và nhắn vào nhóm Telegram. Đơn tự đổi trạng thái, không ai phải ngồi canh ứng dụng ngân hàng. Bốn bước để chạy:</p>
+      <Steps items={[
+        { title: 'Tạo tài khoản MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng được ngay, không cần ai duyệt. Toàn bộ tính năng ' + PRICE_LINE + '.' },
+        { title: 'Nối tài khoản ACB', body: 'Nhập số tài khoản ACB đứng tên anh chị, xác nhận 2 lần OTP do ACB gửi. Chi tiết ở trang <a href="/acb">nhận tiền ACB theo thời gian thực</a>.' },
+        { title: 'Tạo tài khoản ảo hoặc mã VietQR cho từng đơn', body: 'Mỗi đơn một tài khoản ảo hoặc một mã QR động đúng số tiền, khách chuyển là khớp đơn, không cần gõ nội dung.' },
+        { title: 'Nhận webhook hoặc tin Telegram', body: 'Website, phần mềm nhận webhook ký HMAC-SHA256 để tự xác nhận đơn; kế toán thấy tin trong nhóm Telegram. Tài liệu kỹ thuật tại <a href="/docs">monapay.vn/docs</a>.' },
+      ]} />
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Kết luận</span>
+      <h2>Chọn theo khách của anh chị ở đâu,<br class="br-d" /> không chọn theo cái tên</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Khách ở nước ngoài</h3>
+          <p>Dùng PayPal nếu cần đăng ký ngay từ Việt Nam, chấp nhận 4,40% cộng phí cố định và 60.000đ mỗi lần rút. Có pháp nhân ở nước Stripe hỗ trợ thì dùng Stripe cho thanh toán định kỳ và thẻ. Đọc kỹ: <a href="/paypal-viet-nam">PayPal Việt Nam</a> · <a href="/stripe-viet-nam">Stripe Việt Nam</a>.</p>
+        </div>
+        <div class="card">
+          <h3>Khách ở trong nước</h3>
+          <p>Chuyển khoản qua VietQR với xác nhận tự động bằng MONA Pay: 0đ phí, tiền vào thẳng tài khoản ACB, đơn tự khớp, có webhook cho lập trình viên và AI agent. Nhiều web bán hàng làm tại MONA chạy song song cả hai: nút PayPal cho khách ngoại, mã VietQR cho khách Việt.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi hay gặp về cổng thanh toán quốc tế" />
+    </div>
+  </section>
+
+  <CtaBand title="Thu tiền khách trong nước không mất phần trăm, từ hôm nay" body={`Đăng ký xong dùng ngay, nối ACB bằng 2 lần OTP, ${PRICE_LINE}. Web làm tại MONA thì tụi em nối sẵn.`} primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/acb', label: 'Xem cách nối ACB' }} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+</style>

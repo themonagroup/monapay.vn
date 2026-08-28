@@ -1,0 +1,108 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/spa-salon';
+const title = 'Spa, salon, nail thu cọc lịch hẹn qua chuyển khoản, tự xác nhận';
+const description = 'Spa, salon, nail thu cọc lịch hẹn và tiền dịch vụ bằng mã VietQR đúng số tiền. Khách chuyển là lịch tự giữ, lễ tân và Telegram biết ngay, tiền vào thẳng ACB, miễn phí.';
+
+const steps = [
+  { title: 'Chốt lịch xong, gửi khách mã QR cọc đúng số tiền', body: 'Phần mềm spa hoặc dashboard MONA Pay sinh mã VietQR động gắn mã lịch hẹn, số tiền cọc điền sẵn. Gửi qua Zalo, Messenger hay hiện trên trang đặt lịch. Khách quét, không gõ nội dung, không chuyển nhầm số.' },
+  { title: 'Tiền cọc vào thẳng tài khoản ACB của tiệm', body: 'Không ví, không giữ tiền, không phí phần trăm. ACB báo cho MONA Pay ngay khi tiền vào, kể cả khách đặt lịch lúc 10 giờ đêm cho sáng mai.' },
+  { title: 'Lịch tự chuyển sang "đã cọc", lễ tân nhận tin Telegram', body: 'Webhook có chữ ký HMAC đi vào phần mềm, lịch hẹn đổi trạng thái và giữ chỗ cho kỹ thuật viên. Nhóm Telegram của tiệm nhận tin: số tiền, thời gian, nội dung. Lễ tân không cần hỏi chủ.' },
+  { title: 'Thanh toán phần còn lại sau dịch vụ cũng một mã QR', body: 'Xong dịch vụ, hoá đơn phần còn lại sinh mã QR mới. Khách quét, tiền vào, hoá đơn đóng. Cuối ngày chủ tiệm xem danh sách giao dịch trên dashboard, khớp với báo cáo ca của phần mềm.' },
+];
+
+const faq = [
+  { q: 'Tiệm chỉ có 2 lễ tân, chưa có phần mềm, dùng được không?', a: 'Được. Tạo tài khoản MONA Pay, nối ACB bằng 2 lần OTP, bật thông báo Telegram cho nhóm tiệm. Mỗi lần chốt lịch, lễ tân tạo mã QR cọc trong dashboard rồi gửi khách. Tiền vào là cả nhóm thấy, lễ tân ghi "đã cọc" vào sổ lịch.' },
+  { q: 'Khách đặt cọc rồi không đến, xử lý thế nào?', a: 'Chuyện cọc và hoàn cọc là chính sách của tiệm. MONA Pay giúp anh chị có bằng chứng rõ: giao dịch nào, lúc nào, bao nhiêu, gắn đúng mã lịch hẹn. Không còn cãi nhau "em chuyển rồi mà" vì mọi thứ nằm trong lịch sử giao dịch và sao kê ACB.' },
+  { q: 'Nhiều khách cọc cùng 200.000 đ trong một buổi thì có nhầm lịch không?', a: 'Không, vì nhận diện bằng mã QR riêng của từng lịch hẹn, không bằng số tiền. Mười khách cọc 200.000 đ trong 30 phút vẫn khớp đúng mười lịch.' },
+  { q: 'Kỹ thuật viên nhận tiền tip hay dịch vụ riêng thì sao?', a: 'Tài khoản ảo và mã QR đều gắn tài khoản ACB của tiệm, nên tiền dịch vụ về tiệm, minh bạch với cả kỹ thuật viên lẫn chủ. Chia hoa hồng là việc của phần mềm quản lý spa, dựa trên giao dịch đã khớp.' },
+  { q: 'Tiền có qua MONA Pay không?', a: 'Không. Tiền từ ngân hàng khách vào thẳng tài khoản ACB đứng tên tiệm. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về phần mềm và Telegram, không giữ tiền, không thu phần trăm.' },
+  { q: 'Phí sử dụng thế nào?', a: `MONA Pay ${PRICE_LINE}. Phần mềm quản lý spa, salon, nail của Mona.Software báo giá riêng qua ${SITE.hotline}.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Spa, salon, nail', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Ngành làm đẹp · spa, salon tóc, tiệm nail, clinic</span>
+      <h1>Spa, salon, nail thu cọc lịch hẹn:<br class="br-d" /> <span class="accent">khách chuyển là lịch tự giữ</span></h1>
+      <div class="answer-first">
+        <p>Spa, salon, tiệm nail thu cọc lịch hẹn và tiền dịch vụ qua MONA Pay bằng mã VietQR động đúng số tiền, gắn mã lịch hẹn. Khách quét bằng app ngân hàng, tiền vào thẳng tài khoản ACB của tiệm, lịch tự chuyển sang "đã cọc", lễ tân và nhóm Telegram biết trong vài giây. Không ảnh chụp màn hình, không nhầm khách cùng mức cọc, miễn phí.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/acb">Xem cách nối ACB</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện ở quầy lễ tân</span>
+      <h2>Thu cọc và thu tiền dịch vụ bằng chuyển khoản đang kẹt ở đâu?</h2>
+      <p class="lead">Chủ spa, chủ salon đến MONA làm phần mềm kể chuyện giống nhau: lịch thì đầy mà khách không tới, cọc thì nhận bằng ảnh, cuối ngày đếm tiền không khớp. Bốn chỗ kẹt tụi em thấy nhiều nhất.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Không cọc thì khách bùng, đòi cọc thì lễ tân phải canh tiền</h3><p>Tiệm bắt cọc để giữ ghế cho kỹ thuật viên. Khách chuyển xong gửi ảnh, lễ tân nhắn chủ hỏi "tiền vào chưa chị", chủ đang làm khách khác. Lịch cứ treo ở trạng thái "chờ", hai khách cùng muốn một khung giờ là rối.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Cùng mức cọc, cùng giờ chuyển</h3><p>Cọc 200.000 đ cho mọi dịch vụ. Sáng thứ bảy mười khách chuyển trong nửa tiếng, nội dung "coc", "dat lich", tên người chuyển là chồng, là mẹ, là người quen của khách. Lễ tân đoán, đoán sai là giữ ghế cho nhầm người.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Nhiều cơ sở, một tài khoản ngân hàng của chủ</h3><p>Tiền cơ sở nào cũng về một tài khoản, quản lý cơ sở không có quyền xem app. Chủ thành người xác nhận tiền cho cả chuỗi, cuối tháng kế toán tách doanh thu theo cơ sở bằng tay, hoa hồng kỹ thuật viên tính chậm.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Thanh toán sau dịch vụ lẫn với cọc</h3><p>Khách đã cọc 200.000 đ, làm xong trả thêm 650.000 đ. Hai giao dịch, hai thời điểm, cùng một khách. Đối chiếu bằng tay rất hay ghi thiếu một khoản hoặc ghi trùng, hoa hồng tính sai theo.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Cọc về là lịch giữ, tiền dịch vụ về là hoá đơn đóng</h2>
+      <p class="lead">Luồng nhận tiền tụi em dùng cho hosting, học phí và cho hơn {SITE.customersSince2022} khách hàng của MONA từ 2022, đưa vào tiệm: mỗi lịch hẹn một mã QR, thông báo về đúng người cần biết.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Phần mềm MONA cho spa, salon, nail</span>
+      <h2>Phần mềm quản lý spa, salon của Mona.Software, nối sẵn MONA Pay</h2>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><h3>Đặt lịch, cọc, thanh toán, hoa hồng</h3><p><a href="https://mona.software">Phần mềm quản lý spa, salon, nail của Mona.Software</a> sinh mã QR cọc theo lịch hẹn, tiền vào là lịch đổi trạng thái, hoá đơn dịch vụ khớp giao dịch để tính hoa hồng. Bàn giao là chạy.</p></div>
+        <div class="card"><h3>Đang dùng phần mềm khác</h3><p>Nối qua webhook theo <a href="/docs/webhooks/tich-hop-webhook">tài liệu</a>, đội MONA viết lớp nối nếu tiệm không có người kỹ thuật. Tiệm một hai cơ sở dùng mã QR động trong dashboard cộng <a href="/chia-se-bien-dong-so-du-telegram">thông báo Telegram</a> là đủ.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Báo giá phần mềm: gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a>. MONA Pay thì {PRICE_LINE}.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ spa, salon hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Cuối tuần này lễ tân không phải hỏi chủ tiền cọc vào chưa" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, tạo mã QR cọc, bật Telegram cho nhóm tiệm. Cần phần mềm quản lý spa thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/api/qr-thanh-toan', label: 'Xem mã QR động' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

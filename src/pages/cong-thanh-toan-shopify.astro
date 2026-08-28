@@ -1,0 +1,133 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Cổng thanh toán Shopify Việt Nam: nhận chuyển khoản, tự xác nhận';
+const description = 'Cổng thanh toán Shopify cho shop Việt Nam: khách quét VietQR vào tài khoản ACB, MONA Pay báo trong vài giây, đơn tự xác nhận qua lớp nối. Miễn phí hoàn toàn.';
+
+const stepsNoi = [
+  { title: 'Tạo tài khoản MONA Pay, nối tài khoản ACB', body: 'Đăng ký tại my.monapay.vn, dùng ngay không cần duyệt. Vào mục Ngân hàng và VA, đi wizard 4 bước với 2 lần OTP do ACB gửi về số điện thoại chủ tài khoản. Xong bước này, mỗi lần tiền vào ACB là MONA Pay biết.' },
+  { title: 'Mỗi đơn Shopify nhận một mã VietQR động riêng', body: 'Khi khách chốt đơn và chọn chuyển khoản, lớp nối gọi API tạo QR của MONA Pay: số tiền đúng bằng giá trị đơn, nội dung chuyển khoản là mã đơn. Khách quét bằng app ngân hàng bất kỳ, không gõ tay số tiền, không gõ tay nội dung.' },
+  { title: 'Tiền vào ACB, MONA Pay bắn webhook tới lớp nối', body: 'Gói tin JSON có số tiền, nội dung, mã giao dịch, thời gian, ký HMAC-SHA256 để lớp nối biết chắc là MONA Pay gửi. Lớp nối trả HTTP 200 trong 10 giây là MONA Pay ghi nhận thành công, không thì có nút gửi lại trong dashboard.' },
+  { title: 'Lớp nối đánh dấu đơn đã thanh toán trên Shopify', body: 'Lớp nối đọc mã đơn trong nội dung chuyển khoản, so số tiền, rồi gọi API quản lý đơn của Shopify để đổi trạng thái đơn. Phần này đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu. Anh chị kiểm với Shopify xem gói đang dùng có mở API quản lý đơn hàng không.' },
+];
+const stepsTam = [
+  { title: 'Bật hình thức "chuyển khoản ngân hàng" trong Shopify', body: 'Trang thanh toán của Shopify cho khách chọn chuyển khoản, đơn nằm ở trạng thái chờ thanh toán. Đây là đường không cần lập trình, đủ dùng cho shop nhỏ đang bán trong nước.' },
+  { title: 'Tạo mã VietQR động trong dashboard MONA Pay', body: 'Vào mục Tạo QR, nhập số tiền và mã đơn, tải ảnh QR về. Gắn ảnh vào trang cảm ơn, email xác nhận đơn hoặc tin nhắn chốt đơn với khách. Khách quét là chuyển đúng số tiền, đúng nội dung.' },
+  { title: 'Tiền vào, cả nhóm Telegram thấy ngay', body: 'Cấu hình MONA Pay báo vào nhóm Telegram của shop: tên ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Nhân viên đọc tin, vào Shopify bấm đã thanh toán. Vẫn có một thao tác tay, nhưng không ai phải mở app ngân hàng canh tiền nữa.' },
+];
+const faq = [
+  { q: 'Shop Shopify ở Việt Nam có nhận chuyển khoản tự động được không?', a: 'Được, qua 2 đường. Đường đầy đủ: lớp nối nhận webhook từ MONA Pay rồi đổi trạng thái đơn trên Shopify qua API, đơn tự sang đã thanh toán trong vài giây. Đường tạm không cần code: bật chuyển khoản trong Shopify, gắn mã VietQR động, tiền vào là Telegram báo, nhân viên đổi trạng thái tay.' },
+  { q: 'Lớp nối giữa MONA Pay và Shopify là gì, ai viết?', a: 'Là một đoạn chương trình nhỏ nhận gói tin webhook của MONA Pay, kiểm chữ ký HMAC, tìm đúng đơn theo mã trong nội dung chuyển khoản, rồi gọi API của Shopify đánh dấu đơn đã thanh toán. Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs.' },
+  { q: 'Tiền của khách có đi qua MONA Pay hay Shopify không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về lớp nối, Telegram và dashboard. Không có bước rút tiền, không có khoản nào bị giữ lại.' },
+  { q: 'MONA Pay thu phí bao nhiêu cho shop Shopify?', a: `MONA Pay ${PRICE_LINE}. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí rút. Để so sánh, PayPal Việt Nam thu 4,40% cộng phí cố định cho giao dịch thương mại từ ngoài lãnh thổ Việt Nam và 60.000đ mỗi lần rút về ngân hàng trong nước (theo biểu phí công bố, tụi em kiểm ngày 28/08/2026).` },
+  { q: 'Khách nước ngoài mua trên Shopify thì sao?', a: 'Khách nước ngoài không có app ngân hàng Việt Nam để quét VietQR, nên phần bán ra nước ngoài anh chị vẫn dùng cổng quốc tế như PayPal. Cách tụi em hay khuyên là chạy song song: khách trong nước chuyển khoản qua MONA Pay để khỏi mất phần trăm, khách nước ngoài đi cổng quốc tế. Chi tiết ở trang cổng thanh toán quốc tế.' },
+  { q: 'Cần tài khoản ngân hàng nào?', a: 'ACB đang chạy: anh chị cần tài khoản thanh toán ACB đứng tên mình (cá nhân hoặc doanh nghiệp) và số điện thoại đã đăng ký với ACB để nhận 2 lần OTP khi nối. Các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; nối thêm sau không phải sửa tích hợp.' },
+];
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'vi', url: SITE.url + '/cong-thanh-toan-shopify', author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' }, isPartOf: { '@id': SITE.url + '/#website' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán Shopify', item: SITE.url + '/cong-thanh-toan-shopify' },
+  ] },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-shopify" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Shopify · chuyển khoản ACB</span>
+      <h1>Cổng thanh toán Shopify Việt Nam:<br class="hb" /> <span class="accent">khách chuyển khoản, đơn tự xác nhận</span></h1>
+      <div class="answer-first">
+        <p>Cổng thanh toán Shopify cho shop Việt Nam làm theo cách này: mỗi đơn có một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và lớp nối đánh dấu đơn đã thanh toán trên Shopify. Miễn phí hoàn toàn, không thu phần trăm.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Đọc tài liệu webhook</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện shop Shopify hay gặp</span>
+      <h2>Bán trên Shopify mà khách trong nước<br class="br-d" /> vẫn thích chuyển khoản</h2>
+      <p class="lead">Khách MONA làm web bán hàng có một nhóm đang chạy Shopify, phần lớn để bán ra nước ngoài nhưng vẫn có khách Việt. Nhóm này gặp cùng một chỗ kẹt: khách trong nước không quen trả bằng thẻ quốc tế, cứ hỏi "cho em số tài khoản". Và từ lúc khách chuyển tới lúc đơn được xác nhận là một khoảng trống toàn thao tác tay.</p>
+      <div class="grid grid-2">
+        <div class="card"><div class="icon">1</div><h3>Khách chuyển xong phải chụp màn hình</h3><p>Khách gửi ảnh biên lai qua chat, nhân viên mở app ngân hàng đối chiếu số tiền và nội dung, rồi vào Shopify bấm đã thanh toán. Mỗi đơn mất vài phút, ngày 50 đơn là mất cả buổi.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Đơn tối và cuối tuần nằm chờ</h3><p>Khách chuyển lúc 22h, không ai canh app ngân hàng, đơn nằm ở trạng thái chờ tới sáng hôm sau. Khách mua hàng số như khoá học, vé, mã kích hoạt thì khoảng chờ này là lý do hủy đơn.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Nhầm đơn khi nhiều khách chuyển cùng số tiền</h3><p>Ba khách cùng chuyển 350.000đ trong 10 phút, nội dung gõ tay mỗi người một kiểu. Kế toán phải đoán ai là ai, đoán sai là gửi nhầm hàng.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Cổng thu phần trăm ăn vào lãi</h3><p>Cổng quốc tế thu phần trăm trên mỗi đơn và có phí rút về ngân hàng trong nước. Đơn 500.000đ lãi mỏng, mất thêm vài phần trăm là hết lãi. Trong khi khách Việt có app ngân hàng, quét VietQR là xong, không mất phí gì.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Đường đầy đủ</span>
+      <h2>Đơn Shopify tự sang đã thanh toán<br class="br-d" /> qua lớp nối với MONA Pay</h2>
+      <p class="lead">MONA Pay bắn webhook khi tiền vào tài khoản ảo hoặc VietQR. Muốn đơn trên Shopify tự đổi trạng thái thì cần một lớp nối: nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Shopify. Đội MONA viết lớp nối này cho khách, hoặc dev của anh chị tự viết theo tài liệu.</p>
+      <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
+      <p style="margin-top:1.2rem">Tụi em nói rõ hai điều để anh chị khỏi mua hớ: MONA Pay chưa có ứng dụng cài sẵn trên kho ứng dụng Shopify, và việc đổi trạng thái đơn phụ thuộc vào gói Shopify của anh chị có mở API quản lý đơn hàng hay không. Anh chị kiểm với Shopify trước, phần còn lại tụi em lo.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Đường tạm, không cần code</span>
+      <h2>Chưa có dev thì làm cách này:<br class="br-d" /> VietQR động cộng Telegram</h2>
+      <p class="lead">Đường này đủ dùng cho shop nhỏ vài chục đơn mỗi ngày. Không lập trình, không chạm vào code Shopify. Vẫn còn một thao tác tay là đổi trạng thái đơn, nhưng bỏ được hẳn việc mở app ngân hàng ngồi canh.</p>
+      <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">So sánh</span>
+      <h2>Ba cách nhận tiền cho shop Shopify Việt Nam</h2>
+      <p class="lead">Số về cổng quốc tế lấy từ biểu phí công bố của PayPal Việt Nam và trang quốc gia của Stripe, tụi em kiểm ngày 28/08/2026. Ví và cổng nội địa thu phần trăm theo hợp đồng nên không có số công khai để ghi.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>
+          <tbody>
+            <tr><td>Phí mỗi giao dịch</td><td>Phần trăm theo hợp đồng, không niêm yết công khai</td><td>PayPal 4,40% + phí cố định theo tiền tệ; Stripe chưa mở đăng ký cho doanh nghiệp Việt Nam</td><td>0đ, không phần trăm</td></tr>
+            <tr><td>Tiền về đâu</td><td>Ví hoặc tài khoản đối soát, rồi mới chuyển về ngân hàng</td><td>Số dư trong cổng, rút về ngân hàng trong nước 60.000đ/lần (PayPal)</td><td>Thẳng vào tài khoản ACB của anh chị</td></tr>
+            <tr><td>Khách cần gì</td><td>Có ví hoặc app tương ứng</td><td>Thẻ quốc tế hoặc tài khoản cổng</td><td>App ngân hàng bất kỳ, quét VietQR</td></tr>
+            <tr><td>Đăng ký</td><td>Ký hợp đồng merchant</td><td>Tuỳ cổng; Stripe cần pháp nhân ở nước được hỗ trợ</td><td>Đăng ký xong dùng ngay, nối ACB 4 bước</td></tr>
+            <tr><td>Hợp với</td><td>Bán lẻ tại quầy, app có sẵn ví</td><td>Bán ra nước ngoài</td><td>Khách trong nước, đơn từ vài chục nghìn tới vài chục triệu</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">MONA làm gì cho anh chị</span>
+      <h2>Từ nối ACB tới lớp nối Shopify,<br class="br-d" /> tụi em làm trọn</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Nối ACB và cấu hình</h3><p>Hướng dẫn đi wizard 4 bước, cấu hình webhook, nhóm Telegram, mẫu tin. Kẹt ở bước OTP nào gọi 1900 636 648 là có người trực.</p></div>
+        <div class="card"><h3>Viết lớp nối Shopify</h3><p>MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án. Lớp nối nhận webhook, kiểm chữ ký, đổi trạng thái đơn trên Shopify, thường xong trong vài ngày. Chi phí phần này báo riêng, không nằm trong MONA Pay.</p></div>
+        <div class="card"><h3>Tài liệu cho dev tự làm</h3><p>Mọi trang tài liệu có bản .md, có llms.txt và openapi.json để dev hoặc AI agent của anh chị đọc thẳng. Code mẫu cURL, PHP, Node cho phần nhận webhook.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Anh chị cũng có thể xem cách tụi em làm cho <a href="/cong-thanh-toan-woocommerce">WooCommerce</a> và <a href="/cong-thanh-toan-wordpress">WordPress</a>, cùng nguyên lý, chỉ khác lớp nối. Bán ra nước ngoài thì đọc thêm trang <a href="/cong-thanh-toan-quoc-te">cổng thanh toán quốc tế</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ shop Shopify hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Shop Shopify nhận chuyển khoản tự xác nhận từ tuần này" body="Tạo tài khoản, nối ACB 4 bước, tạo VietQR động. Cần lớp nối Shopify thì gọi tụi em, vài ngày là xong." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
+</Base>
+<style>
+  .hb,.br-d{display:inline}
+  @media (max-width:767px){.hb,.br-d{display:none}}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.5rem)}
+</style>

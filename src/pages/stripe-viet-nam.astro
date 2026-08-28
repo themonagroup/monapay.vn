@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Stripe Việt Nam: có hỗ trợ không, đăng ký thế nào, thay bằng gì';
+const description = 'Stripe chưa hỗ trợ Việt Nam: danh sách quốc gia stripe.com ngày 28/08/2026 có Singapore, Thái Lan, Malaysia, không có Việt Nam. Thu tiền trong nước thì dùng VietQR.';
+
+const faq = [
+  { q: 'Stripe có hỗ trợ Việt Nam không?', a: 'Chưa. Trang danh sách quốc gia của Stripe (stripe.com/global) ngày 28/08/2026 liệt kê hơn 40 nước gồm Singapore, Thái Lan, Malaysia, Indonesia, Nhật Bản, Hồng Kông, Ấn Độ, Úc, nhưng không có Việt Nam. Doanh nghiệp đăng ký bằng pháp nhân Việt Nam chưa mở được tài khoản Stripe trực tiếp.' },
+  { q: 'Stripe có ở Việt Nam không, có công ty Stripe Việt Nam không?', a: 'Stripe không có văn phòng hay pháp nhân tại Việt Nam và không nhận đăng ký từ doanh nghiệp Việt Nam tính đến 28/08/2026. Những công ty tự gọi là "Stripe Việt Nam" là bên thứ ba, không phải Stripe.' },
+  { q: 'Đăng ký Stripe từ Việt Nam thì người ta làm cách nào?', a: 'Cách thường thấy là lập pháp nhân tại một nước Stripe hỗ trợ, ví dụ Singapore hoặc Mỹ, rồi đăng ký Stripe bằng pháp nhân đó và mở tài khoản ngân hàng ở nước đó để nhận tiền. Cách này kéo theo chi phí duy trì công ty, kế toán, thuế ở hai nước và việc đưa tiền về Việt Nam. Tụi em không tư vấn pháp lý, anh chị hỏi kế toán và luật sư trước khi làm.' },
+  { q: 'Phí Stripe là bao nhiêu?', a: 'Stripe tính phần trăm cộng phí cố định trên mỗi giao dịch, mức niêm yết theo từng nước trên stripe.com/pricing của nước đăng ký. Vì chưa có bảng phí cho Việt Nam nên tụi em không đưa số ở đây.' },
+  { q: 'Stripe hợp với việc gì?', a: 'Phần mềm bán theo tháng, thanh toán thẻ quốc tế, thị trường nước ngoài, đội kỹ thuật cần API mạnh. Điều kiện là có pháp nhân ở nước Stripe hỗ trợ. Thu tiền khách lẻ trong nước bằng Stripe không hợp: khách Việt quét VietQR chứ không nhập thẻ.' },
+  { q: 'Thu tiền khách trong nước thì thay Stripe bằng gì?', a: 'Chuyển khoản qua VietQR với MONA Pay: mỗi đơn một mã QR động hoặc tài khoản ảo ACB, tiền vào thẳng tài khoản ngân hàng của anh chị, webhook ký HMAC-SHA256 báo về phần mềm để đơn tự xác nhận, ' + PRICE_LINE + '. Có tài liệu API, llms.txt và openapi.json cho lập trình viên và AI agent giống cách Stripe làm tài liệu.' },
+];
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'Article',
+  headline: title, description, inLanguage: 'vi', url: SITE.url + '/stripe-viet-nam',
+  datePublished: '2026-08-28', dateModified: '2026-08-28',
+  author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' },
+  about: ['Stripe Việt Nam', 'cổng thanh toán quốc tế', 'chuyển khoản VietQR'],
+}, {
+  '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán quốc tế', item: SITE.url + '/cong-thanh-toan-quoc-te' },
+    { '@type': 'ListItem', position: 3, name: 'Stripe Việt Nam', item: SITE.url + '/stripe-viet-nam' },
+  ],
+}];
+const countries = ['Singapore', 'Thái Lan', 'Malaysia', 'Indonesia', 'Nhật Bản', 'Hồng Kông', 'Ấn Độ', 'Úc', 'New Zealand'];
+---
+<Base title={title} description={description} path="/stripe-viet-nam" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Cổng thanh toán quốc tế · Stripe</span>
+      <h1>Stripe Việt Nam:<br class="br-d" /> <span class="accent">chưa mở đăng ký, thu tiền thay bằng gì</span></h1>
+      <div class="answer-first">
+        <p>Stripe chưa hỗ trợ Việt Nam. Danh sách quốc gia trên stripe.com ngày 28/08/2026 có Singapore, Thái Lan, Malaysia, Indonesia và hơn 40 nước khác nhưng không có Việt Nam, nên doanh nghiệp Việt chưa đăng ký trực tiếp được. Bán cho khách trong nước thì không cần Stripe: khách quét VietQR, tiền vào thẳng tài khoản ACB, MONA Pay xác nhận tự động qua webhook và {PRICE_LINE}.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Thu tiền trong nước miễn phí</a>
+        <a class="btn btn-outline" href="/cong-thanh-toan-quoc-te">So sánh các cổng quốc tế</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Sự thật</span>
+      <h2>Stripe có hỗ trợ Việt Nam không:<br class="br-d" /> tụi em kiểm ngày 28/08/2026</h2>
+      <p class="lead">Chưa. Stripe công bố danh sách nước mở đăng ký tại stripe.com/global. Trong khu vực châu Á và châu Đại Dương, danh sách đó gồm:</p>
+      <div class="grid grid-3">
+        {countries.map((c) => <div class="card" style="padding:1rem 1.2rem"><strong class="check">✓</strong> {c}</div>)}
+        <div class="card" style="padding:1rem 1.2rem;border:2px solid var(--danger)"><strong class="cross">✗</strong> Việt Nam</div>
+      </div>
+      <p style="margin-top:1.4rem">Nghĩa là pháp nhân đăng ký tại Việt Nam, dùng tài khoản ngân hàng Việt Nam, chưa mở được tài khoản Stripe. Các trang tự gọi là "Stripe Việt Nam" hay "công ty TNHH Stripe Việt Nam" mà anh chị thấy khi tìm trên Google đều là bên thứ ba, không phải Stripe. Stripe cập nhật danh sách theo từng đợt, anh chị kiểm lại tại stripe.com/global trước khi lên kế hoạch.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Đăng ký</span>
+      <h2>Đăng ký Stripe từ Việt Nam:<br class="br-d" /> người ta làm cách nào, đổi lại cái gì</h2>
+      <p>Cách thường thấy ở các công ty phần mềm Việt bán ra nước ngoài: lập một pháp nhân tại nước Stripe hỗ trợ, phổ biến là Singapore hoặc Mỹ, đăng ký Stripe bằng pháp nhân đó, mở tài khoản ngân hàng ở nước đó để Stripe chuyển tiền về. Cách này chạy được, nhưng anh chị đang gánh thêm một công ty ở nước ngoài.</p>
+      <div class="grid grid-3">
+        <div class="card"><h3>Chi phí duy trì</h3><p>Phí lập và duy trì công ty, địa chỉ đăng ký, kế toán, kiểm toán theo luật nước sở tại, trả hằng năm dù bán được hay không.</p></div>
+        <div class="card"><h3>Thuế và pháp lý hai nước</h3><p>Doanh thu ghi nhận ở nước ngoài, tiền đưa về Việt Nam phải đúng quy định ngoại hối và thuế. Tụi em không tư vấn pháp lý, phần này anh chị hỏi kế toán và luật sư.</p></div>
+        <div class="card"><h3>Dòng tiền về chậm</h3><p>Tiền nằm ở tài khoản nước ngoài, chuyển về Việt Nam thêm một chặng chuyển tiền quốc tế với phí và thời gian riêng.</p></div>
+      </div>
+      <p style="margin-top:1.4rem">Vì vậy chỉ nên đi đường này khi doanh thu từ khách nước ngoài đủ lớn để gánh chi phí đó. Còn phần khách trong nước, đừng bắt họ đi qua Stripe.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Phí và tính năng</span>
+      <h2>Stripe hợp việc gì,<br class="br-d" /> không hợp việc gì</h2>
+      <div class="grid grid-2">
+        <div class="card">
+          <h3>Hợp</h3>
+          <ul>
+            <li>Phần mềm bán theo tháng cho thị trường nước ngoài, thu USD hoặc EUR định kỳ.</li>
+            <li>Khách trả bằng thẻ quốc tế, Apple Pay, Google Pay.</li>
+            <li>Đội kỹ thuật cần API, webhook và tài liệu chuẩn.</li>
+            <li>Đã có pháp nhân ở nước Stripe hỗ trợ.</li>
+          </ul>
+        </div>
+        <div class="card">
+          <h3>Không hợp</h3>
+          <ul>
+            <li>Thu tiền khách lẻ trong nước: khách Việt quét VietQR, không nhập thẻ.</li>
+            <li>Doanh nghiệp chỉ có pháp nhân Việt Nam: chưa đăng ký được.</li>
+            <li>Mất phần trăm cộng phí cố định mỗi giao dịch (mức niêm yết theo từng nước trên stripe.com), trong khi chuyển khoản nội địa là 0đ.</li>
+            <li>Tiền về tài khoản ở nước ngoài, không vào thẳng tài khoản Việt Nam.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Thay thế cho khách trong nước</span>
+      <h2>Thu tiền khách Việt bằng chuyển khoản VietQR,<br class="br-d" /> xác nhận tự động như webhook của Stripe</h2>
+      <p class="lead">{SITE.entity}</p>
+      <p>Lập trình viên quen Stripe sẽ thấy MONA Pay quen tay: có API, webhook ký HMAC-SHA256 kèm dấu thời gian chống phát lại 5 phút, lịch sử từng lần gửi, tài liệu có bản markdown cho từng trang, llms.txt và openapi.json để AI agent đọc thẳng. Khác biệt nằm ở dòng tiền: khách quét VietQR, tiền vào thẳng tài khoản ACB của anh chị, không qua ví trung gian, không mất phần trăm, {PRICE_LINE}. Đăng ký xong dùng ngay, không cần ai duyệt.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>Stripe</th><th>MONA Pay (chuyển khoản nội địa)</th></tr></thead>
+          <tbody>
+            <tr><td>Đăng ký từ Việt Nam</td><td>Chưa mở (28/08/2026)</td><td>Đăng ký xong dùng ngay</td></tr>
+            <tr><td>Khách trả bằng</td><td>Thẻ quốc tế, ví điện tử toàn cầu</td><td>Quét VietQR bằng ứng dụng ngân hàng bất kỳ</td></tr>
+            <tr><td>Phí mỗi giao dịch</td><td>Phần trăm + phí cố định theo nước</td><td>0đ</td></tr>
+            <tr><td>Tiền về đâu</td><td>Tài khoản ngân hàng ở nước đăng ký</td><td>Thẳng tài khoản ACB của anh chị</td></tr>
+            <tr><td>Báo về phần mềm</td><td>Webhook</td><td>Webhook ký HMAC-SHA256, tin Telegram</td></tr>
+            <tr><td>Tài liệu cho máy đọc</td><td>Có</td><td>Có: <a href="/llms.txt">llms.txt</a>, <a href="/docs">docs</a> bản .md, <a href="/openapi.json">openapi.json</a></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi hay gặp về Stripe tại Việt Nam" />
+    </div>
+  </section>
+
+  <CtaBand title="Khách trong nước chuyển khoản, đơn tự xác nhận, 0đ phí" body={`Đăng ký xong dùng ngay, nối ACB bằng 2 lần OTP, webhook có tài liệu đầy đủ, ${PRICE_LINE}.`} primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/paypal-viet-nam', label: 'Còn PayPal thì sao?' }} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+</style>

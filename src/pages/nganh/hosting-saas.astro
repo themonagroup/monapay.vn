@@ -1,0 +1,109 @@
+---
+import Base from '../../layouts/Base.astro';
+import Faq from '../../components/Faq.astro';
+import CtaBand from '../../components/CtaBand.astro';
+import Steps from '../../components/Steps.astro';
+import { SITE } from '../../data/site';
+import { PRICE_LINE } from '../../data/pricing';
+
+const path = '/nganh/hosting-saas';
+const title = 'Thu phí hosting, SaaS tự động: khách chuyển khoản là gia hạn ngay';
+const description = 'Công ty hosting, SaaS thu phí gia hạn qua mã VietQR gắn mã hoá đơn: tiền vào là dịch vụ tự gia hạn. Mona.Host thu phí hosting bằng cách này từ nhiều năm, miễn phí.';
+
+const steps = [
+  { title: 'Hoá đơn gia hạn sinh mã QR đúng số tiền, gắn mã hoá đơn', body: 'Hệ thống thuê bao gọi MONA Pay sinh mã VietQR động cho từng hoá đơn, số tiền và mã hoá đơn điền sẵn. Khách nhận email hoặc vào trang khách hàng, quét bằng app ngân hàng. Không gõ nội dung, không chuyển thiếu.' },
+  { title: 'Tiền vào thẳng tài khoản ACB của công ty', body: 'Không ví trung gian, không phí phần trăm. Khách gia hạn 1 năm hosting hay 1 tháng phần mềm đều vào tài khoản công ty ngay, ACB báo cho MONA Pay tức thì, kể cả nửa đêm.' },
+  { title: 'Webhook về hệ thống, dịch vụ tự gia hạn', body: 'Gói tin JSON có chữ ký HMAC-SHA256 đi vào hệ thống thuê bao, hệ thống khớp mã hoá đơn, đánh dấu đã thanh toán, gia hạn dịch vụ, gửi biên nhận. Trả 200 trong 10 giây là MONA Pay ghi nhận đã giao. Đây chính là luồng Mona.Host đang chạy.' },
+  { title: 'Kế toán đối chiếu theo mã, gửi lại nếu lỡ', body: 'Mỗi giao dịch có mã riêng giữ nguyên qua mọi lần gửi lại, hệ thống ghi mã đã xử lý nên không gia hạn trùng. Lịch sử từng lần gửi có mã HTTP, thời gian phản hồi, nhãn lỗi, bấm gửi lại ngay trong dashboard.' },
+];
+
+const faq = [
+  { q: 'Hệ thống thuê bao của tôi tự viết, nối mất bao lâu?', a: 'Cần một địa chỉ nhận webhook trên hệ thống của anh chị, kiểm chữ ký, khớp mã hoá đơn, gia hạn. Code mẫu cURL, PHP, Node có trong tài liệu, người kỹ thuật quen làm thường xong trong một buổi. Đăng ký MONA Pay là dùng ngay, không cần duyệt.' },
+  { q: 'Khách gia hạn trước hạn, hoặc chuyển thiếu vài nghìn thì sao?', a: 'Mã QR động đã điền sẵn số tiền nên thiếu rất hiếm. Nếu khách vẫn sửa số, webhook về với số tiền thật, hệ thống của anh chị tự quyết: gia hạn tạm và nhắc nộp thêm, hay giữ hoá đơn mở. Logic là của anh chị, MONA Pay chỉ báo đúng số.' },
+  { q: 'Khách hàng doanh nghiệp chuyển gộp nhiều hoá đơn một lần?', a: 'Cấp cho khách doanh nghiệp một tài khoản ảo cố định. Tiền về tài khoản đó thì hệ thống biết là của khách nào rồi tự phân bổ vào các hoá đơn mở theo quy tắc của anh chị, kế toán chỉ xem lại.' },
+  { q: 'Tiền có nằm ở MONA Pay không?', a: 'Không. Tiền vào thẳng tài khoản ACB đứng tên công ty. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về hệ thống và Telegram. Mona.Host thu phí hosting nhiều năm bằng đúng cách này, và hơn 6.000 khách hàng của MONA dùng từ 2022, tiền chưa bao giờ qua tay trung gian.' },
+  { q: 'Khách nước ngoài trả bằng thẻ hoặc PayPal thì sao?', a: 'MONA Pay giải chiều thu tiền trong nước bằng chuyển khoản. Khách nước ngoài anh chị chạy thêm cổng quốc tế song song, xem so sánh tại trang cổng thanh toán quốc tế và PayPal Việt Nam (PayPal thu 4,40% cộng phí cố định, rút về ngân hàng 60.000 đ mỗi lần theo biểu phí kiểm ngày 28/08/2026).' },
+  { q: 'Phí sử dụng thế nào?', a: `MONA Pay ${PRICE_LINE}. Vài trăm hay vài chục nghìn hoá đơn gia hạn một tháng đều không tính phí, không thu phần trăm.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Hosting, SaaS, dịch vụ thuê bao', item: SITE.url + path },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + path, inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path={path} jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Hosting, domain, phần mềm thuê bao, dịch vụ gia hạn định kỳ</span>
+      <h1>Thu phí hosting, SaaS tự động:<br class="br-d" /> <span class="accent">khách chuyển khoản là gia hạn ngay</span></h1>
+      <div class="answer-first">
+        <p>Công ty hosting, phần mềm thuê bao và dịch vụ gia hạn định kỳ thu tiền qua MONA Pay bằng mã VietQR gắn mã hoá đơn. Khách quét, tiền vào thẳng tài khoản ACB của công ty, webhook có chữ ký về hệ thống và dịch vụ tự gia hạn trong vài giây, không cần nhân viên xác nhận. Chính Mona.Host thu phí hosting, VPS, domain bằng luồng này từ nhiều năm nay, miễn phí cho mọi công ty từ 2026.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Xem tài liệu webhook</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện của chính tụi em</span>
+      <h2>Trước khi tự động, Mona.Host thu phí gia hạn thế nào?</h2>
+      <p class="lead">Mona.Host bán hosting, VPS, domain cho khách trong hệ 14.000+ dự án. Hoá đơn gia hạn đến hạn rải đều mỗi ngày, khách chuyển khoản bất kể giờ. Bốn chuyện tụi em từng vấp, và thấy lại ở mọi công ty SaaS đến MONA.</p>
+      <div class="grid grid-2" style="margin-top:1.5rem">
+        <div class="card"><div class="icon">1</div><h3>Khách chuyển tối, sáng mới được gia hạn</h3><p>Hosting hết hạn lúc 23 giờ, khách chuyển ngay, nhưng người xác nhận đã về. Web khách sập tới sáng, khách gọi tổng đài trách. Tụi em từng ở đúng cảnh này trước khi tự động hoá phần gia hạn.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Nhiều hoá đơn cùng số tiền, nội dung không có mã</h3><p>Gói hosting cùng giá, hàng chục khách gia hạn cùng ngày, nội dung "gia han", "hosting", tên công ty viết tắt. Nhân viên khớp bằng tay, khớp nhầm là gia hạn cho web khác.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Khách doanh nghiệp chuyển gộp, kế toán tách bằng tay</h3><p>Một khách 5 domain, 2 hosting chuyển một lần 7 triệu. Kế toán phải tự phân bổ vào 7 hoá đơn, sai một dòng là công nợ lệch cả quý.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Ví hoặc cổng thu phần trăm ăn vào biên lợi nhuận mỏng</h3><p>Phí gia hạn hosting vài trăm nghìn, biên mỏng. Đi qua cổng thu phần trăm cộng phí cố định là mất một phần lãi, tiền lại nằm ở ví đối soát rồi mới về tài khoản.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>Hoá đơn có mã QR, tiền vào là hệ thống tự gia hạn</h2>
+      <p class="lead">Luồng dưới đây là luồng thật của Mona.Host, tụi em tự viết để thu tiền cho mình rồi mới mở cho mọi công ty. Ngày 28/08/2026 tụi em chạy lại từ đầu tới cuối với 50.000 đ tiền thật để kiểm trước khi công bố.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Nối vào hệ thống của anh chị</span>
+      <h2>Hệ thống thuê bao nào nhận được webhook đều nối được</h2>
+      <div class="grid grid-3" style="margin-top:1.5rem">
+        <div class="card"><h3>Tự viết theo tài liệu</h3><p>Code mẫu cURL, PHP, Node cho địa chỉ nhận webhook, kiểm chữ ký, chống trùng bằng mã giao dịch: <a href="/docs/webhooks/tich-hop-webhook">tích hợp webhook</a>, <a href="/docs/api/qr-thanh-toan">API mã QR</a>, <a href="/docs/webhooks/doi-soat">đối soát</a>.</p></div>
+        <div class="card"><h3>Để AI agent tự nối</h3><p>Tài liệu có bản .md, llms.txt và openapi.json ngay trên tên miền, kèm prompt sao chép sẵn cho Claude Code, Codex, Cursor. Xem <a href="/ai-agent">trang dành cho AI agent</a>.</p></div>
+        <div class="card"><h3>Đội MONA làm giúp</h3><p>Mona.Software làm phần mềm theo yêu cầu từ 2016. Hệ thống thuê bao làm tại MONA thì nối sẵn lúc bàn giao. Hệ thống làm nơi khác thì đội tụi em viết lớp nối, báo giá qua <a href={SITE.hotlineTel}>{SITE.hotline}</a>.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">MONA Pay {PRICE_LINE}. Xem thêm <a href="/khach-hang">ca dùng thật</a> và <a href="/bang-gia">bảng giá</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại, tổng đài {SITE.hotline} có người trực trong giờ làm việc. Xem thêm <a href="/cong-thanh-toan-quoc-te">so với cổng thanh toán quốc tế</a> cho phần khách nước ngoài.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Công ty hosting, SaaS hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Hoá đơn gia hạn tháng này tự đóng, không cần người trực đêm" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, dán webhook vào hệ thống thuê bao. Kẹt chỗ nào gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/ai-agent', label: 'Để AI agent tự tích hợp' }} />
+</Base>
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero h1 { font-size: clamp(1.9rem, 4vw, 2.75rem); }
+</style>

@@ -1,0 +1,127 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Haravan cổng thanh toán chuyển khoản: tự xác nhận đơn, miễn phí';
+const description = 'Haravan cổng thanh toán chuyển khoản với MONA Pay: khách quét VietQR đúng số tiền, tiền vào thẳng ACB, đơn tự xác nhận qua lớp nối hoặc Telegram báo ngay.';
+
+const stepsNoi = [
+  { title: 'Nối tài khoản ACB vào MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng ngay không cần duyệt. Đi wizard 4 bước với 2 lần OTP do ACB gửi về số điện thoại chủ tài khoản. Từ lúc này, tiền vào ACB là MONA Pay nhận được thông báo giao dịch.' },
+  { title: 'Mỗi đơn Haravan có mã VietQR động riêng', body: 'Lớp nối gọi API tạo QR của MONA Pay khi khách chọn chuyển khoản: số tiền điền sẵn, nội dung là mã đơn. Khách quét bằng app ngân hàng bất kỳ. Không còn chuyện khách gõ sai số tiền hay quên ghi mã đơn.' },
+  { title: 'Tiền vào, MONA Pay bắn webhook có chữ ký', body: 'Gói JSON gồm số tiền, nội dung, mã giao dịch, thời gian, ký HMAC-SHA256, từ chối gói lệch giờ quá 5 phút. Lớp nối trả HTTP 200 trong 10 giây là xong; lỗi thì dashboard có lịch sử từng lần gửi và nút gửi lại.' },
+  { title: 'Lớp nối đổi trạng thái đơn trên Haravan', body: 'Lớp nối đọc mã đơn trong nội dung chuyển khoản, so số tiền, gọi API quản lý đơn hàng của Haravan để đánh dấu đã thanh toán. Đội MONA viết phần này cho khách, hoặc dev của anh chị tự viết theo tài liệu. Anh chị kiểm với Haravan xem gói đang dùng có mở API đơn hàng không.' },
+];
+const stepsTam = [
+  { title: 'Để khách chọn chuyển khoản trên Haravan', body: 'Đơn nằm ở trạng thái chờ thanh toán như bình thường. Không đụng code, không cài thêm gì trên Haravan.' },
+  { title: 'Gắn mã VietQR động vào trang cảm ơn hoặc tin nhắn chốt đơn', body: 'Tạo QR trong dashboard MONA Pay theo số tiền và mã đơn, tải ảnh về gắn vào. Khách quét là chuyển đúng số, đúng nội dung.' },
+  { title: 'Telegram báo tiền vào, nhân viên đổi trạng thái đơn', body: 'Tin về nhóm Telegram của shop trong vài giây: ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Nhân viên đọc tin rồi vào Haravan bấm đã thanh toán. Vẫn một thao tác tay, nhưng không ai phải canh app ngân hàng.' },
+];
+const faq = [
+  { q: 'Haravan có nhận chuyển khoản tự xác nhận được không?', a: 'Được theo 2 đường. Đường đầy đủ: lớp nối nhận webhook MONA Pay rồi gọi API Haravan đổi trạng thái đơn, tự động trong vài giây. Đường tạm không cần code: khách chọn chuyển khoản, quét VietQR động, Telegram báo tiền vào, nhân viên đổi trạng thái tay.' },
+  { q: 'Tôi không có dev, MONA có làm lớp nối cho tôi không?', a: 'Có. MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án, lớp nối Haravan thường xong trong vài ngày. Chi phí phần lớp nối báo riêng, còn MONA Pay thì miễn phí. Gọi 1900 636 648 để tụi em xem gói Haravan của anh chị có mở API không.' },
+  { q: 'Tiền có qua Haravan hay MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về lớp nối, Telegram, dashboard. Không rút tiền, không giữ tiền.' },
+  { q: 'Phí dùng MONA Pay với Haravan là bao nhiêu?', a: `MONA Pay ${PRICE_LINE}. Không phần trăm trên số tiền, không phí rút. Ví và cổng nội địa thu phần trăm theo hợp đồng; PayPal Việt Nam thu 4,40% cộng phí cố định và 60.000đ mỗi lần rút về ngân hàng trong nước (biểu phí công bố, kiểm 28/08/2026).` },
+  { q: 'Cần chuẩn bị gì phía ngân hàng?', a: 'Tài khoản thanh toán ACB đứng tên anh chị và số điện thoại đã đăng ký với ACB để nhận 2 lần OTP khi nối. ACB đang chạy, các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>.' },
+];
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'vi', url: SITE.url + '/cong-thanh-toan-haravan', author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' }, isPartOf: { '@id': SITE.url + '/#website' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Haravan cổng thanh toán', item: SITE.url + '/cong-thanh-toan-haravan' },
+  ] },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-haravan" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Haravan · chuyển khoản ACB</span>
+      <h1>Haravan cổng thanh toán chuyển khoản:<br class="hb" /> <span class="accent">tiền vào là đơn tự xác nhận</span></h1>
+      <div class="answer-first">
+        <p>Haravan cổng thanh toán chuyển khoản với MONA Pay chạy như sau: mỗi đơn một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và đơn trên Haravan được đánh dấu đã thanh toán qua lớp nối. Không thu phần trăm, miễn phí hoàn toàn.</p>
+      </div>
+      <p class="lead">{SITE.entity}</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Đọc tài liệu webhook</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện shop Haravan hay gặp</span>
+      <h2>Đơn chuyển khoản trên Haravan<br class="br-d" /> kẹt ở khâu xác nhận tay</h2>
+      <p class="lead">Nhiều khách MONA bán trên Haravan song song với web riêng. Chỗ kẹt giống nhau: khách chọn chuyển khoản, đơn nằm chờ, nhân viên phải mở app ngân hàng đối chiếu rồi mới bấm đã thanh toán. Ngày 30 đơn là mất hơn một tiếng chỉ để đối chiếu, chưa kể đơn tối và cuối tuần.</p>
+      <div class="grid grid-3">
+        <div class="card"><div class="icon">1</div><h3>Đối chiếu bằng mắt</h3><p>Khách gửi ảnh biên lai, nhân viên soi số tiền, soi nội dung, soi giờ. Nhiều khách chuyển cùng số tiền trong một buổi là bắt đầu đoán.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Khách chờ, đơn nguội</h3><p>Chuyển lúc 21h, sáng hôm sau mới được xác nhận. Khách mua hàng cần gấp chuyển sang shop khác trong lúc chờ.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Đưa app ngân hàng cho nhân viên</h3><p>Muốn nhân viên tự xác nhận thì phải cho họ xem tài khoản ngân hàng. Chủ shop nào cũng ngại chuyện này.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Đường đầy đủ</span>
+      <h2>Lớp nối Haravan với MONA Pay<br class="br-d" /> đổi trạng thái đơn trong vài giây</h2>
+      <p class="lead">MONA Pay bắn webhook khi tiền vào. Lớp nối nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Haravan. Tụi em không hứa "cài app một cú là chạy", vì MONA Pay chưa có ứng dụng trên kho ứng dụng Haravan; phần lớp nối đội MONA viết cho khách hoặc dev của anh chị tự viết.</p>
+      <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Đường tạm, không cần code</span>
+      <h2>Shop nhỏ chưa cần lớp nối:<br class="br-d" /> VietQR động cộng Telegram là đủ</h2>
+      <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">So sánh</span>
+      <h2>Ba cách nhận tiền cho shop Haravan</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>
+          <tbody>
+            <tr><td>Phí mỗi giao dịch</td><td>Phần trăm theo hợp đồng, không niêm yết công khai</td><td>PayPal 4,40% + phí cố định; Stripe chưa mở cho doanh nghiệp Việt Nam (kiểm 28/08/2026)</td><td>0đ</td></tr>
+            <tr><td>Tiền về đâu</td><td>Ví hoặc tài khoản đối soát rồi mới về ngân hàng</td><td>Số dư cổng, rút về ngân hàng 60.000đ/lần (PayPal)</td><td>Thẳng vào tài khoản ACB</td></tr>
+            <tr><td>Khách cần gì</td><td>Ví hoặc app tương ứng</td><td>Thẻ quốc tế</td><td>App ngân hàng bất kỳ</td></tr>
+            <tr><td>Đăng ký</td><td>Ký hợp đồng merchant</td><td>Tuỳ cổng</td><td>Đăng ký dùng ngay, nối ACB 4 bước</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">MONA làm gì cho anh chị</span>
+      <h2>Tụi em nối ACB, viết lớp nối,<br class="br-d" /> để lại tài liệu cho dev của anh chị</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Nối ACB và cấu hình</h3><p>Wizard 4 bước, webhook, nhóm Telegram, mẫu tin. Kẹt chỗ nào gọi 1900 636 648, giờ hành chính có người trực.</p></div>
+        <div class="card"><h3>Viết lớp nối Haravan</h3><p>Nhận webhook, kiểm chữ ký HMAC, đổi trạng thái đơn qua API Haravan. Thường vài ngày. Chi phí báo riêng, MONA Pay vẫn miễn phí.</p></div>
+        <div class="card"><h3>Tài liệu máy đọc được</h3><p>Mọi trang docs có bản .md, llms.txt, openapi.json. Dev hoặc AI agent của anh chị đọc thẳng, code mẫu cURL, PHP, Node.</p></div>
+      </div>
+      <p style="margin-top:1.2rem">Cùng nguyên lý với <a href="/cong-thanh-toan-shopify">Shopify</a>, <a href="/cong-thanh-toan-woocommerce">WooCommerce</a> và <a href="/cong-thanh-toan-sapo">Sapo</a>. Cách nối ACB chi tiết ở trang <a href="/acb">ngân hàng ACB</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ shop Haravan hay hỏi tụi em" />
+    </div>
+  </section>
+
+  <CtaBand title="Đơn Haravan của anh chị tự xác nhận từ tuần này" body="Tạo tài khoản, nối ACB 4 bước, tạo VietQR động. Cần lớp nối thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
+</Base>
+<style>
+  .hb,.br-d{display:inline}
+  @media (max-width:767px){.hb,.br-d{display:none}}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.5rem)}
+</style>

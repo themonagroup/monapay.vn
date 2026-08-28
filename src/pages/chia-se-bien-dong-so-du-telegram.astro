@@ -1,0 +1,139 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const title = 'Biến động số dư ngân hàng báo qua Telegram, tiền vào ACB thấy ngay';
+const description = 'Biến động số dư ACB báo vào nhóm Telegram ngay khi tiền vào: số tiền, nội dung, thời gian. Không chụp màn hình, không đưa app ngân hàng cho nhân viên. Miễn phí hoàn toàn.';
+
+const steps = [
+  { title: 'Tạo nhóm Telegram và thêm bot MONA Pay vào nhóm', body: 'Anh chị lập 1 nhóm Telegram cho bộ phận cần biết tiền vào (kế toán, bán hàng, chủ), rồi thêm bot MONA Pay vào nhóm. Tên bot hiện trong dashboard my.monapay.vn, mục Telegram. Nhóm có chia chủ đề (topic) thì chọn luôn chủ đề muốn nhận tin.' },
+  { title: 'Lấy mã nhóm (group_id) và mã chủ đề (topic_id) nếu có', body: 'Mã nhóm là dãy số Telegram gán cho nhóm, nhóm lớn thường bắt đầu bằng -100. Dashboard có hướng dẫn lấy mã ngay tại chỗ nhập. Nhóm có chủ đề thì lấy thêm mã chủ đề để tin rơi đúng chủ đề, không trôi giữa các tin khác.' },
+  { title: 'Cấu hình trong dashboard: tên, tài khoản, mẫu tin', body: 'Đặt tên cho cấu hình (ví dụ "Kế toán HN"), chọn nhận tin cho mọi tài khoản hay chỉ 1 tài khoản ảo, sửa mẫu tin nhắn nếu muốn. Một công ty lập được nhiều cấu hình: chi nhánh nào, tài khoản ảo nào, báo về nhóm đó.' },
+  { title: 'Bấm gửi thử, thấy tin trong nhóm là xong', body: 'Dashboard có nút gửi thử với một giao dịch giả để anh chị kiểm mẫu tin trước khi có tiền thật. Từ đó, mỗi giao dịch vào ACB là 1 tin trong nhóm, ngày cũng như đêm.' },
+];
+
+const faq = [
+  { q: 'Có phải đưa điện thoại hay mật khẩu ngân hàng cho ai không?', a: 'Không. Anh chị nối tài khoản ACB với MONA Pay bằng 2 lần OTP gửi về số điện thoại đăng ký với ngân hàng, xong là ACB tự báo giao dịch cho MONA Pay. Nhân viên chỉ thấy tin nhắn trong nhóm Telegram: số tiền vào, nội dung, thời gian. Không ai thấy số dư, không ai đăng nhập app ngân hàng.' },
+  { q: 'Tin nhắn Telegram có những gì?', a: 'Mẫu mặc định gồm tên ngân hàng, số tài khoản nhận, số tiền (định dạng 2.500.000 VNĐ), thời gian giao dịch và nội dung chuyển khoản. Anh chị sửa mẫu trong dashboard, ví dụ thêm tên chi nhánh hay bỏ bớt trường.' },
+  { q: 'Công ty có 5 chi nhánh, mỗi chi nhánh muốn nhóm riêng thì làm sao?', a: 'Cấp mỗi chi nhánh 1 tài khoản ảo (VA) từ đầu số ACB của công ty, rồi lập 5 cấu hình Telegram, mỗi cấu hình gắn 1 VA và 1 nhóm. Tiền vào VA chi nhánh nào thì chỉ nhóm chi nhánh đó nhận tin, còn nhóm của chủ nhận tất cả.' },
+  { q: 'Ngoài Telegram có báo qua đâu nữa?', a: 'Có webhook về website hoặc phần mềm của anh chị để tự xác nhận đơn, và dashboard my.monapay.vn để xem, lọc, xuất CSV mọi giao dịch. Telegram là kênh cho người đọc, webhook là kênh cho máy đọc; dùng cả hai cùng lúc được.' },
+  { q: 'Tiền ra (chi) có báo không?', a: 'Hiện MONA Pay báo giao dịch tiền vào (type income). Chi tiền chưa báo, khi có tụi em ghi rõ tại trang tài liệu.' },
+  { q: 'Tin không tới nhóm thì kiểm ở đâu?', a: 'Kiểm 3 chỗ: bot còn trong nhóm không, group_id và topic_id đúng chưa, cấu hình còn bật không. Dashboard có nút gửi thử để kiểm ngay. Vẫn kẹt thì gọi 1900 636 648, tụi em xem cùng.' },
+  { q: 'Chi phí bao nhiêu?', a: `Phía MONA Pay ${PRICE_LINE}, gồm cả Telegram, webhook, tài khoản ảo, VietQR, dashboard. Không thu phần trăm trên số tiền, chi tiết tại trang bảng giá.` },
+];
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Báo biến động số dư qua Telegram', item: SITE.url + '/chia-se-bien-dong-so-du-telegram' },
+  ]},
+  { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + '/chia-se-bien-dong-so-du-telegram', inLanguage: 'vi',
+    about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
+    publisher: { '@id': SITE.url + '/#organization' } },
+];
+---
+<Base title={title} description={description} path="/chia-se-bien-dong-so-du-telegram" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Telegram · biến động số dư ACB</span>
+        <h1>Biến động số dư ACB<br class="hb" /> <span class="accent">báo thẳng vào nhóm Telegram</span></h1>
+        <div class="answer-first">
+          <p>MONA Pay nhận thông báo giao dịch từ ACB rồi gửi 1 tin vào nhóm Telegram anh chị chọn: số tiền, nội dung chuyển khoản, thời gian, số tài khoản nhận. Nhân viên biết có tiền mà không cần cầm điện thoại ngân hàng, không thấy số dư. Nối bằng 2 lần OTP, cấu hình 4 bước, {PRICE_LINE}.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+          <a class="btn btn-outline" href="/docs/telegram">Xem hướng dẫn Telegram</a>
+        </div>
+      </div>
+      <div class="tg-demo" aria-label="Mẫu tin nhắn Telegram từ MONA Pay">
+        <div class="tg-head"><span class="tg-avatar"><img src="/brand/panda-mark.png" alt="" width="28" height="28" /></span><div><b>MONA Pay</b><span>bot · nhóm Kế toán</span></div></div>
+        <div class="tg-msg">
+          <b>Tiền vào tài khoản</b>
+          <div class="tg-row"><span>Tên ngân hàng</span><b>ACB</b></div>
+          <div class="tg-row"><span>Số tài khoản</span><b>1234567890</b></div>
+          <div class="tg-row"><span>Số tiền</span><b class="tg-amount">+2.500.000 VNĐ</b></div>
+          <div class="tg-row"><span>Thời gian</span><b>28/08/2026 10:30:00</b></div>
+          <div class="tg-row"><span>Nội dung</span><b>DH1234 thanh toan</b></div>
+          <div class="tg-time">10:30</div>
+        </div>
+        <p class="tg-note">Mẫu tin mặc định, sửa được trong dashboard</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Chuyện ở phòng kế toán</span>
+      <h2>Biết tiền vào bằng cách chụp màn hình thì mệt chỗ nào?</h2>
+      <div class="grid grid-2">
+        <div class="card"><div class="icon">1</div><h3>Chủ giữ app ngân hàng, cả công ty chờ chủ</h3><p>Chỉ chủ hoặc kế toán trưởng có app. Bán hàng muốn biết khách chuyển chưa thì nhắn hỏi, chủ đang họp thì không ai trả lời. Một ngày chủ nhận vài chục tin "anh coi giúp khách X chuyển chưa".</p></div>
+        <div class="card"><div class="icon">2</div><h3>Đưa điện thoại ngân hàng cho nhân viên thì lộ số dư</h3><p>Muốn nhân viên tự dò thì phải đưa điện thoại hoặc tài khoản. Người cầm điện thoại thấy hết số dư, thấy hết lịch sử, thấy cả lương đồng nghiệp chuyển ra. Tiện thì tiện, mà không ai muốn.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Chụp màn hình gửi nhóm Zalo, trôi giữa trăm tin khác</h3><p>Kế toán chụp thông báo ngân hàng gửi vào nhóm bán hàng, tin chen với ảnh sản phẩm, với hỏi han. Tìm lại giao dịch hôm qua là kéo mỏi tay, số thì đọc từ ảnh nên sai một số là không ai biết.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Đêm và cuối tuần không có ai canh</h3><p>Khách chuyển lúc 10 giờ tối, sáng hôm sau mới có người báo. Đơn giao trễ, khách nhắn 3 lần, mà tiền đã nằm trong tài khoản từ tối hôm trước.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Cách MONA Pay làm</span>
+      <h2>4 bước để tin tiền vào tự rơi vào đúng nhóm</h2>
+      <p class="lead">Tụi em dùng đúng cách này để nhóm kế toán MONA biết tiền hosting, học phí, đơn phần mềm vào lúc nào, trước khi mở cho anh chị.</p>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Sắp xếp theo công ty của anh chị</span>
+      <h2>Mỗi chi nhánh, mỗi bộ phận một nhóm riêng</h2>
+      <div class="grid grid-3">
+        <div class="card"><h3>Nhóm chủ: thấy tất cả</h3><p>Một cấu hình nghe mọi tài khoản, gắn vào nhóm chỉ có chủ và kế toán trưởng. Mọi giao dịch vào ACB đều có mặt ở đây, có mốc thời gian, tìm lại theo ngày dễ hơn ảnh chụp.</p></div>
+        <div class="card"><h3>Nhóm chi nhánh: chỉ thấy tiền của mình</h3><p>Cấp mỗi chi nhánh 1 tài khoản ảo từ đầu số ACB của công ty. Cấu hình Telegram gắn tài khoản ảo đó vào nhóm chi nhánh: tiền của chi nhánh A không hiện ở nhóm chi nhánh B, tiền vẫn về một tài khoản chính.</p></div>
+        <div class="card"><h3>Chủ đề trong 1 nhóm lớn</h3><p>Công ty đã có nhóm chung nhiều chủ đề thì không cần lập nhóm mới: nhập thêm mã chủ đề, tin tiền vào rơi đúng chủ đề "Thu tiền", không lẫn với chuyện khác.</p></div>
+      </div>
+      <div class="callout" style="margin-top:1.5rem">
+        <p><strong>Muốn phần mềm tự xử lý thay vì người đọc tin?</strong> Bật thêm webhook: cùng một giao dịch, MONA Pay vừa gửi tin Telegram cho người, vừa gửi gói JSON có chữ ký cho phần mềm để tự xác nhận đơn. Xem <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a> và trang <a href="/cong-thanh-toan-woocommerce">WooCommerce</a>.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <p class="lead">{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, {SITE.projects} dự án, {SITE.retention} khách quay lại. Kẹt ở bước nào, gọi {SITE.hotline} trong giờ làm việc, tụi em ngồi cùng anh chị tới khi tin đầu tiên rơi vào nhóm.</p>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Kế toán và chủ doanh nghiệp hay hỏi" />
+    </div>
+  </section>
+
+  <CtaBand title="Tin tiền vào đầu tiên rơi vào nhóm Telegram hôm nay" body="Đăng ký tài khoản, nối ACB bằng 2 lần OTP, thêm bot vào nhóm, bấm gửi thử." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/telegram', label: 'Đọc hướng dẫn Telegram' }} />
+</Base>
+
+<style>
+  @media (max-width: 767px) { .hb { display: none; } }
+  .hero-grid h1 { font-size: clamp(1.8rem, 3.3vw, 2.5rem); }
+  .tg-demo { background: var(--surface); border-radius: var(--radius); box-shadow: var(--shadow-lg); padding: 1.1rem 1.2rem 1rem; max-width: 420px; margin: 0 auto; }
+  .tg-head { display: flex; align-items: center; gap: .7rem; padding-bottom: .8rem; border-bottom: 1px solid var(--border); margin-bottom: .9rem; }
+  .tg-head b { display: block; color: var(--ink); font-size: .95rem; }
+  .tg-head span { font-size: .8rem; color: var(--text-soft); }
+  .tg-avatar { width: 40px; height: 40px; border-radius: 50%; background: var(--surface-2); display: grid; place-items: center; }
+  .tg-avatar img { width: 28px; height: 28px; }
+  .tg-msg { position: relative; background: var(--surface-2); border-radius: 14px 14px 14px 4px; padding: .9rem 1rem 1.6rem; font-size: .93rem; color: var(--ink); }
+  .tg-msg > b { display: block; margin-bottom: .5rem; }
+  .tg-row { display: flex; justify-content: space-between; gap: 1rem; padding: .22rem 0; }
+  .tg-row span { color: var(--text-soft); }
+  .tg-row b { font-variant-numeric: tabular-nums; text-align: right; }
+  .tg-amount { color: var(--success); font-size: 1.05rem; }
+  .tg-time { position: absolute; right: .8rem; bottom: .4rem; font-size: .72rem; color: var(--text-soft); }
+  .tg-note { margin: .7rem 0 0; font-size: .8rem; color: var(--text-soft); text-align: center; }
+</style>

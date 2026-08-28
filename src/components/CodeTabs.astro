@@ -1,0 +1,34 @@
+---
+// Tab code mẫu: thứ tự cURL → PHP → Node (khách MONA đa số PHP/WP). Vanilla JS, không lib.
+import { Code } from 'astro:components';
+interface Props { tabs: { label: string; lang: string; code: string }[]; id?: string }
+const { tabs, id = 'ct-' + Math.random().toString(36).slice(2, 8) } = Astro.props;
+---
+<div class="codetabs" data-codetabs>
+  <div class="tabs" role="tablist">
+    {tabs.map((t, i) => <button role="tab" aria-selected={i === 0 ? 'true' : 'false'} data-tab={i}>{t.label}</button>)}
+    <button class="copy" type="button" data-copy>Sao chép</button>
+  </div>
+  {tabs.map((t, i) => (
+    <div class="panel" role="tabpanel" data-panel={i} data-active={i === 0 ? '' : undefined}>
+      <Code code={t.code} lang={t.lang as any} theme="github-dark" wrap />
+    </div>
+  ))}
+</div>
+<script>
+  document.querySelectorAll('[data-codetabs]').forEach((box) => {
+    const tabs = box.querySelectorAll<HTMLButtonElement>('[data-tab]');
+    const panels = box.querySelectorAll<HTMLElement>('[data-panel]');
+    tabs.forEach((b) => b.addEventListener('click', () => {
+      tabs.forEach((x) => x.setAttribute('aria-selected', 'false'));
+      panels.forEach((p) => p.removeAttribute('data-active'));
+      b.setAttribute('aria-selected', 'true');
+      box.querySelector<HTMLElement>(`[data-panel="${b.dataset.tab}"]`)?.setAttribute('data-active', '');
+    }));
+    box.querySelector('[data-copy]')?.addEventListener('click', async (e) => {
+      const btn = e.currentTarget as HTMLButtonElement;
+      const code = box.querySelector<HTMLElement>('[data-panel][data-active] code')?.innerText || '';
+      try { await navigator.clipboard.writeText(code); btn.textContent = 'Đã chép'; setTimeout(() => (btn.textContent = 'Sao chép'), 1500); } catch {}
+    });
+  });
+</script>

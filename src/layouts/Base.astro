@@ -1,0 +1,141 @@
+---
+import '../styles/global.css';
+import { SITE, FOOTER_LINKS } from '../data/site';
+import { MEGA } from '../data/nav';
+interface Props {
+  title: string;
+  description: string;
+  path: string;            // đường dẫn canonical, vd '/acb'
+  ogImage?: string;
+  jsonld?: object[];       // schema bổ sung (FAQPage, SoftwareApplication, TechArticle…)
+  noindex?: boolean;
+}
+const { title, description, path, ogImage = '/og/monapay-og.png', jsonld = [], noindex = false } = Astro.props;
+const canonical = SITE.url + (path === '/' ? '/' : path);
+const org = {
+  '@context': 'https://schema.org', '@type': 'Organization',
+  '@id': SITE.url + '/#organization', name: 'MONA Pay', legalName: SITE.company, url: SITE.url,
+  logo: SITE.url + '/brand/monapay-logo-light.svg',
+  description: SITE.entity, foundingDate: String(SITE.founded), parentOrganization: { '@type': 'Organization', name: SITE.company, url: SITE.companyUrl },
+  contactPoint: [{ '@type': 'ContactPoint', telephone: '+84-1900-636-648', contactType: 'customer service', email: SITE.email, areaServed: 'VN', availableLanguage: ['vi'] }],
+  sameAs: SITE.sameAs,
+};
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE.url + '/#website', url: SITE.url, name: 'MONA Pay', publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'vi' };
+const schemas = [org, website, ...jsonld];
+---
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>{title}</title>
+  <meta name="description" content={description} />
+  <link rel="canonical" href={canonical} />
+  {noindex && <meta name="robots" content="noindex,follow" />}
+  <meta property="og:type" content="website" />
+  <meta property="og:site_name" content="MONA Pay" />
+  <meta property="og:title" content={title} />
+  <meta property="og:description" content={description} />
+  <meta property="og:url" content={canonical} />
+  <meta property="og:image" content={SITE.url + ogImage} />
+  <meta property="og:locale" content="vi_VN" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+  <link rel="icon" href="/favicon.ico" sizes="32x32" />
+  <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+  <link rel="alternate" type="text/plain" href={SITE.url + '/llms.txt'} title="llms.txt" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  {schemas.map((s) => <script type="application/ld+json" set:html={JSON.stringify(s)} />)}
+  <slot name="head" />
+</head>
+<body>
+  <header class="site-header">
+    <div class="wrap">
+      <a class="logo" href="/" aria-label="MONA Pay — trang chủ"><img src="/brand/monapay-logo-light.svg" alt="MONA Pay" width="157" height="34" /></a>
+      <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
+      <nav class="nav" id="site-nav" aria-label="Điều hướng chính">
+        {MEGA.map((g) => {
+          const active = (g.match || []).some((m) => path === m || path.startsWith(/[-/]$/.test(m) ? m : m + '/')) || (g.href && path === g.href);
+          return g.cols ? (
+            <div class="nav-group" data-group>
+              <button class="nav-link nav-btn" type="button" aria-expanded="false" aria-haspopup="true" aria-current={active ? 'page' : undefined}>{g.label}<span class="chev" aria-hidden="true">▾</span></button>
+              <div class="mega" role="menu">
+                <div class="mega-inner">
+                  {g.cols.map((c) => (
+                    <div class="mega-col">
+                      <div class="mega-title">{c.title}</div>
+                      {c.items.map((i) => (
+                        <a class="mega-item" href={i.href} role="menuitem" aria-current={path === i.href ? 'page' : undefined}>
+                          <span class="mega-label">{i.label}{i.badge && <span class="badge badge-cta" style="margin-left:.5em">{i.badge}</span>}</span>
+                          {i.desc && <span class="mega-desc">{i.desc}</span>}
+                        </a>
+                      ))}
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            <a class="nav-link" href={g.href} aria-current={active ? 'page' : undefined}>{g.label}</a>
+          );
+        })}
+        <a class="nav-link nav-login" href={SITE.appLogin}>Đăng nhập</a>
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="main"><slot /></main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <div class="footer-grid">
+        <div>
+          <img src="/brand/monapay-logo-dark.svg" alt="MONA Pay" width="157" height="34" style="height:34px;width:auto;margin-bottom:1rem" />
+          <p class="footer-entity">{SITE.entity}</p>
+          <p class="hotline-big"><a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
+          <p style="margin:0"><a href={'mailto:' + SITE.email}>{SITE.email}</a></p>
+        </div>
+        {Object.entries(FOOTER_LINKS).map(([h, links]) => (
+          <div>
+            <h4>{h}</h4>
+            <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
+          </div>
+        ))}
+      </div>
+      <div class="footer-bottom">
+        <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
+          <a href={SITE.companyUrl} aria-label="The MONA Group"><img src="/brand/mona-logo-the-mona-white.svg" alt="THE MONA" width="160" height="26" /></a>
+          <span>© {new Date().getFullYear()} {SITE.company} · từ {SITE.founded} · {SITE.projects} dự án</span>
+        </div>
+        <div style="display:flex;gap:1.2rem;flex-wrap:wrap">
+          <a href="/llms.txt">llms.txt</a>
+          <a href="/sitemap-index.xml">Sitemap</a>
+          <a href="https://mona.media">mona.media</a>
+          <a href="https://mona.host">mona.host</a>
+          <a href="https://mona.software">mona.software</a>
+        </div>
+      </div>
+    </div>
+  </footer>
+  <script>
+    const t = document.querySelector('[data-nav-toggle]');
+    const n = document.getElementById('site-nav');
+    t?.addEventListener('click', () => { const o = n?.classList.toggle('open'); t.setAttribute('aria-expanded', String(!!o)); });
+    // Mega menu: hover/focus trên desktop, bấm để mở trên mobile; Esc/click ngoài để đóng
+    const groups = document.querySelectorAll('[data-group]');
+    const closeAll = () => groups.forEach((g) => { g.classList.remove('open'); g.querySelector('.nav-btn')?.setAttribute('aria-expanded', 'false'); });
+    groups.forEach((g) => {
+      const b = g.querySelector('.nav-btn');
+      b?.addEventListener('click', (e) => { e.stopPropagation(); const o = g.classList.contains('open'); closeAll(); if (!o) { g.classList.add('open'); b.setAttribute('aria-expanded', 'true'); } });
+      g.addEventListener('mouseenter', () => { if (matchMedia('(hover:hover) and (min-width:901px)').matches) { closeAll(); g.classList.add('open'); b?.setAttribute('aria-expanded', 'true'); } });
+      g.addEventListener('mouseleave', () => { if (matchMedia('(hover:hover) and (min-width:901px)').matches) closeAll(); });
+      g.addEventListener('focusout', (e) => { if (!g.contains(e.relatedTarget)) closeAll(); });
+    });
+    document.addEventListener('click', closeAll);
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape') closeAll(); });
+  </script>
+</body>
+</html>

@@ -1,0 +1,58 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import QrTool from '../components/QrTool.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+const title = 'Tạo mã QR ngân hàng (VietQR) miễn phí, quét là chuyển đúng tiền';
+const description = 'Tạo mã QR ngân hàng chuẩn VietQR cho 36 ngân hàng: chọn ngân hàng, nhập số tài khoản, số tiền, nội dung, tải PNG. Chạy trên trình duyệt, không lưu dữ liệu, miễn phí.';
+const faq = [
+  { q: 'Mã QR ngân hàng tạo ở đây có quét được bằng mọi app ngân hàng không?', a: 'Có. Mã tạo theo chuẩn VietQR (EMVCo, dịch vụ chuyển nhanh Napas 247 theo số tài khoản), là chuẩn chung mà app của 36 ngân hàng trong danh sách đều đọc được. Khách mở app ngân hàng bất kỳ, quét, app tự điền ngân hàng nhận, số tài khoản, số tiền và nội dung.' },
+  { q: 'Tụi em có lưu số tài khoản của anh chị không?', a: 'Không. Toàn bộ việc tạo mã chạy trên trình duyệt của anh chị bằng JavaScript, không gửi số tài khoản, số tiền hay nội dung lên máy chủ nào. Tắt trang là hết. Anh chị kiểm được bằng cách mở công cụ Network của trình duyệt: không có yêu cầu nào bắn đi khi bấm tạo mã.' },
+  { q: 'Mã QR tĩnh (không số tiền) khác mã QR động thế nào?', a: 'Mã tĩnh chỉ chứa ngân hàng và số tài khoản, khách tự gõ số tiền và nội dung, dễ gõ sai. Mã động điền sẵn số tiền và nội dung theo từng đơn, khách quét là đúng, phần mềm khớp đơn được. Tool này tạo được cả hai: để trống số tiền là mã tĩnh, điền số tiền và nội dung là mã động cho một đơn.' },
+  { q: 'Tạo mã QR xong, làm sao biết khách đã chuyển tiền mà không phải mở app ngân hàng?', a: 'MONA Pay lo phần này: nối tài khoản ACB của anh chị, tiền vào là ACB báo, MONA Pay bắn webhook về website hoặc gửi tin vào nhóm Telegram trong vài giây. Mã QR động theo từng đơn thì MONA Pay tự sinh, tự khớp, không cần tạo tay. ACB đang chạy, các ngân hàng khác đang kết nối (xem trạng thái tại /ngan-hang), ' + PRICE_LINE + '.' },
+  { q: 'Số tiền tối đa và nội dung tối đa bao nhiêu?', a: 'Chuẩn VietQR cho phép số tiền tới 13 chữ số, tool giới hạn 1.000.000.000 đồng cho an toàn. Nội dung tối đa 25 ký tự, không dấu, không ký tự đặc biệt, vì nhiều app ngân hàng cắt hoặc từ chối nội dung dài hơn. Tool tự bỏ dấu tiếng Việt khi anh chị gõ.' },
+  { q: 'Dùng mã QR này cho cửa hàng, in ra dán quầy được không?', a: 'Được. Tải PNG, in ở cỡ từ 4 cm mỗi cạnh trở lên là app quét tốt. Với quầy, dùng mã tĩnh (không số tiền) để khách tự nhập; muốn không phải đối chiếu tay thì dùng mã động từng đơn qua MONA Pay và nhận báo Telegram cho thu ngân.' },
+];
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'WebApplication', name: 'Tạo mã QR ngân hàng VietQR', url: SITE.url + '/tao-ma-qr-ngan-hang', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', browserRequirements: 'Trình duyệt hỗ trợ JavaScript',
+  offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'vi',
+  description: 'Tạo mã QR ngân hàng chuẩn VietQR cho 36 ngân hàng Việt Nam ngay trên trình duyệt, không lưu dữ liệu, miễn phí.',
+}];
+---
+<Base title={title} description={description} path="/tao-ma-qr-ngan-hang" jsonld={jsonld}>
+  <section class="hero"><div class="wrap">
+    <span class="eyebrow">Công cụ miễn phí</span>
+    <h1>Tạo mã QR ngân hàng chuẩn VietQR,<br class="br-d" /> <span class="accent">khách quét là chuyển đúng tiền</span></h1>
+    <div class="answer-first"><p>Tạo mã QR ngân hàng ngay tại đây: chọn ngân hàng, nhập số tài khoản, số tiền và nội dung, bấm tạo, tải ảnh PNG về in hoặc gửi cho khách. Mã theo chuẩn VietQR nên app của mọi ngân hàng Việt Nam quét được. Chạy trên trình duyệt của anh chị, tụi em không lưu số tài khoản.</p></div>
+    <QrTool />
+  </div></section>
+
+  <section class="section-alt"><div class="wrap">
+    <span class="eyebrow">Sau khi có mã QR</span>
+    <h2>Khách quét xong, ai xác nhận tiền đã vào?</h2>
+    <div class="grid grid-3">
+      <div class="card"><div class="icon">1</div><h3>Mã tĩnh: đối chiếu tay</h3><p>Dán mã ở quầy hoặc gửi cho khách. Tiền vào, anh chị vẫn phải mở app ngân hàng xem, rồi đối chiếu với đơn. Đủ dùng cho vài đơn mỗi ngày, quá số đó là mệt.</p></div>
+      <div class="card"><div class="icon">2</div><h3>Mã động từng đơn</h3><p>Mỗi đơn một mã, điền sẵn số tiền và nội dung. Khách quét là đúng, không gõ sai. Tool này tạo được, nhưng tạo tay từng đơn thì không ổn khi đơn nhiều.</p></div>
+      <div class="card"><div class="icon">3</div><h3>MONA Pay tự sinh mã, tự báo</h3><p>Nối tài khoản ACB vào MONA Pay: mã QR động tự sinh theo đơn, tiền vào là webhook về website hoặc tin Telegram vào nhóm trong vài giây, đơn tự đổi trạng thái. {PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}.</p></div>
+    </div>
+    <div class="btn-row"><a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản MONA Pay miễn phí</a><a class="btn btn-outline" href="/acb">Xem cách nối ACB</a></div>
+  </div></section>
+
+  <section><div class="wrap narrow">
+    <h2>Mã QR ngân hàng hoạt động thế nào?</h2>
+    <p>Mã QR ngân hàng ở Việt Nam đi theo chuẩn <strong>VietQR</strong>: một chuỗi ký tự theo định dạng EMVCo, trong đó ghi mã ngân hàng (mã BIN 6 số, ví dụ ACB là 970416), số tài khoản, số tiền, nội dung và một mã kiểm tra CRC ở cuối. App ngân hàng đọc chuỗi này rồi điền sẵn lệnh chuyển tiền qua Napas 247, người chuyển chỉ bấm xác nhận. Vì là chuẩn chung nên mã do tool này tạo và mã in trên biển của quán đều cùng một kiểu, app nào cũng đọc.</p>
+    <p>Ở MONA, tụi em dùng đúng cơ chế này để thu phí hosting và học phí, và từ 2022 hơn {SITE.customersSince2022} khách hàng của MONA cũng thu tiền như vậy: mỗi đơn một mã QR động kèm nội dung riêng, tiền vào là hệ thống tự khớp, không ai phải ngồi canh app ngân hàng. Tool tạo mã ở trên là phần "đầu vào" của câu chuyện đó, phần "đầu ra" (tự xác nhận) nằm ở <a href="/">MONA Pay</a>.</p>
+    <p>{SITE.entity}</p>
+  </div></section>
+
+  <section class="section-alt"><div class="wrap narrow"><Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi hay gặp khi tạo mã QR ngân hàng" /></div></section>
+  <CtaBand title="Tiền vào là đơn tự xác nhận, khỏi tạo mã tay từng đơn" body={`MONA Pay tự sinh mã QR động theo đơn, báo Telegram và bắn webhook trong vài giây. ${PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}.`} />
+</Base>
+
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .hero h1{font-size:clamp(1.8rem,3.2vw,2.4rem)}
+</style>

@@ -1,0 +1,75 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+
+const title = 'Liên hệ MONA Pay: tổng đài 1900 636 648, email, tài liệu';
+const description = 'Tổng đài 1900 636 648 giờ hành chính, email info@themona.global, dashboard my.monapay.vn, tài liệu monapay.vn/docs. MONA Pay thuộc The MONA Group từ 2016.';
+
+const jsonld = [
+  { '@context': 'https://schema.org', '@type': 'ContactPage', name: title, description, url: SITE.url + '/lien-he', inLanguage: 'vi',
+    mainEntity: { '@id': SITE.url + '/#organization' } },
+  { '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
+    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+    { '@type': 'ListItem', position: 2, name: 'Liên hệ', item: SITE.url + '/lien-he' },
+  ]},
+];
+---
+<Base title={title} description={description} path="/lien-he" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap">
+      <span class="eyebrow">Liên hệ</span>
+      <h1>Gọi tụi em, có người trực</h1>
+      <div class="answer-first">
+        <p>Muốn hỏi về MONA Pay, cần người nối ACB cùng, hay webhook không về: gọi tổng đài {SITE.hotline} trong giờ hành chính, hoặc gửi email {SITE.email}. Chuyện kỹ thuật thì tài liệu tại monapay.vn/docs có đủ code mẫu; tài khoản và giao dịch xem tại my.monapay.vn.</p>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <div class="grid grid-2">
+        <div class="card">
+          <div class="icon">☎</div>
+          <h3>Tổng đài</h3>
+          <p class="contact-big"><a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
+          <p>Giờ hành chính. Nói "MONA Pay" là tổng đài chuyển đúng người. Kẹt lúc nối ACB, tụi em ngồi cùng anh chị qua điện thoại tới khi nhận được OTP thứ hai.</p>
+        </div>
+        <div class="card">
+          <div class="icon">@</div>
+          <h3>Email</h3>
+          <p class="contact-big"><a href={'mailto:' + SITE.email}>{SITE.email}</a></p>
+          <p>Gửi kèm tên tài khoản MONA Pay và mô tả ngắn: đang làm bước nào, thấy lỗi gì, ảnh chụp nếu có. Email kỹ thuật, hợp tác ngân hàng, báo chí đều về một địa chỉ này.</p>
+        </div>
+        <div class="card">
+          <div class="icon">▣</div>
+          <h3>Dashboard</h3>
+          <p class="contact-big"><a href={SITE.app}>my.monapay.vn</a></p>
+          <p>Đăng ký, đăng nhập, nối ACB, tạo tài khoản ảo, tạo QR, cấu hình webhook và Telegram, xem lịch sử gửi từng gói tin. Tài khoản mới đăng ký xong dùng ngay, không cần chờ duyệt.</p>
+        </div>
+        <div class="card">
+          <div class="icon">{'{}'}</div>
+          <h3>Tài liệu cho dev và AI agent</h3>
+          <p class="contact-big"><a href="/docs">monapay.vn/docs</a></p>
+          <p>Mọi trang tài liệu có bản .md, toàn bộ gom ở <a href="/llms.txt">/llms.txt</a> và <a href="/llms-full.txt">/llms-full.txt</a>, mô tả API ở <a href="/openapi.json">/openapi.json</a>. Dán vào Claude Code, Codex hay Cursor là AI tự tích hợp được, xem <a href="/ai-agent">trang dành cho AI agent</a>.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <h2>Ai đứng sau MONA Pay</h2>
+      <figure class="photo"><img src="/img/mona/doi-mona-va-khach-hang-sau-buoi-lam-viec.jpg" alt="Đội MONA và khách hàng chụp chung sau buổi làm việc" width="1400" height="930" loading="lazy" /><figcaption>Đội MONA và khách hàng sau một buổi làm việc. Gọi 1900 636 648 là gặp đúng những người này.</figcaption></figure>
+      <p>{SITE.entity}</p>
+      <p>{SITE.trustLine} The MONA Group thành lập {SITE.founded}, đã làm {SITE.projects} dự án web và phần mềm, {SITE.retention} khách quay lại làm tiếp. Ba mảng chính: <a href="https://mona.media">Mona.Media</a> (thiết kế web, SEO, quảng cáo), <a href="https://mona.software">Mona.Software</a> (phần mềm theo yêu cầu) và <a href="https://mona.host">Mona.Host</a> (hosting, máy chủ, tên miền). MONA Pay là phần thu tiền tụi em tự xây để dùng cho chính mình và cho khách của cả ba mảng, nay mở cho mọi doanh nghiệp.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/gioi-thieu">Đọc thêm về MONA Pay</a>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .contact-big { font-size: 1.35rem; font-weight: 800; margin: 0 0 .6rem; font-variant-numeric: tabular-nums; overflow-wrap: anywhere; }
+</style>
