@@ -1,40 +1,48 @@
 ---
 import Base from './Base.astro';
-import { DOCS_NAV } from '../data/docs-nav';
+import { DOCS_NAV, DOCS_NAV_EN } from '../data/docs-nav';
 import { SITE } from '../data/site';
-interface Props { title: string; description: string; slug: string; updated?: string }
-const { title, description, slug, updated } = Astro.props;
-const path = slug === 'index' ? '/docs' : '/docs/' + slug;
-const mdPath = (slug === 'index' ? '/docs/index' : '/docs/' + slug) + '.md';
+interface Props { title: string; description: string; slug: string; updated?: string; lang?: 'vi' | 'en' }
+const { title, description, slug, updated, lang = 'vi' } = Astro.props;
+const isEn = lang === 'en';
+const root = isEn ? '/en/docs' : '/docs';
+const path = slug === 'index' ? root : root + '/' + slug;
+const mdPath = (slug === 'index' ? root + '/index' : root + '/' + slug) + '.md';
+const viPath = slug === 'index' ? '/docs' : '/docs/' + slug;
+const alternate = { vi: viPath, en: '/en' + viPath };
+const NAV = isEn ? DOCS_NAV_EN : DOCS_NAV;
+const T = isEn
+  ? { crumbHome: 'Home', crumbDocs: 'Documentation', navLabel: 'Documentation index', cta: 'Get a free API key', updated: 'Updated', md: 'Markdown version (.md)', suffix: ' | MONA Pay docs' }
+  : { crumbHome: 'Trang chủ', crumbDocs: 'Tài liệu', navLabel: 'Mục lục tài liệu', cta: 'Lấy API key miễn phí', updated: 'Cập nhật', md: 'Bản markdown (.md)', suffix: ' | MONA Pay' };
 const jsonld = [{
-  '@context': 'https://schema.org', '@type': 'TechArticle', headline: title, description, inLanguage: 'vi',
+  '@context': 'https://schema.org', '@type': 'TechArticle', headline: title, description, inLanguage: isEn ? 'en' : 'vi',
   url: SITE.url + path, dateModified: updated ? updated.split('/').reverse().join('-') : undefined,
   author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' },
   isPartOf: { '@type': 'WebSite', '@id': SITE.url + '/#website' },
 }, {
   '@context': 'https://schema.org', '@type': 'BreadcrumbList', itemListElement: [
-    { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
-    { '@type': 'ListItem', position: 2, name: 'Tài liệu', item: SITE.url + '/docs' },
+    { '@type': 'ListItem', position: 1, name: T.crumbHome, item: SITE.url + (isEn ? '/en' : '/') },
+    { '@type': 'ListItem', position: 2, name: T.crumbDocs, item: SITE.url + root },
     ...(slug !== 'index' ? [{ '@type': 'ListItem', position: 3, name: title, item: SITE.url + path }] : []),
   ],
 }];
 ---
-<Base title={title.length > 52 ? title : title + ' | MONA Pay'} description={description} path={path} jsonld={jsonld}>
+<Base title={title.length > 52 ? title : title + T.suffix} description={description} path={path} jsonld={jsonld} lang={lang} alternate={alternate}>
   <div class="wrap docs-shell">
-    <aside class="docs-nav" aria-label="Mục lục tài liệu">
-      <a class="btn btn-primary" href={SITE.appRegister} style="width:100%;justify-content:center;margin-bottom:.4rem">Lấy API key miễn phí</a>
-      {DOCS_NAV.map((g) => (
+    <aside class="docs-nav" aria-label={T.navLabel}>
+      <a class="btn btn-primary" href={SITE.appRegister} style="width:100%;justify-content:center;margin-bottom:.4rem">{T.cta}</a>
+      {NAV.map((g) => (
         <div>
           <h4>{g.group}</h4>
-          <ul>{g.items.map((i) => { const h = i.slug === 'index' ? '/docs' : '/docs/' + i.slug; return <li><a href={h} aria-current={h === path ? 'page' : undefined}>{i.label}</a></li>; })}</ul>
+          <ul>{g.items.map((i) => { const h = i.slug === 'index' ? root : root + '/' + i.slug; return <li><a href={h} aria-current={h === path ? 'page' : undefined}>{i.label}</a></li>; })}</ul>
         </div>
       ))}
     </aside>
     <article class="docs-body prose-md">
       <h1>{title}</h1>
       <div class="docs-meta">
-        {updated && <span>Cập nhật {updated}</span>}
-        <a href={mdPath}>Bản markdown (.md)</a>
+        {updated && <span>{T.updated} {updated}</span>}
+        <a href={mdPath}>{T.md}</a>
         <a href="/llms.txt">llms.txt</a>
         <a href="/openapi.json">openapi.json</a>
       </div>

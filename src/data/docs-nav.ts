@@ -29,3 +29,34 @@ export const DOCS_NAV: { group: string; items: { slug: string; label: string }[]
   ]},
 ];
 export const DOCS_FLAT = DOCS_NAV.flatMap((g) => g.items);
+
+// English sidebar — cùng slug, nhãn tiếng Anh (trang /en/docs/*)
+export const DOCS_NAV_EN: { group: string; items: { slug: string; label: string }[] }[] = [
+  { group: 'Getting started', items: [
+    { slug: 'index', label: 'Overview' },
+    { slug: 'bat-dau-nhanh', label: 'Quick start (5 minutes)' },
+    { slug: 'khai-niem', label: 'Concepts: VA, VietQR, webhooks' },
+  ]},
+  { group: 'Webhooks', items: [
+    { slug: 'webhooks/tich-hop-webhook', label: 'Webhook integration' },
+    { slug: 'webhooks/dinh-dang-payload', label: 'Payload format' },
+    { slug: 'webhooks/bao-mat', label: 'Security: HMAC + replay protection' },
+    { slug: 'webhooks/gui-lai-va-xu-ly-loi', label: 'Retries and error handling' },
+    { slug: 'webhooks/doi-soat', label: 'Reconciliation' },
+  ]},
+  { group: 'API v1', items: [
+    { slug: 'api/xac-thuc', label: 'Authentication' },
+    { slug: 'api/api-keys', label: 'API keys' },
+    { slug: 'api/tai-khoan-ao-va', label: 'Virtual accounts (VA)' },
+    { slug: 'api/qr-thanh-toan', label: 'QR payments' },
+    { slug: 'api/giao-dich', label: 'Transactions' },
+    { slug: 'api/webhook-configs', label: 'Webhook configuration API' },
+  ]},
+  { group: 'Notification channels', items: [
+    { slug: 'telegram', label: 'Telegram' },
+  ]},
+  { group: 'Reference', items: [
+    { slug: 'dia-chi-ip', label: 'IP addresses' },
+    { slug: 'ai-agent', label: 'For AI agents' },
+  ]},
+];

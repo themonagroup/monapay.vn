@@ -25,4 +25,10 @@ const posts = defineCollection({
   }),
 });
 
-export const collections = { docs, posts };
+// English docs — cùng slug với docs tiếng Việt, đặt tại src/content/docs-en/**
+const docs_en = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/docs-en' }),
+  schema: z.object({ title: z.string(), description: z.string(), updated: z.string().optional() }),
+});
+
+export const collections = { docs, posts, docs_en };

@@ -1,0 +1,63 @@
+---
+title: "What is a webhook, VietQR and a virtual account (plain-language guide)"
+description: The 7 terms you meet in MONA Pay explained for non-technical readers, with a short developer note in each section.
+updated: 29/08/2026
+---
+
+Using MONA Pay you will run into 7 terms: virtual account (VA), VietQR, webhook, Telegram, HMAC, API key and reconciliation. This page explains each one the way a shop owner or accountant would read it, with a few lines for developers in every section. After reading it you know enough to configure the dashboard without asking a developer.
+
+## Virtual account (VA)
+
+**For users.** A virtual account is a secondary account number issued by ACB; money sent to it still lands in your main account. The useful part is that you can create many different virtual numbers, each attached to one order or one customer. Whichever number the customer pays into tells the system which order it belongs to, without the customer having to type the right transfer note. For example, order 1052 gets VA `MONA1052...`; when the customer pays into it, order 1052 flips to paid on its own.
+
+**For developers.** VAs are created under the prefix you registered with ACB, managed in the dashboard under Banks & VA or through `POST /api/v1/acb/virtual-account/registration`. Webhooks can be configured per VA, so you can route tuition, hosting fees and one-off orders to different endpoints. Details in [Virtual accounts (VA)](/en/docs/api/tai-khoan-ao-va).
+
+## VietQR
+
+**For users.** VietQR is the standard bank-transfer QR code in Vietnam; every banking app can scan it. MONA Pay generates "dynamic" codes: the account number, amount and reference are already inside the code. When the customer scans it, the transfer screen is pre-filled and they only confirm, so nothing can be mistyped. An order of 350,000 VND produces a QR that says exactly 350,000 VND.
+
+**For developers.** Call `POST /api/v1/acb/qr-payment/generate` with `orderId`, `amount` (integer VND, up to 1,000,000,000), `description` (up to 255 characters) and the account details. When the customer scans and pays, ACB notifies MONA Pay and the webhook fires exactly like a VA transaction. Cancel a code with `DELETE /api/v1/acb/qr-payment/{qr_code_id}/cancellation`. See [QR payments](/en/docs/api/qr-thanh-toan).
+
+## Webhook
+
+**For users.** A webhook is how MONA Pay "calls" your software every time money arrives. You give MONA Pay a web address (URL); for each transaction MONA Pay sends a package of information there: amount, reference, time, transaction code. Your software then acts on it, for example updating the order status, emailing the customer, or unlocking a course.
+
+**For developers.** MONA Pay POSTs JSON to your URL, `Content-Type: application/json` by default. Your endpoint returns HTTP 200, 201 or 202 within 10 seconds to count as delivered. The payload has 7 fields; the deduplication key is `transaction_code`. See [Webhook integration](/en/docs/webhooks/tich-hop-webhook) and [Payload format](/en/docs/webhooks/dinh-dang-payload).
+
+## Telegram
+
+**For users.** If you only need to know that money arrived and no software has to react, Telegram notifications are enough. Add the MONA Pay bot to your company's Telegram group; every incoming transfer posts one message: bank, account number, amount, time, reference. The accountant sees it wherever they are without logging into a banking app.
+
+**For developers.** Configure it in the dashboard under Telegram: enter the `group_id` (and `topic_id` if the group uses topics), choose one VA or all accounts, edit the message template, and use the test button. The API lives at `/api/v1/telegram-configs`. See [Telegram](/en/docs/telegram).
+
+## HMAC (webhook signature)
+
+**For users.** A webhook URL is public; in theory anyone who knows it could send a fake "money arrived" package. HMAC is the anti-forgery signature: you and MONA Pay share a secret, and every package MONA Pay sends carries a signature computed from that secret. Your software recomputes the signature; if it matches, trust the package, otherwise drop it. An attacker without the secret cannot forge it.
+
+**For developers.** Header `X-Mona-Signature: sha256=<hex>` where hex = HMAC-SHA256(secret, `"<X-Mona-Timestamp>.<raw_body>"`). The timestamp is unix seconds; reject anything more than 5 minutes off to block replays. Sign the raw body byte for byte. See [Webhook security](/en/docs/webhooks/bao-mat).
+
+## API key and Bearer token
+
+**For users.** An API key is the key your software uses to call into MONA Pay (create VAs, create QR codes, list transactions). Create keys in the dashboard under API Keys, name each one so you know where it is used, and revoke a leaked key without touching the others.
+
+**For developers.** Two layers: log in with `POST /api/v1/client/login` for an `access_token` sent as a Bearer on every request; POST, PUT and DELETE requests add the `X-Client-Secret` header, which is the `client_secret` generated by `POST /api/v1/client-keys/generate`. The `client_secret` is shown only once. Every response uses the envelope `{"success": true, "message": "...", "data": {...}}`. See [Authentication](/en/docs/api/xac-thuc) and [API keys](/en/docs/api/api-keys).
+
+## Reconciliation
+
+**For users.** Reconciliation means comparing your books with the bank's transaction list to make sure nothing was missed. Webhooks cover real time, but your server can be under maintenance or offline right when money arrives. Periodic reconciliation (hourly or end of day) is the safety net for those moments.
+
+**For developers.** Pull the list with `GET /api/v1/acb/virtual-account/transactions?virtual_account_number=...&page=1&limit=100` (at most 100 per page), compare `transaction_code` with your transactions table and insert what is missing. See [Reconciliation](/en/docs/webhooks/doi-soat).
+
+## Putting it together
+
+A typical online store works like this: each order gets a dynamic VietQR code (or a VA), the customer scans and pays. ACB notifies MONA Pay, MONA Pay fires an HMAC-signed webhook at the store, the store verifies the signature and marks the order paid. The accountants' Telegram group gets the message at the same time. At the end of the day a cron job calls the reconciliation API to make sure nothing slipped. Nobody in that chain opens a banking app.
+
+## Quick answers
+
+**Is money ever held by MONA Pay?** No. A VA is a secondary number on your own ACB account, so money is in your bank account the moment it arrives. MONA Pay only receives the notification.
+
+**Do webhooks work without a VA?** Yes. Once the ACB account is linked and notification registration is done (2 OTPs), every transaction on the account is reported. VAs only make order matching automatic.
+
+**VA or VietQR?** Use both. Dynamic VietQR is the most convenient way for customers to pay, and the VA is how the system tells which order the money belongs to. MONA Pay's dynamic QR already carries the amount and reference, so matching is reliable.
+
+**Is HMAC mandatory?** Not mandatory, but we recommend enabling it from day one. It costs about 10 lines of code on the receiving side and makes incoming-payment notifications impossible to forge.

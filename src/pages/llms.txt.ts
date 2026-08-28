@@ -3,7 +3,7 @@ import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
 import { PAGES } from '../data/pages';
-import { DOCS_NAV } from '../data/docs-nav';
+import { DOCS_NAV, DOCS_NAV_EN } from '../data/docs-nav';
 import { PRICE_LINE } from '../data/pricing';
 export const GET: APIRoute = async () => {
   const docs = await getCollection('docs');
@@ -28,6 +28,20 @@ export const GET: APIRoute = async () => {
     }
   }
   lines.push(``);
+  const docsEn = await getCollection('docs_en');
+  if (docsEn.length) {
+    const byIdEn = Object.fromEntries(docsEn.map((d) => [d.id, d]));
+    lines.push(`## English docs (same content in English; every page has a .md twin)`);
+    lines.push(``);
+    lines.push(`- [MONA Pay in English](${SITE.url}/en): overview, 6 integration steps, free with no transaction limit.`);
+    lines.push(`- [For AI agents (English)](${SITE.url}/en/ai-agent): copy-ready prompt and minimal webhook endpoint.`);
+    for (const g of DOCS_NAV_EN) for (const i of g.items) {
+      const d = byIdEn[i.slug]; if (!d) continue;
+      const p = i.slug === 'index' ? '/en/docs' : '/en/docs/' + i.slug;
+      lines.push(`- [${d.data.title}](${SITE.url}${p}.md): ${d.data.description}`);
+    }
+    lines.push(``);
+  }
   const posts = await getCollection('posts');
   if (posts.length) {
     lines.push(`## Blog (bài viết, mỗi bài có bản .md)`);

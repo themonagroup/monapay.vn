@@ -99,6 +99,7 @@ pre,.codetabs{max-width:100%}
 .nav-group.open .chev{transform:rotate(180deg)}
 .nav .btn{padding:.6em 1.2em;font-size:.92rem;margin-left:.4rem}
 .nav-login{margin-left:.6rem}
+.nav-lang{font-size:.8rem;letter-spacing:.06em;border:1px solid var(--border);border-radius:8px;padding:.35em .6em;margin-left:.4rem}
 .nav-group{position:relative}
 .mega{display:none;position:absolute;left:50%;top:calc(100% + 10px);transform:translateX(-50%);z-index:60;min-width:640px;padding-top:10px}
 .nav-group:has(.mega-col:nth-child(3)) .mega{min-width:900px}

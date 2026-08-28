@@ -1,0 +1,113 @@
+---
+import Base from '../../layouts/Base.astro';
+import CodeTabs from '../../components/CodeTabs.astro';
+import { SITE } from '../../data/site';
+const ENTITY_EN = 'MONA Pay is the payment gateway and bank API of The MONA Group that lets Vietnamese businesses receive and confirm bank transfers in real time via virtual accounts (VA), VietQR, webhooks and Telegram — built so both developers and AI agents can integrate in minutes.';
+const title = 'Bank API for AI agents: integrate MONA Pay in minutes';
+const description = 'MONA Pay is built for AI coding agents: llms.txt, a .md version of every docs page and openapi.json on the main domain, a copy-ready prompt, signed webhooks and self-serve accounts. Free, no transaction limit.';
+const PROMPT = `Integrate MONA Pay (a Vietnamese domestic payment gateway that receives and confirms bank transfers in real time) into my project.
+
+Docs: https://monapay.vn/llms-full.txt (full text), https://monapay.vn/openapi.json
+API base URL: https://api.monapay.vn (legacy alias: https://ipn.mona.host)
+Auth: POST /api/v1/client/login {username,password} -> data.access_token (Bearer, valid 86400 seconds).
+POST/PUT/DELETE also send header X-Client-Secret (from POST /api/v1/client-keys/generate, shown once).
+Every response: {"success": bool, "message": str, "data": any}.
+
+Tasks:
+1. Create an HTTPS POST /webhook/monapay endpoint to receive incoming-payment events. MONA Pay POSTs JSON:
+   {"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
+2. Verify the signature: X-Mona-Signature = "sha256=" + hex(HMAC-SHA256(secret, X-Mona-Timestamp + "." + raw_body)).
+   Reject if |now - X-Mona-Timestamp| > 300 seconds. Timing-safe compare. Read the raw body; do not parse before signing.
+3. Deduplicate by transaction_code (UNIQUE). Ignore transaction_code = "DUMMY123" (test payload).
+4. Return HTTP 200 within 10 seconds, process asynchronously. Match the order by account_number (VA) or the order code in description; compare amount with the order total.
+5. Register the webhook: POST /api/v1/client-webhooks {name, webhook_url, auth_type:"HMAC_SHA256", secret_key} (Bearer + X-Client-Secret), then POST /api/v1/client-webhooks/test {webhook_url, auth_type, secret_key, is_dummy:true}.
+Read MONA_WEBHOOK_SECRET and MONA_SECRET from environment variables; never hard-code them.`;
+const CURL = `# Simulate MONA Pay firing a webhook at your endpoint
+SECRET='your_hmac_secret'
+URL='https://your-domain.com/webhook/monapay'
+TS=$(date +%s)
+BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}'
+SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
+curl -X POST "$URL" -H 'Content-Type: application/json' \\
+  -H "X-Mona-Timestamp: $TS" -H "X-Mona-Signature: sha256=$SIG" --data "$BODY"`;
+const PHP = `<?php
+$secret = getenv('MONA_WEBHOOK_SECRET');
+$raw = file_get_contents('php://input');
+$ts  = $_SERVER['HTTP_X_MONA_TIMESTAMP'] ?? '';
+$sig = $_SERVER['HTTP_X_MONA_SIGNATURE'] ?? '';
+if (abs(time() - (int) $ts) > 300) { http_response_code(400); exit; }
+if (!hash_equals('sha256=' . hash_hmac('sha256', "$ts.$raw", $secret), $sig)) { http_response_code(401); exit; }
+http_response_code(200); echo 'OK';
+if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
+$d = json_decode($raw, true);
+if ($d['transaction_code'] === 'DUMMY123') exit;
+// INSERT IGNORE on UNIQUE(transaction_code), then match the order and compare amount`;
+const NODE = `app.post('/webhook/monapay', express.raw({ type: 'application/json' }), (req, res) => {
+  const ts = req.header('X-Mona-Timestamp') || '', sig = req.header('X-Mona-Signature') || '';
+  const raw = req.body.toString('utf8');
+  if (Math.abs(Date.now() / 1000 - Number(ts)) > 300) return res.sendStatus(400);
+  const exp = 'sha256=' + crypto.createHmac('sha256', process.env.MONA_WEBHOOK_SECRET).update(\`\${ts}.\${raw}\`).digest('hex');
+  if (sig.length !== exp.length || !crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(exp))) return res.sendStatus(401);
+  res.sendStatus(200);
+  const d = JSON.parse(raw);
+  if (d.transaction_code === 'DUMMY123') return;
+  queue.add('monapay', d); // upsert by transaction_code, match the order, compare amount
+});`;
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url + '/en/ai-agent', description: ENTITY_EN, offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' }];
+---
+<Base title={title} description={description} path="/en/ai-agent" jsonld={jsonld} lang="en" alternate={{ vi: '/ai-agent', en: '/en/ai-agent' }}>
+  <section class="hero"><div class="wrap">
+    <span class="eyebrow">For AI agents</span>
+    <h1>A Vietnamese bank API<br class="br-d" /> <span class="accent">that an AI agent can integrate alone</span></h1>
+    <div class="answer-first"><p>{ENTITY_EN} Everything an agent needs sits on the main domain: <a href="/llms.txt">llms.txt</a>, a raw <code>.md</code> version of every docs page, <a href="/openapi.json">openapi.json</a>, and a prompt you paste into Claude Code, Codex or Cursor. Accounts work immediately after sign-up; the only human step is the bank's OTP.</p></div>
+  </div></section>
+
+  <section class="section-dark"><div class="wrap">
+    <span class="eyebrow">Prompt</span>
+    <h2>Paste this into Claude Code, Codex or Cursor</h2>
+    <div class="prompt-box">
+      <div class="prompt-head"><b>Prompt for the AI agent</b><button class="copy" type="button" data-copy-target="ai-prompt">Copy prompt</button></div>
+      <pre id="ai-prompt">{PROMPT}</pre>
+    </div>
+    <h3 style="margin-top:1.6rem">Minimal webhook endpoint (cURL → PHP → Node)</h3>
+    <CodeTabs tabs={[{ label: 'cURL (local test)', lang: 'bash', code: CURL }, { label: 'PHP', lang: 'php', code: PHP }, { label: 'Node (Express)', lang: 'js', code: NODE }]} />
+  </div></section>
+
+  <section><div class="wrap">
+    <h2>What the agent reads</h2>
+    <div class="grid grid-3">
+      <div class="card"><h3><a href="/llms.txt">/llms.txt</a></h3><p>Index of every page with a one-line summary, following llmstxt.org. Load it first to know where everything is.</p></div>
+      <div class="card"><h3><a href="/en/docs/index.md">/en/docs/*.md</a></h3><p>Every documentation page has a raw markdown twin: append <code>.md</code> to the URL. No HTML parsing, no navigation noise.</p></div>
+      <div class="card"><h3><a href="/openapi.json">/openapi.json</a></h3><p>The API v1 spec with security schemes, so a client can be generated instead of hand-written.</p></div>
+    </div>
+  </div></section>
+
+  <section class="section-alt"><div class="wrap narrow">
+    <h2>What an agent can do without a human</h2>
+    <ul>
+      <li>Sign up (<code>POST /api/v1/client/register-client</code>) and log in immediately; no approval queue.</li>
+      <li>Generate an API key and register webhook configurations through the API.</li>
+      <li>Fire a simulated payload (<code>POST /api/v1/client-webhooks/test</code>) to verify the endpoint and signature code.</li>
+      <li>Read delivery logs and statistics to debug.</li>
+    </ul>
+    <p>The one step that needs a person: linking the ACB account, because ACB sends two OTPs to the phone number registered with the bank. Full guide: <a href="/en/docs/ai-agent">For AI agents (docs)</a> · <a href="/en/docs/bat-dau-nhanh">Quick start</a>.</p>
+    <div class="btn-row"><a class="btn btn-primary" href={SITE.appRegister}>Create a free account</a><a class="btn btn-outline" href="/en/docs">Read the docs</a></div>
+  </div></section>
+</Base>
+<script is:inline>
+document.querySelectorAll('[data-copy-target]').forEach(function (b) {
+  b.addEventListener('click', async function () {
+    var el = document.getElementById(b.getAttribute('data-copy-target'));
+    try { await navigator.clipboard.writeText(el.innerText); b.textContent = 'Copied'; setTimeout(function () { b.textContent = 'Copy prompt'; }, 1500); } catch (e) {}
+  });
+});
+</script>
+<style>
+  .br-d{display:inline}@media (max-width:767px){.br-d{display:none}}
+  .hero h1{font-size:clamp(1.8rem,3.4vw,2.5rem)}
+  .prompt-box{background:var(--dark-2);border:1px solid var(--dark-border);border-radius:var(--radius-sm);overflow:hidden}
+  .prompt-head{display:flex;justify-content:space-between;align-items:center;padding:.6rem .9rem;border-bottom:1px solid var(--dark-border);color:var(--on-dark)}
+  .prompt-box pre{margin:0;border-radius:0;font-size:.82rem;white-space:pre-wrap}
+  .copy{font:inherit;font-size:.8rem;font-weight:600;color:var(--on-dark-soft);background:transparent;border:1px solid var(--dark-border);border-radius:8px;padding:.3rem .7rem;cursor:pointer}
+  .copy:hover{color:#fff}
+</style>

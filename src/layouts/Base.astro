@@ -9,8 +9,12 @@ interface Props {
   ogImage?: string;
   jsonld?: object[];       // schema bổ sung (FAQPage, SoftwareApplication, TechArticle…)
   noindex?: boolean;
+  lang?: 'vi' | 'en';      // ngôn ngữ trang (mặc định vi); en = trang /en/*
+  alternate?: { vi: string; en: string }; // cặp URL vi↔en để phát hreflang 2 chiều
 }
-const { title, description, path, ogImage = '/og/monapay-og.png', jsonld = [], noindex = false } = Astro.props;
+const { title, description, path, ogImage = '/og/monapay-og.png', jsonld = [], noindex = false, lang = 'vi', alternate } = Astro.props;
+const isEn = lang === 'en';
+const langHref = isEn ? (alternate?.vi ?? '/') : (alternate?.en ?? '/en');
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const org = {
   '@context': 'https://schema.org', '@type': 'Organization',
@@ -20,11 +24,11 @@ const org = {
   contactPoint: [{ '@type': 'ContactPoint', telephone: '+84-1900-636-648', contactType: 'customer service', email: SITE.email, areaServed: 'VN', availableLanguage: ['vi'] }],
   sameAs: SITE.sameAs,
 };
-const website = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE.url + '/#website', url: SITE.url, name: 'MONA Pay', publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'vi' };
+const website = { '@context': 'https://schema.org', '@type': 'WebSite', '@id': SITE.url + '/#website', url: SITE.url, name: 'MONA Pay', publisher: { '@id': SITE.url + '/#organization' }, inLanguage: isEn ? 'en' : 'vi' };
 const schemas = [org, website, ...jsonld];
 ---
 <!doctype html>
-<html lang="vi">
+<html lang={lang}>
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -38,7 +42,10 @@ const schemas = [org, website, ...jsonld];
   <meta property="og:description" content={description} />
   <meta property="og:url" content={canonical} />
   <meta property="og:image" content={SITE.url + ogImage} />
-  <meta property="og:locale" content="vi_VN" />
+  <meta property="og:locale" content={isEn ? 'en_US' : 'vi_VN'} />
+  {alternate && <link rel="alternate" hreflang="vi" href={SITE.url + alternate.vi} />}
+  {alternate && <link rel="alternate" hreflang="en" href={SITE.url + alternate.en} />}
+  {alternate && <link rel="alternate" hreflang="x-default" href={SITE.url + alternate.vi} />}
   <meta name="twitter:card" content="summary_large_image" />
   <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
   <link rel="icon" href="/favicon.ico" sizes="32x32" />
@@ -53,7 +60,7 @@ const schemas = [org, website, ...jsonld];
 <body>
   <header class="site-header">
     <div class="wrap">
-      <a class="logo" href="/" aria-label="MONA Pay — trang chủ"><img src="/brand/monapay-logo-light.svg" alt="MONA Pay" width="157" height="34" /></a>
+      <a class="logo" href={isEn ? '/en' : '/'} aria-label="MONA Pay"><img src="/brand/monapay-logo-light.svg" alt="MONA Pay" width="157" height="34" /></a>
       <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
       <nav class="nav" id="site-nav" aria-label="Điều hướng chính">
         {MEGA.map((g) => {
@@ -81,8 +88,9 @@ const schemas = [org, website, ...jsonld];
             <a class="nav-link" href={g.href} aria-current={active ? 'page' : undefined}>{g.label}</a>
           );
         })}
-        <a class="nav-link nav-login" href={SITE.appLogin}>Đăng nhập</a>
-        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản</a>
+        <a class="nav-link nav-lang" href={langHref} aria-label={isEn ? 'Tiếng Việt' : 'English'} title={isEn ? 'Tiếng Việt' : 'English'}>{isEn ? 'VI' : 'EN'}</a>
+        <a class="nav-link nav-login" href={SITE.appLogin}>{isEn ? 'Log in' : 'Đăng nhập'}</a>
+        <a class="btn btn-primary" href={SITE.appRegister}>{isEn ? 'Create account' : 'Tạo tài khoản'}</a>
       </nav>
     </div>
   </header>

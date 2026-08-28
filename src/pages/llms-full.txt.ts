@@ -2,7 +2,7 @@
 import type { APIRoute } from 'astro';
 import { getCollection } from 'astro:content';
 import { SITE } from '../data/site';
-import { DOCS_NAV } from '../data/docs-nav';
+import { DOCS_NAV, DOCS_NAV_EN } from '../data/docs-nav';
 export const GET: APIRoute = async () => {
   const docs = await getCollection('docs');
   const byId = Object.fromEntries(docs.map((d) => [d.id, d]));
@@ -10,6 +10,14 @@ export const GET: APIRoute = async () => {
   for (const g of DOCS_NAV) for (const i of g.items) {
     const d = byId[i.slug]; if (!d) continue;
     const p = i.slug === 'index' ? '/docs' : '/docs/' + i.slug;
+    out.push(`---`, ``, `# ${d.data.title}`, ``, `> ${d.data.description}`, `> URL: ${SITE.url}${p} · Markdown: ${SITE.url}${p}.md`, ``, d.body ?? '', ``);
+  }
+  const docsEn = await getCollection('docs_en');
+  const byIdEn = Object.fromEntries(docsEn.map((d) => [d.id, d]));
+  if (docsEn.length) out.push(`---`, ``, `# ENGLISH DOCUMENTATION (same content in English)`, ``);
+  for (const g of DOCS_NAV_EN) for (const i of g.items) {
+    const d = byIdEn[i.slug]; if (!d) continue;
+    const p = i.slug === 'index' ? '/en/docs' : '/en/docs/' + i.slug;
     out.push(`---`, ``, `# ${d.data.title}`, ``, `> ${d.data.description}`, `> URL: ${SITE.url}${p} · Markdown: ${SITE.url}${p}.md`, ``, d.body ?? '', ``);
   }
   const posts = await getCollection('posts');

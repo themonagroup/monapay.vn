@@ -26,7 +26,16 @@ for f in files:
     t = text_of(raw)
     rel = os.path.relpath(f, root)
     issues, ws = [], []
-    # voice
+    is_en = rel.startswith('en/') or rel == 'en.html'
+    # voice (bỏ qua trang tiếng Anh)
+    if is_en:
+        h1 = len(re.findall(r'<h1[\s>]', raw))
+        if h1 != 1: issues.append(f'{h1} thẻ H1')
+        if re.search(r"<img[^>]+src=\"/(?!brand/|_astro/|og/|img/)", raw): issues.append('img src ngoài /brand,/_astro,/og,/img')
+        title = re.search(r'<title>(.*?)</title>', raw, re.S)
+        if title and len(html.unescape(title.group(1)).strip()) > 70: ws.append('title dài')
+        for i in issues: print(f'FAIL {rel}: {i}')
+        fails += len(issues); warns += len(ws); continue
     for m in re.finditer(r'\b(\w+) ạ[.!?,]', t): issues.append(f'"ạ" cuối câu: …{m.group(0)}')
     if re.search(r'\bVâng\b', t): issues.append('"Vâng"')
     for m in re.finditer(r'(?:^|[.!?]\s+)Dạ\b', t): issues.append('mở câu "Dạ" (văn viết)')
