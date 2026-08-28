@@ -8,7 +8,7 @@ h1: "Xác nhận thanh toán tự động khi khách chuyển khoản, tụi em 
 ogImage: /img/blog/xac-nhan-thanh-toan-tu-dong.jpg
 ---
 
-Khách đến MONA làm web bán hàng hay phần mềm quản lý, sau 14.000+ dự án tụi em thấy gần như ai cũng kẹt đúng một khâu: khách chuyển khoản xong, phải có người mở app ngân hàng lên coi rồi mới dám giao hàng. Xác nhận thanh toán tự động là cách bỏ hẳn người đó ra khỏi quy trình. Tiền vào tài khoản ACB, ngân hàng báo, phần mềm tự đổi trạng thái đơn trong vài giây. Không ai phải canh. Tụi em tự xây hệ thống này để thu tiền cho chính mình hơn 4 năm, chạy thật lại toàn bộ với 50.000 đồng ngày 28/08/2026, giờ mở cho mọi doanh nghiệp, [miễn phí hoàn toàn](/bang-gia).
+Khách đến MONA làm web bán hàng hay phần mềm quản lý, sau 14.000+ dự án tụi em thấy gần như ai cũng kẹt đúng một khâu: khách chuyển khoản xong, phải có người mở app ngân hàng lên coi rồi mới dám giao hàng. Xác nhận thanh toán tự động là cách bỏ hẳn người đó ra khỏi quy trình. Tiền vào tài khoản ACB, ngân hàng báo, phần mềm tự đổi trạng thái đơn trong vài giây. Không ai phải canh. Tụi em tự xây hệ thống này để thu tiền cho chính mình hơn 4 năm, giờ mở cho mọi doanh nghiệp, [miễn phí hoàn toàn](/bang-gia).
 
 ## Vì sao khách đến MONA làm web đều kẹt ở khâu xác nhận chuyển khoản?
 
@@ -48,11 +48,11 @@ Bước 4, chuyển thử một khoản tiền thật. Tụi em luôn kêu khác
 
 Anh chị chưa muốn đụng tới code, chỉ muốn thử xem tiền vào có báo không, thì cứ làm bước 1 tới bước 3 với Telegram trước. Không mất tiền, không giới hạn số giao dịch, cả nhóm thấy thông báo là biết hệ thống hợp với mình hay không, rồi hãy tính chuyện nối website sau.
 
-## Hố tụi em vấp ngày 28/08/2026: tạo tài khoản ảo xong mà tiền vào không báo
+## Hố tụi em từng vấp: tạo tài khoản ảo xong mà tiền vào không báo
 
-Kể chuyện này vì nó sẽ tiết kiệm cho anh chị một buổi chiều. Ngày 28/08/2026, tụi em chạy thật toàn bộ luồng bằng tiền thật: chuyển 50.000 đồng vào tài khoản ảo, chờ ACB báo, xem MONA Pay ghi nhận, xem webhook bắn về máy nhận và kiểm chữ ký. Lần đầu chuyển, tiền vào tài khoản mà hệ thống im re. Thiếu một cái OTP.
+Kể chuyện này vì nó sẽ tiết kiệm cho anh chị một buổi chiều. Khi tự đi lại toàn bộ luồng như một khách mới: chuyển khoản vào tài khoản ảo, chờ ACB báo, xem MONA Pay ghi nhận, xem webhook bắn về máy nhận và kiểm chữ ký. Lần đầu chuyển, tiền vào tài khoản mà hệ thống im re. Thiếu một cái OTP.
 
-Nguyên nhân nằm ở phía ngân hàng, và hoàn toàn hợp lý: tạo tài khoản ảo là một dịch vụ, nhận thông báo giao dịch là một dịch vụ khác, ACB yêu cầu xác thực OTP riêng cho từng dịch vụ. Bản cũ của tụi em chỉ làm OTP lần đầu. Sửa xong, wizard nối ngân hàng đi liền 4 bước với 2 lần OTP, chuyển lại 50.000 đồng, thông báo về, webhook về, chữ ký khớp đúng công thức tụi em công bố trong [tài liệu bảo mật](/docs/webhooks/bao-mat). Từ hôm đó đến giờ quy trình là vậy, anh chị cứ làm đủ hai lần OTP là yên tâm.
+Nguyên nhân nằm ở phía ngân hàng, và hoàn toàn hợp lý: tạo tài khoản ảo là một dịch vụ, nhận thông báo giao dịch là một dịch vụ khác, ACB yêu cầu xác thực OTP riêng cho từng dịch vụ. Bản cũ của tụi em chỉ làm OTP lần đầu. Sửa xong, wizard nối ngân hàng đi liền 4 bước với 2 lần OTP, chuyển lại, thông báo về, webhook về, chữ ký khớp đúng công thức tụi em công bố trong [tài liệu bảo mật](/docs/webhooks/bao-mat). Từ hôm đó đến giờ quy trình là vậy, anh chị cứ làm đủ hai lần OTP là yên tâm.
 
 Bài học rút ra là đừng tin cái gì chưa chạy tiền thật. Mọi thứ trên màn hình có thể xanh hết mà tiền vẫn không báo, chỉ vì thiếu một cái OTP.
 
@@ -86,7 +86,7 @@ Không. Tiền vào thẳng tài khoản ACB của anh chị, còn MONA Pay ch�
 
 ### Mất bao lâu để tiền vào được xác nhận?
 
-Ngân hàng báo là hệ thống báo ngay, thường tính bằng giây. Phía website của anh chị trả lời trong 10 giây là hoàn tất một vòng. Lần tụi em chuyển 50.000 đồng ngày 28/08/2026, thông báo Telegram và webhook về gần như cùng lúc.
+Ngân hàng báo là hệ thống báo ngay, thường tính bằng giây. Phía website của anh chị trả lời trong 10 giây là hoàn tất một vòng; chữ ký kèm dấu thời gian, lệch quá 5 phút là từ chối, nên webhook giả không lọt. Khi tụi em tự kiểm luồng, thông báo Telegram và webhook về gần như cùng lúc.
 
 ### Tôi chưa có tài khoản ACB thì sao?
 

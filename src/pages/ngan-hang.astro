@@ -19,7 +19,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: '
 <Base title={title} description={description} path="/ngan-hang" jsonld={jsonld}>
   <section class="hero"><div class="wrap narrow">
     <span class="eyebrow">Ngân hàng hỗ trợ</span>
-    <h1>Ngân hàng hỗ trợ MONA Pay:<br class="br-d" /> <span class="accent">{LIVE_BANKS.map((b) => b.name).join(', ')} đang chạy, các ngân hàng khác đang kết nối</span></h1>
+    <h1>Ngân hàng hỗ trợ MONA Pay:<br class="br-d" /> <span class="accent">{LIVE_BANKS.map((b) => b.name).join(', ')} đang chạy, nhiều ngân hàng đang kết nối</span></h1>
     <div class="answer-first"><p>MONA Pay nhận thông báo tiền vào qua API đối tác của từng ngân hàng. Hiện {LIVE_BANKS.map((b) => b.name).join(', ')} đang hoạt động thật (tài khoản ảo, VietQR động, thông báo giao dịch), {APPLYING_BANKS.length} ngân hàng đang trong quá trình đăng ký kết nối. Webhook, Telegram, API của anh chị dùng chung cho mọi ngân hàng, thêm ngân hàng không phải sửa tích hợp.</p></div>
   </div></section>
 
@@ -62,4 +62,4 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: '
   <section class="section-alt"><div class="wrap narrow"><Faq items={faq} eyebrow="Hỏi đáp" title="Câu hỏi về ngân hàng hỗ trợ" /></div></section>
   <CtaBand title="Nối ngân hàng hôm nay, thêm ngân hàng sau không phải sửa gì" body="Tạo tài khoản, nối ACB 4 bước, cấu hình webhook hoặc Telegram một lần dùng cho mọi ngân hàng." />
 </Base>
-<style>.br-d{display:inline}@media (max-width:767px){.br-d{display:none}}.hero h1{font-size:clamp(1.7rem,3vw,2.3rem)}</style>
+<style>.br-d{display:inline}@media (max-width:767px){.br-d{display:none}}.hero h1{font-size:clamp(1.6rem,2.7vw,2.05rem)}</style>

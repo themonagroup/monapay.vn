@@ -53,7 +53,7 @@ Tụi em nói rõ giới hạn: tới 28/08/2026 MONA Pay mới nối ACB, phầ
 
 Lỗi thứ nhất là nội dung có dấu tiếng Việt hoặc ký tự lạ. Nhiều app ngân hàng cắt hoặc từ chối nội dung như vậy, khách chuyển được nhưng nội dung về trống, phần mềm không khớp đơn. Tụi em giới hạn nội dung 25 ký tự không dấu trong tool, và trong API thì phần mềm nên sinh mã đơn dạng DH10234.
 
-Lỗi thứ hai là dùng mã tĩnh rồi kỳ vọng tự động. Không có mã đơn trong nội dung thì không có cách nào khớp, dù phần mềm giỏi tới đâu. Lỗi thứ ba là tạo tài khoản ảo xong mà quên đăng ký nhận thông báo giao dịch, một bước cần OTP lần hai từ ACB, tiền vào mà hệ thống im lặng. Chính tụi em vấp lỗi này ngày 28/08/2026 khi test 50.000 đồng tiền thật, và sửa wizard nối ngân hàng thành 4 bước liền mạch ngay hôm đó. Vấp rồi mới hiểu. Anh chị đi sau thì đỡ vấp đúng chỗ tụi em đã vấp.
+Lỗi thứ hai là dùng mã tĩnh rồi kỳ vọng tự động. Không có mã đơn trong nội dung thì không có cách nào khớp, dù phần mềm giỏi tới đâu. Lỗi thứ ba là tạo tài khoản ảo xong mà quên đăng ký nhận thông báo giao dịch, một bước cần OTP lần hai từ ACB, tiền vào mà hệ thống im lặng. Chính tụi em từng vấp lỗi này khi triển khai, và sửa wizard nối ngân hàng thành 4 bước liền mạch với 2 lần OTP, thiếu 1 lần là tiền vào không báo. Vấp rồi mới hiểu. Anh chị đi sau thì đỡ vấp đúng chỗ tụi em đã vấp.
 
 ## Câu hỏi thường gặp
 

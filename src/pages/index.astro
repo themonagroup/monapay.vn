@@ -2,6 +2,7 @@
 import Base from '../layouts/Base.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
+import MonaStory from '../components/MonaStory.astro';
 import Steps from '../components/Steps.astro';
 import Stats from '../components/Stats.astro';
 import CodeTabs from '../components/CodeTabs.astro';
@@ -142,7 +143,7 @@ app.listen(3000, () => console.log('Webhook MONA Pay chạy ở cổng 3000'));`
 
 const faq = [
   { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên cũng không có chuyện chờ đối soát rồi mới được rút.' },
-  { q: 'MONA Pay hỗ trợ ngân hàng nào?', a: `${BANKS_LINE}. ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn ${SITE.customersSince2022} khách hàng của MONA nên mở trước, cả tài khoản cá nhân lẫn doanh nghiệp. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; webhook, Telegram, API dùng chung nên thêm ngân hàng anh chị không phải sửa gì.` },
+  { q: 'MONA Pay hỗ trợ ngân hàng nào?', a: `${BANKS_LINE}. ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn 6.000 khách hàng của MONA nên mở trước, cả tài khoản cá nhân lẫn doanh nghiệp. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; webhook, Telegram, API dùng chung nên thêm ngân hàng anh chị không phải sửa gì.` },
   { q: 'Mất bao lâu để tích hợp?', a: `Nối tài khoản ACB trong dashboard mất 4 bước, xác thực 2 lần OTP do ACB gửi. Phần webhook, lập trình viên của anh chị copy code mẫu PHP hoặc Node ở trên là chạy, thường trong vài phút. Nếu anh chị dùng AI như Claude Code hay Codex, dán prompt có sẵn là AI tự làm. Web hay phần mềm làm tại MONA thì tụi em cài luôn. Gọi ${SITE.hotline} nếu cần người ngồi cùng.` },
   { q: 'Phần mềm của tôi không do MONA làm, dùng được không?', a: 'Được. Webhook là chuẩn HTTP thông thường: MONA Pay POST một gói JSON tới đường dẫn anh chị chỉ định, phần mềm nào nhận được HTTP request là nhận được. WordPress, WooCommerce, Laravel, Node, .NET, phần mềm nội bộ tự viết đều nối được, kèm code mẫu trong tài liệu.' },
   { q: 'Giá bao nhiêu?', a: isFree ? `${PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}, đủ mọi tính năng: tài khoản ảo, VietQR, webhook, Telegram, API, dashboard. Không thu phần trăm trên số tiền, không phí mở tài khoản. Giới hạn duy nhất là fair-use chống lạm dụng, xem trang bảng giá.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng: tài khoản ảo, VietQR, webhook, Telegram, API, dashboard. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền.` },
@@ -195,7 +196,7 @@ const jsonld = [{
   <section class="section-alt">
     <div class="wrap">
       <div class="stats-5"><Stats items={stats} /></div>
-      <p class="stats-note">Hệ thống MONA tự xây để thu tiền cho chính mình, rồi từ 2022 tới nay hơn {SITE.customersSince2022} khách hàng mới của MONA đã thu tiền qua đây trong web, phần mềm tụi em giao. Ngày 28/08/2026 tụi em chạy thử lần cuối bằng 50.000 đ tiền thật: chuyển khoản, ACB báo, MONA Pay ghi nhận, webhook về đúng chữ ký. Năm 2026 mới mở cho mọi doanh nghiệp.</p>
+      <p class="stats-note">Hệ thống MONA tự xây để thu tiền cho chính mình, rồi từ 2022 tới nay hơn 6.000 khách hàng mới của MONA đã thu tiền qua đây trong web, phần mềm tụi em giao. Năm 2026 mới mở cho mọi doanh nghiệp.</p>
     </div>
   </section>
 
@@ -253,22 +254,7 @@ const jsonld = [{
     </div>
   </section>
 
-  <section>
-    <div class="wrap trust">
-      <div>
-        <img src="/brand/mona-logo-the-mona-dark.svg" alt="THE MONA" width="246" height="40" class="trust-logo" />
-        <h2 class="trust-h2">Đứng sau MONA Pay là The MONA Group,<br class="br-d" /> làm web và phần mềm từ {SITE.founded}</h2>
-        <p>{SITE.projects} dự án đã giao, {SITE.retention} khách làm xong quay lại làm tiếp. Ba mảng của tụi em: <a href="https://mona.media">Mona.Media</a> làm website và SEO, <a href="https://mona.software">Mona.Software</a> viết phần mềm quản lý theo yêu cầu, <a href="https://mona.host">Mona.Host</a> lo hosting và máy chủ. MONA Pay sinh ra vì chính tụi em cần thu tiền hosting, học phí, đơn phần mềm mà không muốn thuê thêm người ngồi đối chiếu chuyển khoản.</p>
-        <p>Web hay phần mềm làm tại MONA thì MONA Pay được cài sẵn. Khách ngoài dùng tài liệu mở hoặc gọi tổng đài, có kỹ sư trực.</p>
-      </div>
-      <div class="trust-box">
-        <p class="trust-label">Tổng đài MONA, có người trực</p>
-        <p class="trust-hotline"><a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
-        <p><a href={'mailto:' + SITE.email}>{SITE.email}</a></p>
-        <a class="btn btn-outline" href="/gioi-thieu">Đọc thêm về MONA Pay</a>
-      </div>
-    </div>
-  </section>
+  <MonaStory />
 
   <section class="section-alt">
     <div class="wrap narrow">

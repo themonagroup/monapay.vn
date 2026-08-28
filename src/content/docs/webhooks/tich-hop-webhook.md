@@ -180,7 +180,7 @@ Cùng một giao dịch có thể tới endpoint của anh chị nhiều lần: 
 - Tường lửa cho phép IP `103.168.55.14` (xem [Địa chỉ IP](/docs/dia-chi-ip)).
 - Không có redirect ở URL webhook (ví dụ từ `http` sang `https` hoặc thêm dấu `/` cuối). Redirect ra nhãn `HTTP_3XX` và tính là thất bại.
 - Bấm Gửi thử trong dashboard, xem Lịch sử gửi có mã 200 và thời gian phản hồi dưới 1 giây.
-- Chuyển thử một khoản nhỏ vào VA để chạy luồng thật. Tụi em kiểm luồng này ngày 28/08/2026 với 50.000đ tiền thật.
+- Chuyển thử một khoản nhỏ vào VA để chạy luồng thật.
 
 ## Lỗi thường gặp
 

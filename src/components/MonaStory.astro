@@ -1,0 +1,44 @@
+---
+// Khối "Chuyện MONA" dùng chung home + giới thiệu: câu chuyện công ty + ảnh thật + số. Ảnh đã đối chiếu blacklist.
+import { SITE } from '../data/site';
+interface Props { compact?: boolean }
+const { compact = false } = Astro.props;
+const photos = [
+  { src: '/img/mona/mona-hop-khach-hang-doanh-nghiep.jpg', alt: 'Đội MONA họp với khách hàng doanh nghiệp, trình bày giải pháp trên màn hình lớn', cap: 'Họp với khách doanh nghiệp: web, phần mềm và khâu thu tiền bàn cùng một lúc.', w: 1400, h: 1050 },
+  { src: '/img/mona/mona-gap-khach-tai-xuong.jpg', alt: 'Nhân viên MONA mặc áo THE MONA chụp cùng khách hàng trước xưởng sản xuất', cap: 'Đi gặp khách tận xưởng: phần mềm quản lý và thu tiền phải chạy đúng cách xưởng vận hành.', w: 1400, h: 1050 },
+  { src: '/img/mona/mona-team-building.jpg', alt: 'Đội ngũ MONA trong ngày team building ở biển', cap: 'Đội ngũ MONA: đội làm web, làm phần mềm, làm hosting, và đội tự xây MONA Pay.', w: 1400, h: 926 },
+];
+---
+<section class="mona-story section-alt">
+  <div class="wrap">
+    <span class="eyebrow">Chuyện MONA</span>
+    <h2>Đứng sau MONA Pay là The MONA Group,<br class="br-d" /> làm web và phần mềm từ năm {SITE.founded}</h2>
+    <div class="story-grid">
+      <div class="story-text">
+        <p>Tụi em bắt đầu năm {SITE.founded} bằng việc làm website cho doanh nghiệp. Làm web thì khách hỏi tiếp phần mềm quản lý, rồi hỏi chỗ đặt web cho ổn định. Ba mảng đó thành ba thương hiệu: <a href="https://mona.media">Mona.Media</a> làm web và marketing, <a href="https://mona.software">Mona.Software</a> làm phần mềm theo yêu cầu, <a href="https://mona.host">Mona.Host</a> lo hosting và máy chủ. Tới nay là {SITE.projects} dự án, {SITE.retention} khách làm xong quay lại làm tiếp.</p>
+        <p>Làm nhiều web bán hàng và phần mềm thu tiền, tụi em thấy khách nào cũng kẹt đúng một chỗ: khách chuyển khoản xong phải có người ngồi mở app ngân hàng để xác nhận. Tụi em viết hệ thống nhận và xác nhận chuyển khoản để dùng cho chính mình trước, thu phí hosting, học phí, đơn phần mềm. Từ 2022, hệ thống này nhúng vào web và phần mềm giao cho khách, tới nay hơn {SITE.customersSince2022.replace('+', '')} khách hàng mới của MONA thu tiền qua đây.</p>
+        {!compact && <p>Năm 2026 tụi em đặt tên nó là MONA Pay, mở tại monapay.vn cho mọi doanh nghiệp, {'miễn phí hoàn toàn'}. Tiền vẫn nằm ở ngân hàng của anh chị, MONA Pay chỉ đọc thông báo giao dịch và báo về đúng chỗ. Gọi {SITE.hotline} là gặp đúng đội đã làm việc này nhiều năm.</p>}
+        <div class="btn-row"><a class="btn btn-outline" href="/gioi-thieu">Đọc chuyện MONA Pay</a><a class="btn btn-ghost" href="https://mona.media">Về The MONA Group</a></div>
+      </div>
+      <div class="story-photos">
+        {photos.map((p) => <figure><img src={p.src} alt={p.alt} width={p.w} height={p.h} loading="lazy" /><figcaption>{p.cap}</figcaption></figure>)}
+      </div>
+    </div>
+    <div class="story-logo"><img src="/brand/mona-logo-the-mona-dark.svg" alt="THE MONA" width="246" height="40" /><span>Mona.Media · Mona.Software · Mona.Host · MONA Pay</span></div>
+  </div>
+</section>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .story-grid{display:grid;grid-template-columns:1.05fr .95fr;gap:2.2rem;align-items:start;margin-top:.5rem}
+  @media (max-width:900px){.story-grid{grid-template-columns:1fr}}
+  .story-text p{font-size:1.05rem}
+  .story-photos{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
+  .story-photos figure{margin:0}
+  .story-photos figure:first-child{grid-column:1/-1}
+  .story-photos img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius);box-shadow:var(--shadow);aspect-ratio:4/3}
+  .story-photos figure:first-child img{aspect-ratio:16/10}
+  .story-photos figcaption{font-size:.85rem;color:var(--text-soft);margin-top:.4rem}
+  .story-logo{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;margin-top:1.6rem;color:var(--text-soft);font-size:.92rem}
+  .story-logo img{height:34px;width:auto}
+</style>

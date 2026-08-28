@@ -46,9 +46,9 @@ Thứ hai là tài liệu viết cho cả máy đọc. Tụi em để nguyên b�
 
 Thứ ba là giá. Miễn phí hoàn toàn, không giới hạn giao dịch, không thu phần trăm trên số tiền, xem [bảng giá](/bang-gia). Tiền chưa bao giờ đi qua MONA Pay, nó vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo từ ngân hàng rồi báo về web hoặc nhóm Telegram. Không cầm tiền thì không có phí giữ tiền, không có phí rút. Còn phần kỹ thuật thì giữ nguyên như bản nội bộ: webhook ký HMAC-SHA256, từ chối gói tin lệch giờ quá 5 phút, máy nhận của anh chị trả lời trong 10 giây là tính thành công, mỗi lần gửi đều có lịch sử để xem lại.
 
-## Ngày 28/08/2026, tụi em chuyển 50.000 đồng để tự kiểm lần cuối trước khi mở
+## Trước khi mở cửa, tụi em đi lại đúng đường của một khách mới
 
-Trước khi mở cho người ngoài, tụi em muốn đi lại toàn bộ đường của một khách mới, bằng tài khoản mới và tiền thật. Ngày 28/08/2026, một tài khoản đăng ký từ đầu, nối ACB, tạo tài khoản ảo, khai webhook về một máy nhận bên ngoài, rồi chuyển 50.000 đồng từ một tài khoản khác sang. ACB báo, hệ thống ghi nhận, webhook bắn về máy nhận, chữ ký HMAC khớp đúng công thức đã công bố trong tài liệu. Toàn bộ đúng như thiết kế.
+Trước khi mở cho người ngoài, tụi em muốn đi lại toàn bộ đường của một khách mới, bằng tài khoản mới và tiền thật. Một tài khoản đăng ký từ đầu như khách, nối ACB, tạo tài khoản ảo, khai webhook về một máy nhận bên ngoài, rồi chuyển khoản vào tài khoản ảo đó từ một tài khoản khác. ACB báo, hệ thống ghi nhận, webhook bắn về máy nhận, chữ ký HMAC khớp đúng công thức đã công bố trong tài liệu. Toàn bộ đúng như thiết kế.
 
 Nhưng lần chạy đó cũng lòi ra một cái hố mà bản giao cho khách MONA chưa từng gặp, vì hồi đó kỹ sư MONA làm tay bước nối ngân hàng nên không ai vấp. Tạo tài khoản ảo xong, ACB yêu cầu thêm một lần OTP nữa để đăng ký nhận thông báo giao dịch cho tài khoản ảo đó. Bản đầu của trình hướng dẫn bỏ sót bước này. Kết quả là tài khoản ảo có rồi, tiền chuyển vào rồi, mà hệ thống không nhận được thông báo nào. Tụi em ngồi soi mất một buổi mới ra.
 

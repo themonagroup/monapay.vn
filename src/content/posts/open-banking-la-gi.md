@@ -44,9 +44,9 @@ Có một thứ open banking kiểu này không làm: giữ tiền. Tiền đi t
 
 ## Open banking có rủi ro gì, tụi em phòng thế nào?
 
-Rủi ro thật nằm ở phần thông báo đi ra ngoài ngân hàng. Khi thông báo tiền vào được bắn tới website của anh chị, kẻ xấu có thể giả một gói tin "tiền đã vào" để lừa mở đơn. MONA Pay ký mọi gói tin bằng HMAC-SHA256 kèm mốc thời gian, website kiểm chữ ký rồi mới tin, gói tin lệch quá 5 phút bị từ chối. Tụi em test 50.000 đồng tiền thật ngày 28/08/2026, chữ ký khớp đúng công thức công bố tại [trang bảo mật webhook](/docs/webhooks/bao-mat).
+Rủi ro thật nằm ở phần thông báo đi ra ngoài ngân hàng. Khi thông báo tiền vào được bắn tới website của anh chị, kẻ xấu có thể giả một gói tin "tiền đã vào" để lừa mở đơn. MONA Pay ký mọi gói tin bằng HMAC-SHA256 kèm mốc thời gian, website kiểm chữ ký rồi mới tin, gói tin lệch quá 5 phút bị từ chối. Công thức chữ ký công bố tại [trang bảo mật webhook](/docs/webhooks/bao-mat), anh chị tự kiểm lại được bằng lệnh cURL.
 
-Rủi ro thứ hai là bỏ sót: website đang khởi động lại đúng lúc thông báo tới. Lịch sử từng lần gửi trong dashboard ghi mã HTTP và nhãn lỗi, anh chị bấm gửi lại, và phần gửi lại tự động tối đa 7 lần tụi em đang triển khai. Rủi ro thứ ba là lỗi cấu hình phía người dùng, ví dụ tạo tài khoản ảo xong quên bật nhận thông báo, chính tụi em vấp ngày 28/08 rồi sửa wizard thành 4 bước liền mạch. Vấp thật, sửa thật, cùng ngày.
+Rủi ro thứ hai là bỏ sót: website đang khởi động lại đúng lúc thông báo tới. Lịch sử từng lần gửi trong dashboard ghi mã HTTP và nhãn lỗi, anh chị bấm gửi lại, và phần gửi lại tự động tối đa 7 lần tụi em đang triển khai. Rủi ro thứ ba là lỗi cấu hình phía người dùng, ví dụ tạo tài khoản ảo xong quên bật nhận thông báo, chính tụi em từng vấp rồi sửa wizard thành 4 bước liền mạch. Vấp thật, sửa thật, cùng ngày.
 
 ## Câu hỏi thường gặp
 

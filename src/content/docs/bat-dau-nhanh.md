@@ -185,7 +185,7 @@ curl -X POST "$URL" \
   --data "$BODY"
 ```
 
-Cuối cùng chuyển một khoản nhỏ vào số VA vừa tạo, ví dụ 10.000đ, từ app ngân hàng bất kỳ. Trong vài giây anh chị sẽ thấy giao dịch trong dashboard và webhook về máy chủ. Chính tụi em kiểm luồng này ngày 28/08/2026 bằng 50.000đ tiền thật, chữ ký HMAC khớp ở đầu nhận.
+Cuối cùng chuyển một khoản nhỏ vào số VA vừa tạo, ví dụ 10.000đ, từ app ngân hàng bất kỳ. Trong vài giây anh chị sẽ thấy giao dịch trong dashboard và webhook về máy chủ.
 
 ## Sau khi chạy được
 

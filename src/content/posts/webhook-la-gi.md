@@ -34,7 +34,7 @@ Một chi tiết mà khách MONA hay bỏ qua rồi sau này hối: `transaction
 
 Đây là câu tụi em thấy dân kỹ thuật hỏi ngay sau khi hiểu webhook là gì, và hỏi là đúng, vì địa chỉ nhận webhook nằm trên internet, ai cũng gọi được. Nếu phần mềm tin mọi gói tin POST tới, kẻ xấu chỉ cần gửi một JSON giả với `amount` 50.000.000 đồng là đơn được mở khoá.
 
-MONA Pay ký mỗi gói tin bằng HMAC-SHA256. Trong header có `X-Mona-Timestamp` là mốc thời gian, và `X-Mona-Signature` là chữ ký tính từ khoá bí mật của anh chị cộng với chuỗi "mốc thời gian.nội dung gói tin". Phần mềm nhận tính lại chữ ký bằng cùng khoá, khớp thì tin. Sai thì bỏ. Kèm theo đó là luật chống phát lại: gói tin có mốc thời gian lệch quá 5 phút so với giờ máy nhận thì từ chối, dù chữ ký đúng. Tụi em test tiền thật 50.000 đồng ngày 28/08/2026 và chữ ký khớp 100% đúng công thức công bố trong [trang bảo mật webhook](/docs/webhooks/bao-mat).
+MONA Pay ký mỗi gói tin bằng HMAC-SHA256. Trong header có `X-Mona-Timestamp` là mốc thời gian, và `X-Mona-Signature` là chữ ký tính từ khoá bí mật của anh chị cộng với chuỗi "mốc thời gian.nội dung gói tin". Phần mềm nhận tính lại chữ ký bằng cùng khoá, khớp thì tin. Sai thì bỏ. Kèm theo đó là luật chống phát lại: gói tin có mốc thời gian lệch quá 5 phút so với giờ máy nhận thì từ chối, dù chữ ký đúng. Công thức chữ ký công bố đầy đủ trong [trang bảo mật webhook](/docs/webhooks/bao-mat), anh chị tự kiểm lại được bằng lệnh cURL.
 
 Khoá bí mật đó anh chị tự đặt trong dashboard khi khai webhook, không ai khác biết, kể cả tụi em cũng chỉ lưu bản đã băm. Giữ nó như giữ mật khẩu ngân hàng, và đổi khoá ngay nếu nghi ngờ đã lộ, MONA Pay cho đổi trong 1 phút không cần khai lại địa chỉ.
 

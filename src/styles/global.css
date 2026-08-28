@@ -139,8 +139,9 @@ pre,.codetabs{max-width:100%}
 /* stats */
 .stats{display:grid;grid-template-columns:repeat(4,1fr);gap:1rem}
 @media (max-width:900px){.stats{grid-template-columns:repeat(2,1fr)}}
-.stat{background:var(--surface);border-radius:var(--radius);padding:1.25rem 1.4rem;box-shadow:var(--shadow)}
-.stat b{display:block;font-size:2rem;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums;line-height:1.15}
+.stat{background:var(--surface);border-radius:var(--radius);padding:1.25rem 1.4rem;box-shadow:var(--shadow);min-width:0}
+.stat b{display:block;font-size:2rem;font-weight:800;color:var(--primary);font-variant-numeric:tabular-nums;line-height:1.15;overflow-wrap:anywhere}
+@media (max-width:480px){.stats{gap:.6rem}.stat{padding:1rem}.stat b{font-size:1.5rem}}
 .stat span{color:var(--text-soft);font-size:.95rem}
 
 /* steps */

@@ -35,6 +35,7 @@ export const PAGES = [
   { path: '/nganh/nhap-hang-trung-quoc', title: 'Dịch vụ nhập hàng Trung Quốc: thu cọc, nạp tiền khách tự đối soát', desc: 'Mỗi khách một tài khoản ảo ACB cố định, nạp tiền là ví tự cộng, đơn tự sang đã cọc, đối soát hàng nghìn giao dịch theo mã.' },
   { path: '/nganh/cho-thue-tro', title: 'Thu tiền phòng trọ tự động: mỗi phòng 1 tài khoản ảo, báo có ngay', desc: 'Chủ trọ, chủ toà nhà: tài khoản ảo riêng từng phòng, tiền phòng, điện nước, cọc về là sổ thu tự ghi, không dò sao kê, không nhầm phòng.' },
   { path: '/nganh/hosting-saas', title: 'Thu phí hosting, SaaS tự động: khách chuyển khoản là gia hạn ngay', desc: 'Mã VietQR gắn mã hoá đơn, tiền vào là dịch vụ tự gia hạn; chính Mona.Host thu phí hosting, VPS, domain bằng luồng này hơn 4 năm.' },
+  { path: '/status', title: 'Trạng thái hệ thống MONA Pay', desc: 'Kiểm tra 5 phút/lần website, dashboard, API; uptime 24h/30 ngày; JSON máy đọc /status.json.' },
   { path: '/dieu-khoan', title: 'Điều khoản sử dụng MONA Pay', desc: 'Miễn phí, không giữ tiền, trách nhiệm hai bên, fair-use, ngừng dịch vụ.' },
   { path: '/chinh-sach-bao-mat', title: 'Chính sách bảo mật MONA Pay', desc: 'Dữ liệu thu thập (chỉ thông báo giao dịch), mục đích, thời gian lưu, quyền của người dùng.' },
 ];

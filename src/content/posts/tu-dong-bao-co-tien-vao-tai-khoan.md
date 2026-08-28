@@ -8,7 +8,7 @@ h1: "Báo có tự động: tiền vào tài khoản là cả công ty biết, t
 ogImage: /img/blog/tu-dong-bao-co-tien-vao-tai-khoan.jpg
 ---
 
-Khách đến MONA làm phần mềm quản lý, mười người thì tám người đang "báo có" bằng cách chụp màn hình app ngân hàng gửi vào nhóm chat. Báo có tự động là bỏ cái thao tác đó: tiền vào tài khoản ACB, ngân hàng báo cho MONA Pay, MONA Pay đẩy một tin có số tiền, nội dung, thời gian vào đúng nhóm Telegram của bộ phận cần biết, trong vài giây. Tụi em dùng cách này để thu học phí và phí hosting hơn 4 năm, chạy thật lại toàn bộ với 50.000 đồng ngày 28/08/2026 trước khi mở cho mọi doanh nghiệp. Không tốn tiền, bật trong 4 bước.
+Khách đến MONA làm phần mềm quản lý, mười người thì tám người đang "báo có" bằng cách chụp màn hình app ngân hàng gửi vào nhóm chat. Báo có tự động là bỏ cái thao tác đó: tiền vào tài khoản ACB, ngân hàng báo cho MONA Pay, MONA Pay đẩy một tin có số tiền, nội dung, thời gian vào đúng nhóm Telegram của bộ phận cần biết, trong vài giây. Tụi em dùng cách này để thu học phí và phí hosting hơn 4 năm trước khi mở cho mọi doanh nghiệp. Không tốn tiền, bật trong 4 bước.
 
 ## Chủ doanh nghiệp đến MONA thường đang báo có bằng cách nào?
 
@@ -64,9 +64,9 @@ Kế toán của MONA làm việc này 1 lần mỗi tuần thay vì mỗi ngày
 
 ## Tin không về nhóm thì kiểm ở đâu?
 
-Kiểm đúng ba chỗ. Theo thứ tự tụi em vẫn kiểm cho khách. Một, bấm gửi thử trong mục Telegram: tin mẫu không về nghĩa là bot chưa được thêm vào nhóm hoặc mã nhóm sai, dán lại mã là xong. Hai, tin mẫu về mà tiền thật không về, gần như chắc chắn là chưa làm OTP lần hai để đăng ký nhận thông báo với ACB. Ngày 28/08/2026 chính tụi em dính lỗi này khi chạy thử 50.000 đồng: tiền vào, hệ thống im, kiểm lại mới thấy thiếu bước đăng ký thông báo, làm xong OTP lần hai thì tin về ngay. Ba, mở lịch sử gửi trong dashboard: mỗi lần gửi có trạng thái và nhãn lỗi, có nút gửi lại từng tin.
+Kiểm đúng ba chỗ. Theo thứ tự tụi em vẫn kiểm cho khách. Một, bấm gửi thử trong mục Telegram: tin mẫu không về nghĩa là bot chưa được thêm vào nhóm hoặc mã nhóm sai, dán lại mã là xong. Hai, tin mẫu về mà tiền thật không về, gần như chắc chắn là chưa làm OTP lần hai để đăng ký nhận thông báo với ACB. Chính tụi em từng dính lỗi này khi triển khai: tiền vào, hệ thống im, kiểm lại mới thấy thiếu bước đăng ký thông báo, làm xong OTP lần hai thì tin về ngay. Ba, mở lịch sử gửi trong dashboard: mỗi lần gửi có trạng thái và nhãn lỗi, có nút gửi lại từng tin.
 
-Ngoài ba chỗ đó mà vẫn kẹt thì gọi tụi em qua 1900 636 648, không mất phí, kỹ sư kiểm cùng anh chị trong vài phút.
+Nối ACB đúng quy trình là 2 lần OTP, thiếu 1 lần là tiền vào không báo. Ngoài ba chỗ đó mà vẫn kẹt thì gọi tụi em qua 1900 636 648, không mất phí, kỹ sư kiểm cùng anh chị trong vài phút.
 
 ## Báo có tự động bằng MONA Pay tốn bao nhiêu?
 
@@ -82,11 +82,11 @@ Không, vì tin chỉ có số tiền vào, nội dung, thời gian và số tà
 
 ### Tin báo có về chậm không?
 
-ACB báo là MONA Pay đẩy tin ngay, thường tính bằng giây. Lần tụi em chuyển 50.000 đồng ngày 28/08/2026 để kiểm tra toàn bộ luồng, tin Telegram về gần như cùng lúc với thông báo của ngân hàng, và webhook về phần mềm cũng trong cùng khoảng đó.
+ACB báo là MONA Pay đẩy tin ngay, thường tính bằng giây. Máy nhận webhook của anh chị có 10 giây để trả lời, còn tin Telegram thì không cần anh chị trả lời gì. Khi tụi em kiểm toàn bộ luồng, tin Telegram về gần như cùng lúc với thông báo của ngân hàng, và webhook về phần mềm cũng trong cùng khoảng đó.
 
 ### Một nhóm nhận tin của nhiều tài khoản ảo được không?
 
-Được. Chọn "mọi tài khoản" khi tạo cấu hình. Ngược lại, một tài khoản ảo cũng gửi được vào nhiều nhóm bằng cách tạo nhiều cấu hình, mỗi cấu hình 1 nhóm. Tụi em hay làm vậy cho nhóm kế toán và nhóm bán hàng cùng nhận một nguồn tin.
+Được. Chọn "mọi tài khoản" khi tạo cấu hình. Ngược lại, một tài khoản ảo cũng gửi được vào nhiều nhóm bằng cách tạo nhiều cấu hình, mỗi cấu hình 1 nhóm. Cấu hình 1 lần, nhóm kế toán và nhóm bán hàng cùng nhận một nguồn tin.
 
 ### Tiền ra khỏi tài khoản có báo không?
 

@@ -65,7 +65,7 @@ const faq = [
   { q: 'Tôi cần chuẩn bị gì để nối tài khoản ACB?', a: 'Ba thứ: tài khoản thanh toán ACB đứng tên anh chị (cá nhân hoặc doanh nghiệp), số điện thoại đã đăng ký với ACB để nhận OTP, và tài khoản MONA Pay (đăng ký xong dùng ngay, không cần ai duyệt). Không cần ra quầy, không cần ký giấy với ngân hàng, toàn bộ 4 bước làm trên dashboard.' },
   { q: 'Tiền có nằm ở MONA Pay lúc nào không?', a: 'Không lúc nào. Tài khoản ảo chỉ là số định danh ACB gắn lên tài khoản thật của anh chị, tiền chuyển vào số ảo là vào thẳng tài khoản thật. MONA Pay chỉ nhận thông báo giao dịch từ ACB, không có quyền chuyển, rút hay giữ tiền.' },
   { q: 'Tài khoản ảo ACB là gì, khác gì số tài khoản thường?', a: 'ACB cấp cho anh chị một dải số theo đầu số đăng ký. Mỗi số trong dải trỏ về cùng tài khoản thật nhưng anh chị gắn được cho từng đơn, từng khách. Nhờ vậy tiền vào số nào là biết ngay của đơn nào, không phụ thuộc khách gõ đúng nội dung chuyển khoản.' },
-  { q: 'Bao lâu sau khi khách chuyển thì tôi nhận được thông báo?', a: `Ngay khi ACB báo có tiền, MONA Pay gửi webhook và tin Telegram trong cùng lúc. Phần mềm của anh chị trả HTTP 200 trong ${SITE.tech.webhookTimeoutSec} giây là ghi nhận thành công. Lần chạy thử cuối ngày 28/08/2026 với 50.000 đ tiền thật, webhook về đúng chữ ký ngay sau khi ACB báo.` },
+  { q: 'Bao lâu sau khi khách chuyển thì tôi nhận được thông báo?', a: `Ngay khi ACB báo có tiền, MONA Pay gửi webhook và tin Telegram trong cùng lúc. Phần mềm của anh chị trả HTTP 200 trong ${SITE.tech.webhookTimeoutSec} giây là ghi nhận thành công.` },
   { q: 'Tôi có tài khoản Vietcombank, MB, Techcombank thì sao?', a: `${BANKS_LINE}. Trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>. Trong lúc chờ, mở một tài khoản ACB cá nhân hoặc doanh nghiệp (làm online được), nối vào MONA Pay là dùng; khi ngân hàng của anh chị lên đang hoạt động, nối thêm mà không phải sửa webhook hay Telegram.` },
   { q: 'Dùng ACB qua MONA Pay có mất phí gì với ngân hàng không?', a: `Phía MONA Pay: ${PRICE_LINE}, không có gói trả phí ẩn. Phí dịch vụ của ACB (nếu có, tuỳ loại tài khoản anh chị đang dùng) do ACB thu theo biểu phí của ngân hàng, tụi em không cộng thêm và không thu phần trăm trên số tiền.` },
 ];
@@ -94,7 +94,7 @@ const faq = [
           <span class="link-arrow" aria-hidden="true">⇄</span>
           <img src="/brand/acb-logo.svg" alt="Ngân hàng ACB" width="106" height="44" />
         </div>
-        <p class="link-caption"><strong>MONA Pay kết nối ACB qua bộ API dành cho đối tác của ACB</strong>: tài khoản ảo, thông báo giao dịch và QR thanh toán. Kết nối đang chạy thật, lần kiểm gần nhất ngày {SITE.tech.lastVerified} bằng 50.000 đ tiền thật: chuyển khoản vào tài khoản ảo, ACB báo, MONA Pay bắn webhook đúng chữ ký.</p>
+        <p class="link-caption"><strong>MONA Pay kết nối ACB qua bộ API dành cho đối tác của ACB</strong>: tài khoản ảo, thông báo giao dịch và QR thanh toán. Kết nối đang chạy thật từ 2022 cho hơn 6.000 khách hàng của MONA: chuyển khoản vào tài khoản ảo, ACB báo, MONA Pay bắn webhook đúng chữ ký.</p>
         <p class="link-note">ACB là Ngân hàng TMCP Á Châu, hoạt động từ năm 1993, hội sở tại TP.HCM. Tiền của anh chị nằm ở ACB; MONA Pay chỉ nhận thông báo giao dịch do ACB gửi, không có quyền chuyển, rút hay giữ tiền.</p>
       </div>
     </div>
@@ -125,7 +125,7 @@ const faq = [
     <div class="wrap">
       <span class="eyebrow">ACB qua MONA Pay làm được gì</span>
       <h2>Bảng tính năng, cái nào chưa có tụi em ghi chưa có</h2>
-      <p class="lead">ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn {SITE.customersSince2022} khách hàng của MONA nên mở trước; các ngân hàng khác đang kết nối, xem <a href="/ngan-hang">bảng trạng thái</a>. Bảng dưới đây kiểm theo hệ thống đang chạy ngày {SITE.tech.lastVerified}.</p>
+      <p class="lead">ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn 6.000 khách hàng của MONA nên mở trước; các ngân hàng khác đang kết nối, xem <a href="/ngan-hang">bảng trạng thái</a>. Bảng dưới đây kiểm theo hệ thống đang chạy ngày {SITE.tech.lastVerified}.</p>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Tính năng</th><th>Trạng thái</th><th>Ghi chú</th></tr></thead>
@@ -185,8 +185,8 @@ const faq = [
     <div class="wrap narrow">
       <span class="eyebrow">Vì sao ACB trước</span>
       <h2>ACB đi trước, các ngân hàng khác nối sau</h2>
-      <p>ACB (Ngân hàng TMCP Á Châu) hoạt động từ năm 1993, hội sở tại TP.HCM, là ngân hàng có chương trình API cho đối tác về tài khoản ảo và thông báo giao dịch mà tụi em nối vào. Tụi em chọn ACB trước vì đây là ngân hàng hệ thống này đã chạy lâu nhất, từ 2022 cho hơn {SITE.customersSince2022} khách hàng của MONA.</p>
-      <p>Trước khi có tên MONA Pay, hệ thống này thu tiền hosting và máy chủ ở <a href="https://mona.host">mona.host</a>, thu học phí, thu đơn phần mềm cho chính MONA, rồi từ 2022 thu tiền cho hơn {SITE.customersSince2022} khách hàng mới của MONA trong web, phần mềm tụi em giao. Toàn bộ chạy trên ACB, nên khi mở public năm 2026, ACB là ngân hàng đã được thử lâu nhất, ổn định nhất, tụi em đưa ra trước.</p>
+      <p>ACB (Ngân hàng TMCP Á Châu) hoạt động từ năm 1993, hội sở tại TP.HCM, là ngân hàng có chương trình API cho đối tác về tài khoản ảo và thông báo giao dịch mà tụi em nối vào. Tụi em chọn ACB trước vì đây là ngân hàng hệ thống này đã chạy lâu nhất, từ 2022 cho hơn 6.000 khách hàng của MONA.</p>
+      <p>Trước khi có tên MONA Pay, hệ thống này thu tiền hosting và máy chủ ở <a href="https://mona.host">mona.host</a>, thu học phí, thu đơn phần mềm cho chính MONA, rồi từ 2022 thu tiền cho hơn 6.000 khách hàng mới của MONA trong web, phần mềm tụi em giao. Toàn bộ chạy trên ACB, nên khi mở public năm 2026, ACB là ngân hàng đã được thử lâu nhất, ổn định nhất, tụi em đưa ra trước.</p>
       <p>Các ngân hàng khác tụi em đang đăng ký kết nối theo chương trình API đối tác của từng bên: {APPLYING_BANKS.map((b) => b.name).join(', ')}. Trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; tụi em không hứa ngày, lên là công bố. Webhook, Telegram, API của anh chị dùng chung cho mọi ngân hàng nên nối thêm sau không phải sửa gì.</p>
       <p>Đọc tiếp: <a href="/docs/api/tai-khoan-ao-va">API tài khoản ảo</a> · <a href="/docs/api/qr-thanh-toan">API QR thanh toán</a> · <a href="/chia-se-bien-dong-so-du-telegram">Báo biến động số dư qua Telegram</a>.</p>
     </div>

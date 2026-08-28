@@ -1,0 +1,46 @@
+---
+import Base from '../layouts/Base.astro';
+import { SITE } from '../data/site';
+const title = 'Trạng thái hệ thống MONA Pay: website, dashboard, API';
+const description = 'Trang trạng thái công khai của MONA Pay: kiểm tra 5 phút một lần website monapay.vn, dashboard my.monapay.vn và API, kèm uptime 24 giờ, 30 ngày và các lần gián đoạn gần nhất.';
+---
+<Base title={title} description={description} path="/status">
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Trạng thái hệ thống</span>
+    <h1>Trạng thái MONA Pay <span class="accent" id="st-overall">đang kiểm tra…</span></h1>
+    <div class="answer-first"><p>Trang này tự kiểm tra 5 phút một lần ba thành phần: website monapay.vn, dashboard my.monapay.vn và API nhận giao dịch. Số uptime tính từ log kiểm tra thật, không nhập tay. Có gián đoạn, tụi em ghi ở mục "Sự cố 30 ngày" và thông báo trên dashboard.</p></div>
+  </div></section>
+  <section><div class="wrap narrow">
+    <div id="st-list" class="st-list"><p style="color:var(--text-soft)">Đang tải dữ liệu từ /status.json…</p></div>
+    <p class="st-note" id="st-updated"></p>
+    <h2>Sự cố 30 ngày gần nhất</h2>
+    <div id="st-incidents"><p style="color:var(--text-soft)">Chưa có dữ liệu.</p></div>
+    <h2>Tụi em kiểm cái gì</h2>
+    <ul>
+      <li><strong>Website</strong>: trang chủ trả HTTP 200 trong 10 giây.</li>
+      <li><strong>Dashboard</strong>: trang đăng nhập my.monapay.vn phản hồi.</li>
+      <li><strong>API</strong>: endpoint <code>/health</code> của máy chủ nhận thông báo giao dịch. Thông báo từ ngân hàng phụ thuộc phía ngân hàng; API sống mà ngân hàng chậm thì webhook chậm theo, anh chị nên đối soát định kỳ theo <a href="/docs/webhooks/doi-soat">hướng dẫn đối soát</a>.</li>
+    </ul>
+    <p>Dữ liệu thô: <a href="/status.json">/status.json</a> (JSON, cập nhật mỗi 5 phút, máy đọc được). Kẹt gì gọi {SITE.hotline}.</p>
+  </div></section>
+</Base>
+<script is:inline>
+(async function(){
+  var fmt=function(d){ try{ return new Date(d).toLocaleString('vi-VN',{timeZone:'Asia/Ho_Chi_Minh'}); }catch(e){ return d; } };
+  try{
+    var r=await fetch('/status.json',{cache:'no-store'}); var d=await r.json();
+    var ov=document.getElementById('st-overall'); ov.textContent=d.all_ok?'hoạt động bình thường':'có thành phần gián đoạn'; ov.style.color=d.all_ok?'var(--success)':'var(--danger)';
+    document.getElementById('st-list').innerHTML=d.components.map(function(c){ return '<div class="st-row"><span class="st-dot '+(c.ok?'ok':'bad')+'"></span><div><b>'+c.name+'</b><br><span class="st-sub">'+(c.ok?'Hoạt động':'Gián đoạn')+' · '+c.ms+' ms'+(c.uptime_24h!=null?' · 24h '+c.uptime_24h+'%':'')+(c.uptime_30d!=null?' · 30 ngày '+c.uptime_30d+'%':'')+'</span></div></div>'; }).join('');
+    document.getElementById('st-updated').textContent='Kiểm lần cuối: '+fmt(d.updated_at)+' (giờ Việt Nam)';
+    var inc=d.incidents_30d||[]; document.getElementById('st-incidents').innerHTML= inc.length? '<ul>'+inc.slice(-10).reverse().map(function(i){ return '<li>'+fmt(i.t)+' · '+i.id+' không phản hồi</li>'; }).join('')+'</ul>' : '<p>Không có gián đoạn nào được ghi nhận trong 30 ngày.</p>';
+  }catch(e){ document.getElementById('st-list').innerHTML='<p>Chưa đọc được dữ liệu trạng thái. Thử lại sau hoặc gọi 1900 636 648.</p>'; }
+})();
+</script>
+<style>
+  .st-list{display:grid;gap:.8rem;margin:.5rem 0 1rem}
+  .st-row{display:flex;gap:.9rem;align-items:center;background:var(--surface);border-radius:var(--radius-sm);padding:.9rem 1.1rem;box-shadow:var(--shadow)}
+  .st-dot{width:14px;height:14px;border-radius:50%;flex:none;background:var(--success);box-shadow:0 0 0 4px rgba(20,115,77,.15)}
+  .st-dot.bad{background:var(--danger);box-shadow:0 0 0 4px rgba(196,50,37,.15)}
+  .st-sub{color:var(--text-soft);font-size:.9rem}
+  .st-note{color:var(--text-soft);font-size:.9rem}
+</style>

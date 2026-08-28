@@ -50,7 +50,7 @@ Trên trang thanh toán, đơn bằng tiền Việt hiện mã VietQR động đ
 
 Ba điểm tụi em dặn khách trước khi bật hai luồng. Thứ nhất, ghi rõ trên trang thanh toán đơn nào trả bằng gì, đừng để khách Việt bấm nhầm sang PayPal rồi mất 4,40%. Thứ hai, với luồng chuyển khoản, mỗi đơn một mã QR riêng hoặc một tài khoản ảo riêng để phần mềm khớp bằng số tài khoản nhận, khỏi phải bắt khách gõ đúng nội dung chuyển khoản. Thứ ba, bật thêm thông báo Telegram vào nhóm kế toán để có người nhìn thấy mọi khoản tiền vào, dù webhook đã tự xử lý. Cách bật tin Telegram nằm ở trang [báo biến động số dư qua Telegram](/chia-se-bien-dong-so-du-telegram).
 
-Một chi tiết nhỏ mà tụi em vấp ngày 28/08/2026 khi chạy thử bằng 50.000đ tiền thật: tạo tài khoản ảo ACB xong mà chưa làm bước đăng ký nhận thông báo giao dịch thì tiền vào vẫn im lặng. ACB đòi thêm một lần OTP nữa cho riêng phần thông báo. Tụi em sửa wizard thành 4 bước liền mạch, OTP 2 lần, và ghi lại ở đây để anh chị không mất một buổi đi tìm lý do như tụi em.
+Một chi tiết nhỏ mà tụi em từng vấp khi triển khai: tạo tài khoản ảo ACB xong mà chưa làm bước đăng ký nhận thông báo giao dịch thì tiền vào vẫn im lặng. ACB đòi thêm một lần OTP nữa cho riêng phần thông báo. Tụi em sửa wizard thành 4 bước liền mạch, OTP 2 lần, và ghi lại ở đây để anh chị không mất một buổi đi tìm lý do như tụi em.
 
 ## Ba việc cần hỏi kế toán và ngân hàng trước khi nhận ngoại tệ
 

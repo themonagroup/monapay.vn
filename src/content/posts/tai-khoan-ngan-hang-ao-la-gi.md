@@ -30,7 +30,7 @@ Tài khoản ảo bỏ luôn việc đọc nội dung. Đơn DH10234 được c�
 
 Tụi em kể đúng trình tự MONA Pay đang làm với ACB, kiểm ngày 28/08/2026. Bước một, trong dashboard my.monapay.vn, anh chị nhập số tài khoản ACB đứng tên mình, số điện thoại đã đăng ký với ACB và loại khách hàng cá nhân hay doanh nghiệp. Bước hai, ACB gửi OTP về số điện thoại đó để xác thực việc đăng ký đầu số tài khoản ảo. Bước ba, đăng ký dịch vụ nhận thông báo giao dịch, ACB gửi OTP lần hai. Bước bốn, xong, từ đây tiền vào số ảo nào là MONA Pay nhận thông báo và báo lại cho anh chị.
 
-Bước ba là bước tụi em từng bỏ sót. Ngày 28/08/2026 khi test 50.000 đồng tiền thật, tụi em tạo tài khoản ảo xong mà chưa đăng ký nhận thông báo, tiền vào ACB đúng nhưng hệ thống im lặng. Tìm ra rồi mới hiểu ACB tách hai dịch vụ và cần hai lần OTP. Tụi em sửa wizard thành 4 bước liền mạch ngay hôm đó để không khách nào vấp lại. Vấp một lần là đủ.
+Bước ba là bước tụi em từng bỏ sót. Chính tụi em từng tạo tài khoản ảo xong mà chưa đăng ký nhận thông báo, tiền vào ACB đúng nhưng hệ thống im lặng. Tìm ra rồi mới hiểu ACB tách hai dịch vụ và cần hai lần OTP. Tụi em sửa wizard thành 4 bước liền mạch ngay hôm đó để không khách nào vấp lại. Vấp một lần là đủ.
 
 Với dân kỹ thuật, toàn bộ trình tự có API tương ứng ở [tài liệu tài khoản ảo](/docs/api/tai-khoan-ao-va): đăng ký VA, xác thực OTP, đăng ký thông báo, xác thực OTP lần hai, tra danh sách VA, huỷ VA.
 
