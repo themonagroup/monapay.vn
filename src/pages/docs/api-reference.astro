@@ -1,0 +1,30 @@
+---
+import Base from '../../layouts/Base.astro';
+const title = 'API reference tương tác MONA Pay: thử endpoint ngay trên trình duyệt';
+const description = 'Tài liệu API MONA Pay dạng tương tác sinh từ openapi.json: xem tham số, body mẫu, gọi thử từng endpoint (login, API key, tài khoản ảo, QR, giao dịch, webhook) ngay trên trình duyệt.';
+---
+<Base title={title} description={description} path="/docs/api-reference">
+  <section class="hero" style="padding-bottom:24px"><div class="wrap narrow">
+    <span class="eyebrow">Tài liệu</span>
+    <h1>API reference tương tác <span class="accent">MONA Pay</span></h1>
+    <div class="answer-first"><p>Trang này dựng từ <a href="/openapi.json">openapi.json</a> (20 endpoint). Anh chị bấm Authorize, dán Bearer token lấy từ <code>POST /api/v1/client/login</code> và <code>X-Client-Secret</code>, rồi gọi thử từng endpoint. Lệnh ghi chạy trên tài khoản thật, nên thử với tài khoản riêng hoặc bật sandbox.</p></div>
+  </div></section>
+  <section style="padding-top:0"><div class="wrap">
+    <div id="swagger-ui" class="swagger-wrap"></div>
+    <p style="color:var(--text-soft);font-size:.9rem">Bản markdown cho máy đọc: <a href="/docs/index.md">/docs/index.md</a> · <a href="/llms.txt">llms.txt</a> · <a href="/monapay.postman_collection.json">Postman collection</a></p>
+  </div></section>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui.min.css" />
+  <script is:inline src="https://cdnjs.cloudflare.com/ajax/libs/swagger-ui/5.17.14/swagger-ui-bundle.min.js"></script>
+  <script is:inline>
+    window.addEventListener('load', function () {
+      if (!window.SwaggerUIBundle) return;
+      window.SwaggerUIBundle({ url: '/openapi.json', dom_id: '#swagger-ui', deepLinking: true, docExpansion: 'list', tryItOutEnabled: true, persistAuthorization: true });
+    });
+  </script>
+</Base>
+<style is:global>
+  .swagger-wrap{background:#fff;border-radius:var(--radius);box-shadow:var(--shadow);padding:.5rem 1rem;overflow-x:auto}
+  .swagger-ui .topbar{display:none}
+  .swagger-ui, .swagger-ui .info .title, .swagger-ui .opblock .opblock-summary-description{font-family:var(--font)}
+  .swagger-ui .info{margin:20px 0}
+</style>

@@ -24,6 +24,7 @@ export const DOCS_NAV: { group: string; items: { slug: string; label: string }[]
     { slug: 'telegram', label: 'Telegram' },
   ]},
   { group: 'Tham chiếu', items: [
+    { slug: 'api-reference', label: 'API reference tương tác' },
     { slug: 'dia-chi-ip', label: 'Địa chỉ IP' },
     { slug: 'ai-agent', label: 'Dành cho AI agent' },
   ]},

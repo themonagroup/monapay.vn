@@ -76,3 +76,10 @@ MONA Pay là sản phẩm của The MONA Group, thành lập năm 2016, đã là
 **Tài khoản mới dùng được ngay chưa?** Được. Đăng ký xong đăng nhập ngay, tự tạo API key, không cần ai duyệt. Chỉ bước nối ACB cần OTP gửi về số điện thoại đăng ký với ngân hàng. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch (xem [bảng giá](/bang-gia)).
 
 **Có hỗ trợ ngân hàng ngoài ACB không?** ACB đang hoạt động; MB, BIDV, VietinBank, OCB, MSB, KienlongBank, TPBank đang trong quá trình đăng ký kết nối, trạng thái cập nhật tại [ngân hàng hỗ trợ](/ngan-hang). Webhook, Telegram, API dùng chung mọi ngân hàng, payload có `bank_name`, nối thêm ngân hàng không phải sửa tích hợp.
+
+## Công cụ cho lập trình viên
+
+- [OpenAPI 3.1](/openapi.json) — import vào Postman, Insomnia, hoặc sinh SDK.
+- [Postman collection](/monapay.postman_collection.json) — 20 request sẵn biến `baseUrl`, `accessToken`, `clientSecret`.
+- [API reference tương tác](/docs/api-reference) — thử endpoint ngay trên trình duyệt.
+- SDK: [Node.js](https://github.com/themonagroup/monapay-node) · [Python](https://github.com/themonagroup/monapay-python) · [PHP](https://github.com/themonagroup/monapay-php) · [MCP server](https://github.com/themonagroup/monapay-mcp) · [CLI](https://github.com/themonagroup/monapay-cli) · [WooCommerce](https://github.com/themonagroup/woocommerce-monapay) · [Ví dụ 8 framework](https://github.com/themonagroup/monapay-examples)

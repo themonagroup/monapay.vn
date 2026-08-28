@@ -1,0 +1,700 @@
+{
+ "info": {
+  "name": "MONA Pay API v1",
+  "description": "MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group. Docs: https://monapay.vn/docs · Set biến baseUrl=https://api.monapay.vn, accessToken (từ POST /api/v1/client/login), clientSecret (từ POST /api/v1/client-keys/generate).",
+  "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+ },
+ "variable": [
+  {
+   "key": "baseUrl",
+   "value": "https://api.monapay.vn"
+  },
+  {
+   "key": "accessToken",
+   "value": ""
+  },
+  {
+   "key": "clientSecret",
+   "value": ""
+  }
+ ],
+ "item": [
+  {
+   "name": "Register Client",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client/register-client",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client",
+      "register-client"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"username\": \"string\",\n  \"password\": \"string\",\n  \"name\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Login",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client/login",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client",
+      "login"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"username\": \"string\",\n  \"password\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Get Current Client",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client/me",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client",
+      "me"
+     ]
+    }
+   }
+  },
+  {
+   "name": "List Bank Accounts",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client/bank-accounts",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client",
+      "bank-accounts"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Change Own Password",
+   "request": {
+    "method": "PUT",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client/change-password",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client",
+      "change-password"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"old_password\": \"string\",\n  \"new_password\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Generate Key",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client-keys/generate",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client-keys",
+      "generate"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"name\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "List Keys",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client-keys/list",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client-keys",
+      "list"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Destroy Key",
+   "request": {
+    "method": "DELETE",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/client-keys/destroy/:key_id",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "client-keys",
+      "destroy",
+      ":key_id"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Đăng ký tài khoản VA",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/virtual-account/registration",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      "virtual-account",
+      "registration"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"bank_account_id\": \"string\",\n  \"customer_type\": \"string\",\n  \"account_number\": 0,\n  \"phone_number\": \"string\",\n  \"virtual_account_info\": 0,\n  \"user_agreement\": 0\n}"
+    }
+   }
+  },
+  {
+   "name": "Xác thực đăng ký/hủy tài khoản định danh",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:acb_request_id/virtual-account/verification",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":acb_request_id",
+      "virtual-account",
+      "verification"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"code\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Danh sách giao dịch của VA",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/virtual-account/transactions",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      "virtual-account",
+      "transactions"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Hủy tài khoản VA",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:virtual_account_id/virtual-account/delete",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":virtual_account_id",
+      "virtual-account",
+      "delete"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Truy vấn danh sách tài khoản VA",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:bank_account_id/virtual-account/retrieve",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":bank_account_id",
+      "virtual-account",
+      "retrieve"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Đăng ký dịch vụ thông báo giao dịch",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:virtual_account_id/notification/registration",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":virtual_account_id",
+      "notification",
+      "registration"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"username\": \"string\",\n  \"receive_noti_realtime\": 0\n}"
+    }
+   }
+  },
+  {
+   "name": "Xác thực đăng ký/cập nhật/hủy dịch vụ thông báo",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:acb_request_id/notification/verification",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":acb_request_id",
+      "notification",
+      "verification"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"code\": \"string\"\n}"
+    }
+   }
+  },
+  {
+   "name": "Cập nhật dịch vụ thông báo giao dịch",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:acb_notification_id/notification/modification",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":acb_notification_id",
+      "notification",
+      "modification"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"username\": \"string\",\n  \"receive_noti_realtime\": 0\n}"
+    }
+   }
+  },
+  {
+   "name": "Hủy đăng ký dịch vụ thông báo giao dịch",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/:acb_notification_id/notification/delete",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      ":acb_notification_id",
+      "notification",
+      "delete"
+     ]
+    }
+   }
+  },
+  {
+   "name": "Khởi tạo QR Code",
+   "request": {
+    "method": "POST",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/qr-payment/generate",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      "qr-payment",
+      "generate"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"ownerNumber\": \"string\",\n  \"ownerType\": 0,\n  \"traceNumber\": \"string\",\n  \"merchantId\": \"string\",\n  \"terminalId\": \"string\",\n  \"userId\": \"string\",\n  \"orderId\": \"string\",\n  \"virtualAccountPrefix\": \"string\",\n  \"beneficiaryName\": \"string\",\n  \"amount\": 0,\n  \"voucherCode\": \"string\",\n  \"loyaltyCode\": \"string\",\n  \"description\": \"string\",\n  \"additionalInfo\": 0\n}"
+    }
+   }
+  },
+  {
+   "name": "Hủy QR Code",
+   "request": {
+    "method": "DELETE",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     },
+     {
+      "key": "X-Client-Secret",
+      "value": "{{clientSecret}}"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/api/v1/acb/qr-payment/:qr_code_id/cancellation",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "api",
+      "v1",
+      "acb",
+      "qr-payment",
+      ":qr_code_id",
+      "cancellation"
+     ]
+    },
+    "body": {
+     "mode": "raw",
+     "raw": "{\n  \"ownerNumber\": \"string\",\n  \"ownerType\": 0,\n  \"traceNumber\": \"string\",\n  \"orderId\": \"string\",\n  \"amount\": 0\n}"
+    }
+   }
+  },
+  {
+   "name": "Health Check",
+   "request": {
+    "method": "GET",
+    "header": [
+     {
+      "key": "Authorization",
+      "value": "Bearer {{accessToken}}"
+     },
+     {
+      "key": "Content-Type",
+      "value": "application/json"
+     }
+    ],
+    "url": {
+     "raw": "{{baseUrl}}/health",
+     "host": [
+      "{{baseUrl}}"
+     ],
+     "path": [
+      "health"
+     ]
+    }
+   }
+  }
+ ]
+}
