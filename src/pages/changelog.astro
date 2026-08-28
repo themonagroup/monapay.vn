@@ -1,0 +1,48 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { CHANGELOG, IN_PROGRESS } from '../data/changelog';
+const title = 'Nhật ký thay đổi MONA Pay: có gì mới, đang triển khai gì';
+const description = 'Nhật ký thay đổi công khai của MONA Pay theo ngày: tính năng đã lên thật ở website, dashboard, API, SDK, tài liệu; và danh sách đang triển khai. Không hứa ngày, lên là ghi.';
+const TAG: Record<string, string> = { 'san-pham': 'Sản phẩm', 'tai-lieu': 'Tài liệu', 'ma-nguon': 'Mã nguồn', 'ha-tang': 'Hạ tầng' };
+const iso = (d: string) => d.split('/').reverse().join('-');
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'Nhật ký thay đổi MONA Pay', itemListElement: CHANGELOG.map((c, i) => ({ '@type': 'ListItem', position: i + 1, name: `${c.date} · ${c.title}` })) }];
+---
+<Base title={title} description={description} path="/changelog" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Nhật ký thay đổi</span>
+    <h1>MONA Pay có gì mới,<br class="br-d" /> <span class="accent">đang triển khai gì</span></h1>
+    <div class="answer-first"><p>Trang này ghi theo ngày những gì đã lên thật ở website, dashboard, API, SDK và tài liệu MONA Pay, kèm danh sách việc đang triển khai. Tụi em không hứa ngày, tính năng lên máy chủ là ghi vào đây. Cập nhật gần nhất {CHANGELOG[0].date}.</p></div>
+  </div></section>
+  <section><div class="wrap narrow">
+    {CHANGELOG.map((c) => (
+      <article class="cl-entry">
+        <div class="cl-head">
+          <time datetime={iso(c.date)}>{c.date}</time>
+          {c.version && <span class="badge badge-cta">{c.version}</span>}
+          {c.tag && <span class="badge">{TAG[c.tag]}</span>}
+        </div>
+        <h2>{c.title}</h2>
+        <ul>{c.items.map((i) => <li>{i}</li>)}</ul>
+      </article>
+    ))}
+  </div></section>
+  <section class="section-alt"><div class="wrap narrow">
+    <h2>Đang triển khai, chưa lên máy chủ</h2>
+    <p>Mã đã viết và có test, đang chờ đưa lên. Lên rồi tụi em chuyển sang mục có ngày ở trên, không hứa mốc thời gian.</p>
+    <ul>{IN_PROGRESS.map((i) => <li>{i}</li>)}</ul>
+    <p>Muốn theo dõi sát hơn: <a href="/roadmap">lộ trình</a> · <a href="https://github.com/themonagroup">mã nguồn trên GitHub</a> · <a href="/status">trạng thái hệ thống</a>.</p>
+  </div></section>
+  <CtaBand title="Tạo tài khoản miễn phí, nối ACB trong vài phút" body={`Tài khoản tự kích hoạt, ${SITE.customersSince2022} khách hàng của MONA đã thu tiền qua hệ thống này từ 2022.`} />
+</Base>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .cl-entry{background:var(--surface);border-radius:var(--radius);padding:1.5rem 1.6rem;box-shadow:var(--shadow);margin-bottom:1.2rem}
+  .cl-head{display:flex;flex-wrap:wrap;gap:.6rem;align-items:center;margin-bottom:.4rem}
+  .cl-head time{font-weight:700;color:var(--primary);font-variant-numeric:tabular-nums}
+  .cl-entry h2{font-size:1.3rem;margin:.2rem 0 .6rem}
+  .cl-entry ul{margin:0}
+  .cl-entry li{margin:.45rem 0}
+</style>

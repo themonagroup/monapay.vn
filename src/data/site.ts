@@ -73,6 +73,8 @@ export const FOOTER_LINKS = {
     { href: '/cong-thanh-toan-quoc-te', label: 'So với cổng thanh toán quốc tế' },
     { href: '/faq', label: 'Hỏi đáp' },
     { href: 'https://my.monapay.vn', label: 'Đăng nhập' },
+    { href: '/changelog', label: 'Nhật ký thay đổi' },
+    { href: '/roadmap', label: 'Lộ trình' },
     { href: '/status', label: 'Trạng thái hệ thống' },
     { href: '/dieu-khoan', label: 'Điều khoản sử dụng' },
     { href: '/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },

@@ -1,0 +1,53 @@
+---
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { ROADMAP, STATUS_LABEL } from '../data/roadmap';
+const title = 'Lộ trình MONA Pay: đã có gì, đang làm gì, kế hoạch gì';
+const description = 'Lộ trình công khai của MONA Pay theo 7 nhóm: nền tảng, SDK, plugin, công cụ cho AI agent, kênh thông báo, bảo mật, tài liệu. Mỗi mục ghi rõ đã có, đang làm hay kế hoạch; góp ý qua GitHub Discussions.';
+const count = (s: string) => ROADMAP.flatMap((g) => g.items).filter((i) => i.status === s).length;
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: 'Lộ trình MONA Pay', itemListElement: ROADMAP.map((g, i) => ({ '@type': 'ListItem', position: i + 1, name: g.title })) }];
+---
+<Base title={title} description={description} path="/roadmap" jsonld={jsonld}>
+  <section class="hero"><div class="wrap narrow">
+    <span class="eyebrow">Lộ trình</span>
+    <h1>Lộ trình MONA Pay:<br class="br-d" /> <span class="accent">đã có gì, đang làm gì</span></h1>
+    <div class="answer-first"><p>Lộ trình công khai của MONA Pay chia 7 nhóm, mỗi mục ghi đúng một trong ba trạng thái: đã có ({count('da-co')} mục), đang làm ({count('dang-lam')}) hay kế hoạch ({count('ke-hoach')}). Tụi em không hứa ngày; mục nào lên máy chủ thì ghi vào <a href="/changelog">nhật ký thay đổi</a>. Anh chị góp ý hay đề xuất tính năng qua GitHub Discussions.</p></div>
+  </div></section>
+  <section><div class="wrap">
+    <div class="legend"><span class="badge badge-ok">Đã có</span><span class="badge badge-warn">Đang làm</span><span class="badge">Kế hoạch</span></div>
+    <div class="grid grid-2">
+      {ROADMAP.map((g) => (
+        <div class="card rm-card">
+          <h2>{g.title}</h2>
+          <p class="rm-why">{g.why}</p>
+          <ul>
+            {g.items.map((i) => (
+              <li>
+                <span class={'badge ' + (i.status === 'da-co' ? 'badge-ok' : i.status === 'dang-lam' ? 'badge-warn' : '')}>{STATUS_LABEL[i.status]}</span>
+                <span>{i.name}{i.note && <em> ({i.note})</em>}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ))}
+    </div>
+  </div></section>
+  <section class="section-alt"><div class="wrap narrow">
+    <h2>Góp ý và theo dõi</h2>
+    <p>Mã nguồn SDK, MCP server, CLI, plugin nằm ở <a href="https://github.com/themonagroup">github.com/themonagroup</a>. Muốn đề xuất tính năng hay báo lỗi, mở một chủ đề trong Discussions của <a href="https://github.com/themonagroup/monapay-node/discussions">monapay-node</a> hoặc <a href="https://github.com/themonagroup/monapay-mcp/discussions">monapay-mcp</a>; lỗi bảo mật gửi {SITE.email}. Việc gấp gọi {SITE.hotline}.</p>
+    <p>{SITE.entity}</p>
+  </div></section>
+  <CtaBand title="Dùng ngay phần đã có, phần còn lại lên tới đâu ghi tới đó" body="Tạo tài khoản miễn phí, nối ACB 4 bước, webhook và Telegram chạy hôm nay." />
+</Base>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .legend{display:flex;gap:.6rem;flex-wrap:wrap;margin-bottom:1.2rem}
+  .rm-card h2{font-size:1.25rem;margin-bottom:.2rem}
+  .rm-why{color:var(--text-soft);font-size:.95rem}
+  .rm-card ul{list-style:none;padding:0;margin:0}
+  .rm-card li{display:flex;gap:.6rem;align-items:flex-start;padding:.45rem 0;border-top:1px solid var(--border)}
+  .rm-card li .badge{flex:none;margin-top:.15rem}
+  .rm-card em{color:var(--text-soft);font-style:normal;font-size:.9rem}
+</style>
