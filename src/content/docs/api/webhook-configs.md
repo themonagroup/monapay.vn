@@ -130,7 +130,7 @@ Bắn 1 payload giả lập tới URL bất kỳ, không cần tạo cấu hình
 Payload giả lập MONA Pay gửi:
 
 ```json
-{"amount":500000,"description":"DUMMY TRANSACTION MONAPAY","transfer_date":"2026-08-28 11:05:00","transaction_code":"DUMMY123","account_number":"1900636648","bank_name":"ACB","type":"income"}
+{"amount":500000,"description":"DUMMY TRANSACTION MONAPAY","transfer_date":"11:05:00 28/08/2026","transaction_code":"DUMMY123","account_number":"1900636648","bank_name":"ACB","type":"income"}
 ```
 
 Server anh chị nên nhận ra `transaction_code` = `DUMMY123` để không tạo đơn thật.

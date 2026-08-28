@@ -23,7 +23,7 @@ Trước khi có webhook, cách phổ biến để biết một việc đã xả
 Tụi em lấy đúng gói tin MONA Pay đang gửi cho khách, kiểm ngày 28/08/2026, để anh chị nhìn thay vì tưởng tượng. Khi có tiền vào, MONA Pay POST một chuỗi JSON gồm 7 trường:
 
 ```json
-{"amount":2500000,"description":"DH10234 NGUYEN VAN A","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"1234567890","bank_name":"ACB","type":"income"}
+{"amount":2500000,"description":"DH10234 NGUYEN VAN A","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"1234567890","bank_name":"ACB","type":"income"}
 ```
 
 Bảy trường, đủ dùng. Mỗi trường có một việc riêng và phần mềm chỉ cần đọc đúng trường mình cần. `amount` là số tiền, `description` là nội dung khách gõ khi chuyển, `transaction_code` là mã giao dịch phía ngân hàng, `account_number` là số tài khoản ảo nhận tiền. Phần mềm của anh chị đọc `description`, thấy DH10234, tìm đơn DH10234, thấy số tiền 2.500.000 đồng khớp, đánh dấu đã thanh toán, cả vòng chưa tới 10 giây kể từ lúc ACB báo.

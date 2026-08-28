@@ -54,7 +54,7 @@ Các lệnh liên quan: `GET /api/v1/client-webhooks` xem danh sách, `PUT /api/
 {
   "amount": 2500000,
   "description": "noi dung chuyen khoan",
-  "transfer_date": "2026-08-28 10:30:00",
+  "transfer_date": "10:30:00 28/08/2026",
   "transaction_code": "FT26240001234",
   "account_number": "1234567890",
   "bank_name": "ACB",
@@ -73,7 +73,7 @@ Endpoint tốt làm đúng 3 việc theo thứ tự: kiểm chữ ký, trả 200
 SECRET='secret_hmac_cua_anh_chi'   # secret HMAC đặt khi bật HMAC trong dashboard
 URL='https://ten-mien-cua-anh-chi.vn/webhook/monapay'
 TS=$(date +%s)
-BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"1234567890","bank_name":"ACB","type":"income"}'
+BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"1234567890","bank_name":"ACB","type":"income"}'
 
 # Chữ ký = HMAC-SHA256(secret, "<timestamp>.<raw_body>"), dùng printf để không dính ký tự xuống dòng
 SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')

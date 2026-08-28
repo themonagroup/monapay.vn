@@ -153,7 +153,7 @@ Response: `{"success": true, "message": "Success", "data": null}`.
 ACB ghi nhận tiền vào, báo cho MONA Pay, MONA Pay bắn webhook tới URL anh chị cấu hình với payload y như giao dịch VA:
 
 ```json
-{"amount":2500000,"description":"Thanh toan DH10234","transfer_date":"2026-08-28 10:45:12","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
+{"amount":2500000,"description":"Thanh toan DH10234","transfer_date":"10:45:12 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
 ```
 
 Khớp đơn bằng `account_number` (số VA gắn với QR) hoặc `description` chứa `orderId`. Nhớ so `amount` với số tiền đơn trước khi đổi trạng thái đã thanh toán.

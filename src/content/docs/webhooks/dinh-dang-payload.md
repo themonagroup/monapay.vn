@@ -12,7 +12,7 @@ Mỗi webhook MONA Pay gửi là một gói JSON 7 trường: số tiền, nội
 {
   "amount": 2500000,
   "description": "noi dung chuyen khoan",
-  "transfer_date": "2026-08-28 10:30:00",
+  "transfer_date": "10:30:00 28/08/2026",
   "transaction_code": "FT26240001234",
   "account_number": "1234567890",
   "bank_name": "ACB",
@@ -74,3 +74,8 @@ Khi bấm Gửi thử trong dashboard hoặc gọi `POST /api/v1/client-webhooks
 **Có gửi giao dịch tiền ra không?** Hiện chưa. `type` luôn là `income`. Khi có thêm loại khác tụi em giữ nguyên tên trường.
 
 **Tôi nhận webhook bằng Google Apps Script hoặc n8n được không?** Được, miễn URL nhận POST và trả 200 trong 10 giây. Với chữ ký HMAC, cần lấy raw body để tính lại, xem [Bảo mật webhook](/docs/webhooks/bao-mat).
+
+
+## Lưu ý định dạng `transfer_date`
+
+`transfer_date` là chuỗi `HH:MM:SS dd/mm/YYYY` theo giờ Việt Nam (UTC+7), ví dụ `10:30:00 28/08/2026`. Không phải ISO 8601, nên đừng `new Date()` thẳng; tách theo khoảng trắng rồi ghép lại, hoặc lưu nguyên chuỗi để đối soát.

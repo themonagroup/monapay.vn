@@ -153,7 +153,7 @@ Response: `{"success": true, "message": "Success", "data": null}`.
 ACB records the incoming money, notifies MONA Pay, and MONA Pay fires the webhook to your configured URL with the same payload as a VA transaction:
 
 ```json
-{"amount":2500000,"description":"Thanh toan DH10234","transfer_date":"2026-08-28 10:45:12","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
+{"amount":2500000,"description":"Thanh toan DH10234","transfer_date":"10:45:12 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
 ```
 
 Match the order by `account_number` (the VA attached to the QR) or by the `orderId` inside `description`. Compare `amount` with the order total before marking it paid.

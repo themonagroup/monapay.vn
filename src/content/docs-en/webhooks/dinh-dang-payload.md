@@ -12,7 +12,7 @@ Every MONA Pay webhook is a 7-field JSON payload: amount, reference, time, trans
 {
   "amount": 2500000,
   "description": "noi dung chuyen khoan",
-  "transfer_date": "2026-08-28 10:30:00",
+  "transfer_date": "10:30:00 28/08/2026",
   "transaction_code": "FT26240001234",
   "account_number": "1234567890",
   "bank_name": "ACB",

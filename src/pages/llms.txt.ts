@@ -53,6 +53,11 @@ export const GET: APIRoute = async () => {
   lines.push(``);
   for (const p of PAGES) lines.push(`- [${p.title}](${SITE.url}${p.path === '/' ? '/' : p.path}): ${p.desc}`);
   lines.push(``);
+  lines.push(`## Hệ sinh thái cho AI agent (cùng The MONA Group)`);
+  lines.push(``);
+  lines.push(`- [VibeCloud](https://vibecloud.vn/llms.txt): VPS/DB cho AI agent tự deploy qua API, tính tiền theo giờ; deploy app rồi cắm MONA Pay để thu tiền — chuỗi vibecode → deploy → thu tiền khép kín trong 1 nhà.`);
+  lines.push(`- [Mona.Host](https://mona.host): hosting, VPS, domain, SSL.`);
+  lines.push(``);
   lines.push(`## Optional`);
   lines.push(``);
   lines.push(`- [Sitemap](${SITE.url}/sitemap-index.xml)`);

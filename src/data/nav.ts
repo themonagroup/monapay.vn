@@ -3,12 +3,13 @@ export type NavItem = { href: string; label: string; desc?: string; badge?: stri
 export type NavGroup = { label: string; href?: string; cols?: { title: string; items: NavItem[] }[]; match?: string[] };
 export const MEGA: NavGroup[] = [
   {
-    label: 'Sản phẩm', match: ['/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/ai-agent', '/tao-ma-qr-ngan-hang'],
+    label: 'Sản phẩm', match: ['/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/ai-agent', '/tao-ma-qr-ngan-hang', '/loa-thong-bao-chuyen-khoan'],
     cols: [
       { title: 'Nhận tiền', items: [
         { href: '/ngan-hang', label: 'Ngân hàng hỗ trợ', desc: 'ACB đang chạy, các ngân hàng khác đang kết nối, bảng trạng thái', badge: 'Mở rộng' },
         { href: '/acb', label: 'Nhận tiền ACB theo thời gian thực', desc: 'Tài khoản ảo (VA) riêng từng đơn, ACB báo là biết ngay' },
         { href: '/docs/api/qr-thanh-toan', label: 'VietQR động', desc: 'Mã QR điền sẵn số tiền và nội dung, khách quét là khớp đơn' },
+        { href: '/loa-thong-bao-chuyen-khoan', label: 'Thay loa báo tiền', desc: 'Báo có qua Telegram/Zalo/webhook, không cần mua loa' },
         { href: '/tao-ma-qr-ngan-hang', label: 'Tạo mã QR ngân hàng (miễn phí)', desc: 'Công cụ tạo VietQR 36 ngân hàng, chạy trên trình duyệt', badge: 'Tool' },
         { href: '/docs/webhooks/tich-hop-webhook', label: 'Webhook về website, phần mềm', desc: 'Ký HMAC-SHA256, chống replay 5 phút, lịch sử từng lần gửi' },
       ]},

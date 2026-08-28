@@ -130,7 +130,7 @@ Fires one simulated payload at any URL, no configuration needed. Use it to try y
 The simulated payload MONA Pay sends:
 
 ```json
-{"amount":500000,"description":"DUMMY TRANSACTION MONAPAY","transfer_date":"2026-08-28 11:05:00","transaction_code":"DUMMY123","account_number":"1900636648","bank_name":"ACB","type":"income"}
+{"amount":500000,"description":"DUMMY TRANSACTION MONAPAY","transfer_date":"11:05:00 28/08/2026","transaction_code":"DUMMY123","account_number":"1900636648","bank_name":"ACB","type":"income"}
 ```
 
 Your server should recognise `transaction_code` = `DUMMY123` and not create a real order.

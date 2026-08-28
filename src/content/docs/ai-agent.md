@@ -23,7 +23,7 @@ Mọi response: {"success": bool, "message": str, "data": any}.
 
 Việc cần làm:
 1. Tạo endpoint HTTPS POST /webhook/monapay trong dự án để nhận thông báo tiền vào. MONA Pay POST JSON:
-   {"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
+   {"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
 2. Verify chữ ký: header X-Mona-Signature = "sha256=" + hex(HMAC-SHA256(secret, X-Mona-Timestamp + "." + raw_body)).
    Từ chối nếu |now - X-Mona-Timestamp| > 300 giây. So sánh chữ ký bằng hàm timing-safe. Đọc raw body, không parse trước khi ký.
 3. Chống trùng bằng transaction_code (UNIQUE). Bỏ qua transaction_code = "DUMMY123" (payload gửi thử).
@@ -72,7 +72,7 @@ Giả lập MONA Pay bắn vào máy local (không cần tài khoản) để th�
 SECRET='secret_hmac_test'
 URL='http://localhost:3000/webhook/monapay'
 TS=$(date +%s)
-BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}'
+BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}'
 SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
 curl -X POST "$URL" -H 'Content-Type: application/json' \
   -H "X-Mona-Timestamp: $TS" -H "X-Mona-Signature: sha256=$SIG" --data "$BODY"

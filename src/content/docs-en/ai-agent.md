@@ -23,7 +23,7 @@ Every response: {"success": bool, "message": str, "data": any}.
 
 Tasks:
 1. Create an HTTPS POST /webhook/monapay endpoint in the project to receive incoming-payment events. MONA Pay POSTs JSON:
-   {"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
+   {"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}
 2. Verify the signature: header X-Mona-Signature = "sha256=" + hex(HMAC-SHA256(secret, X-Mona-Timestamp + "." + raw_body)).
    Reject if |now - X-Mona-Timestamp| > 300 seconds. Compare signatures with a timing-safe function. Read the raw body; do not parse before signing.
 3. Deduplicate by transaction_code (UNIQUE). Ignore transaction_code = "DUMMY123" (test payload).
@@ -72,7 +72,7 @@ Simulate MONA Pay hitting your local machine (no account needed) to test the ver
 SECRET='secret_hmac_test'
 URL='http://localhost:3000/webhook/monapay'
 TS=$(date +%s)
-BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"2026-08-28 10:30:00","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}'
+BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"MONA0000010234","bank_name":"ACB","type":"income"}'
 SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
 curl -X POST "$URL" -H 'Content-Type: application/json' \
   -H "X-Mona-Timestamp: $TS" -H "X-Mona-Signature: sha256=$SIG" --data "$BODY"

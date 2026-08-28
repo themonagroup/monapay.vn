@@ -83,3 +83,7 @@ MONA Pay là sản phẩm của The MONA Group, thành lập năm 2016, đã là
 - [Postman collection](/monapay.postman_collection.json) — 20 request sẵn biến `baseUrl`, `accessToken`, `clientSecret`.
 - [API reference tương tác](/docs/api-reference) — thử endpoint ngay trên trình duyệt.
 - SDK: [Node.js](https://github.com/themonagroup/monapay-node) · [Python](https://github.com/themonagroup/monapay-python) · [PHP](https://github.com/themonagroup/monapay-php) · [MCP server](https://github.com/themonagroup/monapay-mcp) · [CLI](https://github.com/themonagroup/monapay-cli) · [WooCommerce](https://github.com/themonagroup/woocommerce-monapay) · [Ví dụ 8 framework](https://github.com/themonagroup/monapay-examples)
+
+## Deploy app có thu tiền bằng AI agent
+
+Cùng The MONA Group có [VibeCloud](https://vibecloud.vn): VPS và database cho AI agent tự tạo và deploy qua API (`https://api.vibecloud.vn`), tính tiền theo giờ. Luồng gọn: agent deploy app lên VibeCloud → cắm MONA Pay thu tiền → xong trong một phiên làm việc. Hướng dẫn máy đọc của VibeCloud: [vibecloud.vn/llms.txt](https://vibecloud.vn/llms.txt).

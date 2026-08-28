@@ -1,0 +1,138 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import Steps from '../components/Steps.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+import { BANKS_SHORT } from '../data/banks';
+
+const title = 'Loa thông báo chuyển khoản: có cần mua loa để biết tiền vào?';
+const description = 'Loa thông báo chuyển khoản đọc to số tiền khi khách chuyển. MONA Pay báo tiền vào ACB qua Telegram, điện thoại và webhook, không cần mua loa, miễn phí.';
+
+const steps = [
+  { title: 'Tạo tài khoản MONA Pay, dùng ngay', body: 'Đăng ký tại my.monapay.vn bằng tên đăng nhập và mật khẩu, tài khoản tự kích hoạt, không chờ ai duyệt. Vào dashboard là thấy mục nối ngân hàng.' },
+  { title: 'Nối tài khoản ACB bằng 2 lần OTP', body: 'Nhập số tài khoản ACB đứng tên anh chị và số điện thoại đã đăng ký với ngân hàng. ACB gửi OTP lần 1 để tạo tài khoản ảo, OTP lần 2 để bật nhận thông báo giao dịch. Không đưa mật khẩu ngân hàng cho ai.' },
+  { title: 'Chọn kênh báo có: Telegram, điện thoại hay webhook', body: 'Thêm bot MONA Pay vào nhóm Telegram của quầy hoặc của kế toán, hoặc cấu hình webhook để phần mềm bán hàng tự nhận. Một tài khoản dùng được nhiều kênh cùng lúc.' },
+  { title: 'Bấm gửi thử, rồi để khách chuyển thật', body: 'Dashboard có nút gửi thử với giao dịch giả để kiểm mẫu tin. Từ đó mỗi lần tiền vào ACB, tin báo có chạy vào đúng chỗ anh chị chọn, kèm số tiền, nội dung, thời gian.' },
+];
+
+const faq = [
+  { q: 'MONA Pay có bán loa thông báo chuyển khoản không?', a: 'Không. Tụi em không làm loa phần cứng. Loa là thiết bị đi kèm tài khoản ngân hàng, ngân hàng nào có chương trình loa thì anh chị hỏi thẳng chi nhánh của mình. MONA Pay lo phần còn lại: tiền vào là báo về Telegram, điện thoại, hoặc webhook cho phần mềm, và khớp đúng đơn nào trả.' },
+  { q: 'Đang dùng loa của ngân hàng, dùng thêm MONA Pay được không?', a: 'Được, và nhiều quầy làm đúng vậy. Loa đọc số tiền cho khách và thu ngân nghe tại chỗ, MONA Pay gửi tin cho chủ và kế toán ở xa, đồng thời báo cho phần mềm bán hàng gạch nợ đơn. Hai thứ không đụng nhau vì MONA Pay chỉ đọc thông báo giao dịch từ ngân hàng, không can thiệp vào tài khoản.' },
+  { q: 'Loa báo được số tiền, vậy thiếu gì mà phải thêm kênh khác?', a: 'Loa không biết khoản tiền đó của đơn nào, không lưu lại để đối soát, và không nói gì cho website hay phần mềm. Cuối ngày kế toán vẫn phải mở app ngân hàng dò từng dòng. MONA Pay gắn mỗi đơn một tài khoản ảo hoặc mã QR động, nên khoản tiền vào tự khớp đơn, có lịch sử tra lại, có webhook cho phần mềm.' },
+  { q: 'Quầy đông, ồn, tin Telegram có kịp không?', a: 'Tin về ngay khi ngân hàng báo giao dịch, thường trong vài giây. Điện thoại thu ngân bật thông báo Telegram là nghe tiếng và thấy số tiền, không cần mở app ngân hàng. Quầy quá ồn thì loa của ngân hàng vẫn hữu ích, và anh chị dùng song song như câu trên.' },
+  { q: 'Hiện MONA Pay nhận báo có từ ngân hàng nào?', a: `MONA Pay ${BANKS_SHORT}. Bảng trạng thái từng ngân hàng cập nhật tại trang ngân hàng hỗ trợ. Chưa có tài khoản ACB thì mở online tại acb.com.vn rồi nối, tiền vẫn nằm ở ngân hàng của anh chị.` },
+  { q: 'Chi phí ra sao?', a: `Phía MONA Pay ${PRICE_LINE}: Telegram, webhook, tài khoản ảo, VietQR, dashboard đều nằm trong đó, không thu phần trăm trên số tiền. Phí dịch vụ phía ngân hàng (nếu có) theo biểu phí ngân hàng, anh chị hỏi ngân hàng.` },
+  { q: 'Website hay phần mềm quản lý có tự biết tiền vào không?', a: 'Có. MONA Pay bắn webhook có chữ ký HMAC-SHA256 tới địa chỉ anh chị cấu hình, kèm số tiền, nội dung, mã giao dịch. Phần mềm trả HTTP 200 trong 10 giây là xong, đơn tự chuyển sang đã thanh toán. Đây là thứ loa không làm được.' },
+];
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'vi',
+  url: SITE.url + '/loa-thong-bao-chuyen-khoan', author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' },
+}];
+---
+<Base title={title} description={description} path="/loa-thong-bao-chuyen-khoan" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap hero-grid">
+      <div>
+        <span class="eyebrow">Báo có tiền vào</span>
+        <h1>Loa thông báo chuyển khoản:<br class="br-d" /> <span class="accent">không mua loa vẫn biết tiền vào</span></h1>
+        <div class="answer-first">
+          <p>Loa thông báo chuyển khoản là chiếc loa nhỏ đặt ở quầy, đọc to số tiền mỗi khi khách chuyển khoản vào tài khoản ngân hàng. Hợp với quầy bán lẻ đông, thu ngân không rảnh tay xem điện thoại. Cái loa chỉ giải quyết được chuyện nghe: nó không khớp đơn, không lưu để đối soát, không báo cho website hay phần mềm. MONA Pay lo phần đó, không cần mua thêm thiết bị.</p>
+        </div>
+        <p>{SITE.entity}</p>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+          <a class="btn btn-outline" href="/chia-se-bien-dong-so-du-telegram">Xem báo có qua Telegram</a>
+        </div>
+      </div>
+      <div class="card">
+        <span class="badge badge-cta">Tin báo có, không cần loa</span>
+        <div class="tg-mock" aria-hidden="true">
+          <div class="tg-head">Nhóm quầy 1 · MONA Pay</div>
+          <div class="tg-msg"><b>Tên ngân hàng:</b> ACB<br /><b>Số tài khoản:</b> 1234567890<br /><b>Số tiền:</b> <span class="accent">2.500.000 VNĐ</span><br /><b>Thời gian:</b> 10:30:00 28/08/2026<br /><b>Nội dung:</b> DH10234 NGUYEN VAN A</div>
+          <div class="tg-time">vừa xong</div>
+        </div>
+        <p style="margin:.8rem 0 0;font-size:.9rem;color:var(--text-soft)">Thu ngân nghe tiếng thông báo Telegram trên điện thoại, chủ ở xa cũng thấy cùng lúc.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Nói thẳng</span>
+      <h2>Loa của ngân hàng làm được gì,<br class="br-d" /> và chỗ nào loa chịu thua</h2>
+      <p class="lead">Tụi em không làm loa. Ngân hàng phát loa cho merchant thì anh chị cứ dùng, MONA Pay chạy song song vì chỉ đọc thông báo giao dịch, không đụng vào tài khoản. Bảng dưới là kinh nghiệm từ khách MONA đang đứng quầy.</p>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Tiêu chí</th><th>Loa thông báo của ngân hàng</th><th>Báo có qua MONA Pay</th></tr></thead>
+          <tbody>
+            <tr><td>Nghe được ở quầy đông</td><td><span class="check">✓</span> Đọc to số tiền tại chỗ</td><td><span class="check">✓</span> Điện thoại thu ngân kêu và hiện số tiền, nội dung</td></tr>
+            <tr><td>Nhiều người cùng biết</td><td><span class="cross">✗</span> 1 loa phục vụ 1 quầy, chủ ở nhà không nghe</td><td><span class="check">✓</span> Cả nhóm Telegram thấy, chủ và kế toán ở đâu cũng nhận</td></tr>
+            <tr><td>Biết tiền của đơn nào</td><td><span class="cross">✗</span> Chỉ đọc số tiền, 2 khách chuyển cùng số là loạn</td><td><span class="check">✓</span> Tài khoản ảo riêng từng đơn hoặc QR động đúng số tiền, tự khớp</td></tr>
+            <tr><td>Đối soát cuối ngày</td><td><span class="cross">✗</span> Không lưu, phải mở app ngân hàng dò lại</td><td><span class="check">✓</span> Lịch sử từng giao dịch trên dashboard, tra theo tài khoản ảo, tối đa 100 giao dịch mỗi trang</td></tr>
+            <tr><td>Báo cho website, phần mềm</td><td><span class="cross">✗</span> Không</td><td><span class="check">✓</span> Webhook ký HMAC-SHA256, phần mềm tự chuyển đơn sang đã thanh toán</td></tr>
+            <tr><td>Chi phí</td><td>Theo chương trình của ngân hàng</td><td>{PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">3 cách nhận báo có không cần mua loa</span>
+      <h2>Tiền vào tài khoản là đúng người<br class="br-d" /> nhận đúng tin, ngay lúc đó</h2>
+      <div class="grid grid-3">
+        <div class="card"><div class="icon">1</div><h3>Nhóm Telegram cho quầy, cho kế toán</h3><p>Thêm bot MONA Pay vào nhóm, mỗi giao dịch vào ACB là một tin gồm tên ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Có thể tách nhóm theo từng tài khoản ảo, chi nhánh nào nhận tin chi nhánh đó. <a href="/chia-se-bien-dong-so-du-telegram">Cách bật Telegram</a>.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Điện thoại thu ngân, không cần app ngân hàng</h3><p>Thu ngân chỉ cần vào nhóm Telegram của quầy, không cần cầm điện thoại chủ, không cần biết mật khẩu ngân hàng. Khách chuyển xong, điện thoại kêu, nhìn số tiền và nội dung là giao hàng. Đổi nhân viên thì rời khỏi nhóm là hết quyền.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Webhook cho website và phần mềm</h3><p>Phần mềm bán hàng, web WooCommerce, phần mềm quản lý nhận webhook JSON có chữ ký, từ chối tin lệch quá 5 phút, trả HTTP 200 trong 10 giây là xong. Đơn tự sang đã thanh toán, không ai phải bấm tay. <a href="/docs/webhooks/tich-hop-webhook">Tài liệu webhook</a>.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Chọn theo kiểu bán</span>
+      <h2>Quầy bán lẻ, shop online, dịch vụ:<br class="br-d" /> mỗi kiểu một cách báo có</h2>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>Kiểu kinh doanh</th><th>Chuyện hay gặp</th><th>Cách tụi em khuyên</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Quầy bán lẻ, quán ăn, cà phê</strong></td><td>Khách quét QR tại quầy, thu ngân phải nhìn màn hình khách để tin</td><td>Loa của ngân hàng nếu có, cộng nhóm Telegram cho quầy để chủ và kế toán cùng thấy. QR động theo bàn hoặc theo hoá đơn để không nhầm 2 khách cùng số tiền.</td></tr>
+            <tr><td><strong>Shop online, web bán hàng</strong></td><td>Khách chuyển khoản tối, sáng mới có người xác nhận đơn</td><td>Webhook về website: đơn tự đổi trạng thái lúc 11 giờ đêm, sáng đóng gói. Telegram để chủ theo dõi song song. Xem <a href="/cong-thanh-toan-woocommerce">WooCommerce</a>.</td></tr>
+            <tr><td><strong>Dịch vụ, học phí, đặt cọc</strong></td><td>Nhiều khoản giống nhau, khách chuyển thiếu hoặc quên nội dung</td><td>Tài khoản ảo riêng từng khách hoặc từng hợp đồng, tiền vào là biết của ai, kế toán đối soát trên dashboard. Xem <a href="/nganh/giao-duc">ngành giáo dục</a>.</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Bắt đầu</span>
+      <h2>4 bước để tiền vào là có tin báo có,<br class="br-d" /> làm xong trong vài phút</h2>
+      <div style="margin-top:1.5rem"><Steps items={steps} /></div>
+      <p style="margin-top:1.2rem">{SITE.trustLine}</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Chủ quầy hay hỏi tụi em về loa và báo có" />
+    </div>
+  </section>
+
+  <CtaBand title="Không mua loa, tiền vào vẫn báo đúng người" body="Tạo tài khoản, nối ACB bằng 2 lần OTP, thêm bot vào nhóm Telegram. Có loa của ngân hàng thì cứ dùng song song." />
+</Base>
+
+<style>
+  .br-d { display: inline; }
+  @media (max-width: 767px) { .br-d { display: none; } }
+  .hero-grid h1 { font-size: clamp(1.8rem, 3.2vw, 2.4rem); }
+  .tg-mock { margin-top: 1rem; background: var(--surface-2); border-radius: var(--radius-sm); padding: .9rem 1rem; font-size: .95rem; }
+  .tg-head { font-weight: 700; color: var(--ink); margin-bottom: .5rem; font-size: .9rem; }
+  .tg-msg { background: #fff; border-radius: 12px; padding: .8rem .9rem; line-height: 1.6; color: var(--ink); box-shadow: var(--shadow); }
+  .tg-time { text-align: right; font-size: .8rem; color: var(--text-soft); margin-top: .4rem; }
+</style>
