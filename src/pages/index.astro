@@ -1,4 +1,6 @@
 ---
+// Trang chủ monapay.vn — viết cho CHỦ DOANH NGHIỆP KINH DOANH ONLINE không rành kỹ thuật (Mon lệnh 30/08/2026).
+// Thứ tự: hero (báo có tự động, miễn phí) → cảnh quen ở shop → công dụng → cách chạy → không có web vẫn dùng → ai dùng → vì sao miễn phí → tiền không qua MONA Pay → chuyện MONA → khối dev/AI → FAQ → CTA.
 import Base from '../layouts/Base.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
@@ -7,12 +9,15 @@ import Steps from '../components/Steps.astro';
 import Stats from '../components/Stats.astro';
 import CodeTabs from '../components/CodeTabs.astro';
 import { SITE } from '../data/site';
-import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS, APPLYING_BANKS } from '../data/banks';
+import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS } from '../data/banks';
 import { PRICING_MODE, FREE_TX_PER_MONTH, PRICE_LINE } from '../data/pricing';
+import { AI_PROMPT, CURL_SAMPLE, PHP_SAMPLE, NODE_SAMPLE } from '../data/home-samples';
 const isFree = PRICING_MODE === 'free-all';
+const priceCap = PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1);
+const liveBank = LIVE_BANKS[0]?.name ?? 'ACB';
 
-const title = 'Cổng thanh toán và API ngân hàng nhận tiền tự động | MONA Pay';
-const description = `MONA Pay giúp doanh nghiệp nhận và xác nhận tiền chuyển khoản theo thời gian thực qua tài khoản ảo ACB, VietQR, webhook, Telegram. ${isFree ? 'Miễn phí, không giới hạn giao dịch.' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng.`}`;
+const title = 'Cổng thanh toán tự động báo có chuyển khoản, miễn phí | MONA Pay';
+const description = `Cổng thanh toán tự động báo có MONA Pay: khách chuyển khoản là website, phần mềm, nhóm Telegram biết ngay, đơn tự xác nhận. ${isFree ? 'Miễn phí, không giới hạn giao dịch.' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng.`}`;
 
 const stats = [
   { value: String(SITE.founded), label: 'năm The MONA Group thành lập, hơn 10 năm làm web và phần mềm' },
@@ -21,134 +26,53 @@ const stats = [
   isFree ? { value: '0 đ', label: 'miễn phí, không giới hạn giao dịch, đủ tính năng' } : { value: String(FREE_TX_PER_MONTH), label: 'giao dịch mỗi tháng miễn phí, đủ tính năng' },
 ];
 
+const pains = [
+  { t: 'Khách nhắn "chuyển rồi nha", nhân viên mở app ngân hàng dò', d: 'Mỗi ngày vài chục lần mở app, kéo sao kê, so số tiền với đơn. Ba khách chuyển cùng số tiền thì phải hỏi lại từng người. Shop nào bán chạy là có một nhân viên gần như chỉ ngồi làm việc này.' },
+  { t: 'Nội dung chuyển khoản mỗi khách gõ một kiểu', d: 'Người ghi mã đơn, người ghi "ck", người ghi tên mình, người để trống. Cuối ngày kế toán ngồi ghép sao kê với danh sách đơn, ghép không ra thì gọi khách hỏi lại.' },
+  { t: 'Khách chuyển lúc 11 giờ đêm, sáng hôm sau mới có người xác nhận', d: 'Đơn nằm chờ 8 tiếng, khách nhắn hỏi, kho không dám đóng hàng. Bán qua Facebook, Zalo, TikTok thì ai cũng biết: khách chờ lâu là huỷ đơn, đặt chỗ khác.' },
+  { t: 'Nhận ảnh bill chuyển khoản, giao hàng xong mới biết chưa có tiền', d: 'Ảnh chụp màn hình sửa được. Nhân viên tin ảnh, giao hàng, tối kiểm sao kê mới thấy không có khoản nào. Hàng đã đi, tiền không về, không biết đòi ai.' },
+];
+
+const uses = [
+  { k: '01', t: 'Báo có tức thì vào nhóm Telegram của cửa hàng', d: 'Tiền vào tài khoản là 1 tin nhắn hiện trong nhóm: ngân hàng, số tiền, nội dung, giờ chuyển. Chủ shop, kế toán, nhân viên chốt đơn cùng thấy một lúc, không ai phải cầm điện thoại có app ngân hàng. Mẫu tin sửa được, ví dụ chỉ hiện số tiền và mã đơn.' },
+  { k: '02', t: 'Đơn hàng tự chuyển sang "đã thanh toán"', d: 'Website hay phần mềm bán hàng nhận tín hiệu từ MONA Pay rồi tự đổi trạng thái đơn, tự gửi email xác nhận, tự đẩy đơn xuống kho. Khách chuyển lúc 11 giờ đêm thì 11 giờ 1 phút đơn đã xác nhận, không cần ai thức canh.' },
+  { k: '03', t: 'Mỗi đơn 1 mã QR đúng số tiền, đúng nội dung', d: 'Anh chị tạo mã VietQR cho từng đơn, khách quét là app ngân hàng điền sẵn số tiền và mã đơn, không gõ tay. Hết cảnh khách chuyển thiếu 50.000 đ hay ghi nội dung "chuyen tien". Tạo trong dashboard, hoặc website tự tạo lúc khách đặt hàng.' },
+  { k: '04', t: 'Mỗi khách 1 số tài khoản riêng để nhận tiền', d: 'Ngân hàng cấp cho anh chị một dải số tài khoản ảo, MONA Pay gắn mỗi số cho 1 khách hoặc 1 đơn. Tiền vào số nào là biết của ai ngay, không cần đọc nội dung. Hợp với thu học phí, tiền trọ, phí hội viên, tiền cọc: khách chuyển tháng nào cũng đúng số đó.' },
+  { k: '05', t: 'Chỉ tin ngân hàng, không tin ảnh chụp màn hình', d: 'MONA Pay nhận thông tin thẳng từ ngân hàng, có tiền thật vào tài khoản mới báo. Nhân viên không cần nhìn bill khách gửi để quyết định giao hàng, cứ chờ tin trong nhóm hoặc trạng thái đơn trên phần mềm.' },
+  { k: '06', t: 'Sổ giao dịch xem mọi lúc, xuất file cho kế toán', d: 'Mọi khoản tiền vào nằm trong dashboard my.monapay.vn: lọc theo ngày, theo tài khoản, xuất file CSV để đối chiếu cuối tháng. Mở được trên máy tính lẫn điện thoại, bật xác thực 2 lớp cho tài khoản quản trị.' },
+];
+
 const steps = [
-  { title: 'Khách chuyển khoản vào tài khoản ACB của anh chị', body: 'Khách quét mã VietQR đã có sẵn số tiền và nội dung, hoặc chuyển vào số tài khoản ảo (VA) gắn riêng với đơn hàng đó. Tiền vào thẳng tài khoản ACB đứng tên anh chị, không đi qua ví trung gian nào.' },
-  { title: 'ACB báo cho MONA Pay ngay khi tiền vào', body: 'MONA Pay đã đăng ký nhận thông báo giao dịch với ACB, nên tiền vừa chạm tài khoản là ngân hàng đẩy thông tin sang: số tiền, nội dung chuyển khoản, mã giao dịch, số tài khoản nhận.' },
-  { title: 'MONA Pay báo về phần mềm và nhóm Telegram của anh chị', body: 'Cùng lúc, MONA Pay gửi một gói tin webhook (có chữ ký HMAC để phần mềm biết chắc là tin thật, từ chối nếu lệch quá 5 phút) tới website hoặc phần mềm quản lý, và nhắn vào nhóm Telegram cho kế toán, bộ phận bán hàng cùng thấy.' },
-  { title: 'Phần mềm tự khớp đơn, đổi trạng thái đã thanh toán', body: 'Phần mềm dựa vào số tài khoản ảo hoặc mã giao dịch để biết tiền này của đơn nào, rồi tự xác nhận. Không ai phải mở app ngân hàng canh, không phải hỏi khách "anh chuyển chưa".' },
+  { title: 'Khách chuyển khoản như bình thường', body: 'Khách quét mã QR hoặc chuyển vào số tài khoản anh chị đưa. Tiền vào thẳng tài khoản ngân hàng đứng tên anh chị, không qua ví, không qua trung gian nào.' },
+  { title: 'Ngân hàng báo cho MONA Pay ngay khi tiền vào', body: 'Anh chị cho phép MONA Pay nhận thông báo giao dịch từ ngân hàng, làm 1 lần trong dashboard, xác nhận bằng 2 mã OTP ngân hàng gửi về điện thoại. Từ đó tiền vừa chạm tài khoản là ngân hàng đẩy thông tin sang: số tiền, nội dung, mã giao dịch.' },
+  { title: 'MONA Pay báo về đúng chỗ anh chị chọn', body: 'Nhóm Telegram của cửa hàng nhận tin nhắn. Website, phần mềm bán hàng nhận một gói tin có chữ ký bảo mật, để phần mềm biết chắc tin đó do MONA Pay gửi, không ai giả được. Cả hai cùng lúc, trong vài giây.' },
+  { title: 'Phần mềm tự khớp đơn, người chỉ việc giao hàng', body: 'Phần mềm so mã đơn hoặc số tài khoản nhận để biết tiền này của đơn nào rồi tự xác nhận. Người bán chỉ còn việc đóng gói và giao. Cuối tháng kế toán mở sổ giao dịch đối chiếu, khỏi ghép sao kê bằng tay.' },
 ];
 
-const features = [
-  { k: 'VA', t: 'Tài khoản ảo (VA) theo từng đơn', d: 'ACB cấp cho anh chị một dải số tài khoản ảo. Mỗi đơn hàng, mỗi học viên, mỗi khách thuê được gắn 1 số riêng. Tiền vào số nào là biết ngay của ai, khỏi dò nội dung chuyển khoản.' },
-  { k: 'QR', t: 'VietQR động đúng số tiền', d: 'Tạo mã QR có sẵn số tiền và nội dung cho từng đơn, qua dashboard hoặc 1 lệnh API. Khách quét là chuyển đúng, hết cảnh gõ sai nội dung rồi kế toán phải lần.' },
-  { k: 'WH', t: 'Webhook có chữ ký HMAC', d: `Tiền vào là MONA Pay POST một gói JSON về phần mềm của anh chị, kèm header ${SITE.tech.hmacHeader} và ${SITE.tech.tsHeader}. Phần mềm trả HTTP 200 trong ${SITE.tech.webhookTimeoutSec} giây là xong. Mỗi lần gửi đều có lịch sử để soi.` },
-  { k: 'TG', t: 'Báo vào nhóm Telegram', d: 'Thêm bot MONA Pay vào nhóm công ty, chọn báo theo từng tài khoản ảo hoặc mọi tài khoản, tự sửa mẫu tin nhắn. Kế toán, sale, chủ shop cùng thấy một lúc.' },
-  { k: 'AI', t: 'API và tài liệu viết cho cả AI đọc', d: 'Mọi trang tài liệu có bản .md, có llms.txt và openapi.json ngay trên monapay.vn. Anh chị dán prompt có sẵn vào Claude Code, Codex hay Cursor, AI tự tích hợp trong vài phút.' },
-  { k: 'DB', t: 'Dashboard theo dõi từng giao dịch', d: 'Xem tiền vào theo thời gian thực, lịch sử gửi webhook (HTTP status, thời gian phản hồi, nhãn lỗi), bấm gửi lại, tạo QR, quản lý API key, bật 2 lớp bảo mật.' },
+const noWeb = [
+  { t: `Tài khoản ngân hàng ${liveBank} đứng tên anh chị`, d: `Cá nhân hay doanh nghiệp đều nối được. ${liveBank} là ngân hàng hệ thống này chạy thật từ 2022, các ngân hàng khác đang kết nối thêm, xem bảng trạng thái ở trang ngân hàng hỗ trợ.` },
+  { t: 'Nhóm Telegram của cửa hàng', d: 'Thêm bot MONA Pay vào nhóm, chọn tài khoản muốn theo dõi. Từ đó tiền vào là cả nhóm thấy, ai đi vắng cũng không lỡ đơn.' },
+  { t: 'Khoảng 10 phút làm theo hướng dẫn', d: `Tạo tài khoản, nối ngân hàng bằng 2 mã OTP, thêm bot vào nhóm. Không cài phần mềm, không cần biết lập trình. Kẹt chỗ nào gọi ${SITE.hotline}, tụi em ngồi cùng tới khi chạy.` },
 ];
 
-const AI_PROMPT = `Tích hợp MONA Pay (cổng thanh toán nội địa Việt Nam: nhận và xác nhận tiền
-chuyển khoản ngân hàng theo thời gian thực) vào dự án của tôi.
-
-Base URL API: ${SITE.api} (legacy: ${SITE.apiLegacy})
-Tài liệu máy đọc: ${SITE.url}/llms.txt · ${SITE.url}/openapi.json
-Xác thực: đăng nhập POST /api/v1/client/login lấy Bearer token; các request
-ghi kèm header X-Client-Secret: <CLIENT_SECRET>.
-
-Việc cần làm:
-1. Tạo endpoint webhook HTTPS trong dự án của tôi để nhận thông báo tiền vào.
-   MONA Pay sẽ POST JSON: {"amount": 2500000, "description": "noi dung ck",
-   "transfer_date": "...", "transaction_code": "...", "account_number": "...",
-   "bank_name": "ACB", "type": "income"}
-2. Nếu tôi bật HMAC: verify chữ ký từ header X-Mona-Signature ("sha256=<hex>")
-   = HMAC-SHA256(secret, "<X-Mona-Timestamp>.<raw_body>"); từ chối nếu
-   timestamp lệch quá 5 phút.
-3. Trả HTTP 200 ngay khi nhận, xử lý đơn hàng async. Dùng transaction_code
-   làm khoá chống trùng.
-4. Đăng ký URL webhook này trong dashboard MONA Pay (mục Webhooks) hoặc qua
-   API POST /api/v1/client-webhooks.`;
-
-const CURL_SAMPLE = `# Giả lập MONA Pay bắn webhook vào endpoint của anh chị để test tại chỗ
-SECRET='secret_hmac_cua_anh_chi'   # secret HMAC đặt khi bật HMAC trong dashboard
-URL='https://ten-mien-cua-anh-chi.vn/webhook/monapay'
-TS=$(date +%s)
-BODY='{"amount":2500000,"description":"noi dung ck","transfer_date":"10:30:00 28/08/2026","transaction_code":"FT26240001234","account_number":"0123456789","bank_name":"ACB","type":"income"}'
-
-# Chữ ký = HMAC-SHA256(secret, "<timestamp>.<raw_body>"), dùng printf để không dính ký tự xuống dòng
-SIG=$(printf '%s.%s' "$TS" "$BODY" | openssl dgst -sha256 -hmac "$SECRET" | awk '{print $2}')
-
-curl -X POST "$URL" \\
-  -H 'Content-Type: application/json' \\
-  -H "X-Mona-Timestamp: $TS" \\
-  -H "X-Mona-Signature: sha256=$SIG" \\
-  --data "$BODY"`;
-
-const PHP_SAMPLE = `<?php
-// webhook-monapay.php: endpoint nhận thông báo tiền vào từ MONA Pay
-$secret = getenv('MONA_WEBHOOK_SECRET'); // secret HMAC đặt khi bật HMAC
-
-$raw       = file_get_contents('php://input');
-$timestamp = $_SERVER['HTTP_X_MONA_TIMESTAMP'] ?? '';
-$signature = $_SERVER['HTTP_X_MONA_SIGNATURE'] ?? ''; // dạng "sha256=<hex>"
-
-// 1. Chặn replay: timestamp lệch quá 5 phút thì từ chối
-if (abs(time() - (int) $timestamp) > 300) {
-    http_response_code(400);
-    exit('timestamp qua han');
-}
-
-// 2. Verify chữ ký: HMAC-SHA256(secret, "<timestamp>.<raw_body>")
-$expected = 'sha256=' . hash_hmac('sha256', $timestamp . '.' . $raw, $secret);
-if (!hash_equals($expected, $signature)) { // hash_equals chống timing attack
-    http_response_code(401);
-    exit('sai chu ky');
-}
-
-// 3. Trả 200 ngay, việc nặng đẩy sang xử lý sau (queue/cron)
-http_response_code(200);
-echo 'OK';
-if (function_exists('fastcgi_finish_request')) fastcgi_finish_request();
-
-$data = json_decode($raw, true);
-// $data['amount'], $data['description'], $data['transaction_code'], ...
-// TODO: ghi nhận giao dịch (UNIQUE theo transaction_code) + xử lý đơn hàng của anh chị tại đây`;
-
-const NODE_SAMPLE = `// webhook-monapay.js: nhận webhook MONA Pay bằng Express
-const express = require('express');
-const crypto  = require('crypto');
-
-const app    = express();
-const SECRET = process.env.MONA_WEBHOOK_SECRET; // secret HMAC đặt khi bật HMAC
-
-// Phải đọc raw body thì chữ ký mới khớp (đừng dùng express.json() ở route này)
-app.post('/webhook/monapay', express.raw({ type: 'application/json' }), (req, res) => {
-  const timestamp = req.header('X-Mona-Timestamp') || '';
-  const signature = req.header('X-Mona-Signature') || ''; // "sha256=<hex>"
-  const rawBody   = req.body.toString('utf8');
-
-  // 1. Chặn replay: timestamp lệch quá 5 phút thì từ chối
-  if (Math.abs(Date.now() / 1000 - Number(timestamp)) > 300) {
-    return res.status(400).send('timestamp qua han');
-  }
-
-  // 2. Verify chữ ký: HMAC-SHA256(secret, "<timestamp>.<raw_body>")
-  const expected = 'sha256=' + crypto
-    .createHmac('sha256', SECRET)
-    .update(timestamp + '.' + rawBody)
-    .digest('hex');
-  const hopLe =
-    signature.length === expected.length &&
-    crypto.timingSafeEqual(Buffer.from(signature), Buffer.from(expected));
-  if (!hopLe) return res.status(401).send('sai chu ky');
-
-  // 3. Trả 200 ngay, xử lý đơn hàng async sau đó
-  res.status(200).send('OK');
-
-  const data = JSON.parse(rawBody);
-  // data.amount, data.description, data.transaction_code, ...
-  // TODO: ghi nhận giao dịch (UNIQUE theo transaction_code) + xử lý đơn hàng của anh chị tại đây
-});
-
-app.listen(3000, () => console.log('Webhook MONA Pay chạy ở cổng 3000'));`;
+const industries = [
+  { href: '/cong-thanh-toan-woocommerce', t: 'Shop, website bán hàng', d: 'WordPress, WooCommerce, Shopify, Haravan, Sapo, KiotViet: khách chuyển khoản là đơn tự xác nhận, kho đóng hàng ngay, không chờ người kiểm.' },
+  { href: '/nganh/giao-duc', t: 'Trung tâm, trường, khoá học online', d: 'Mỗi học viên 1 số tài khoản riêng, đóng học phí là hệ thống ghi nhận và mở khoá bài học, kế toán không dò tên từng người.' },
+  { href: '/nganh/nha-hang-fnb', t: 'Nhà hàng, quán cà phê', d: 'Mã QR đúng số tiền cho từng hoá đơn, thu ngân thấy tiền vào ngay trên máy, không cần khách chìa màn hình.' },
+  { href: '/nganh/spa-salon', t: 'Spa, salon, phòng khám', d: 'Khách chuyển cọc là lịch hẹn tự giữ chỗ, lễ tân không phải mở app ngân hàng kiểm rồi mới xác nhận lịch.' },
+  { href: '/nganh/cho-thue-tro', t: 'Cho thuê trọ, căn hộ', d: 'Mỗi phòng 1 số tài khoản, tiền nhà tháng nào cũng khớp đúng phòng đó, chủ trọ mở sổ là biết ai chưa đóng.' },
+  { href: '/nganh/nhap-hang-trung-quoc', t: 'Đặt hàng hộ, nhập hàng Trung Quốc', d: 'Khách nạp tiền là số dư trong phần mềm tự cộng, không phải gửi bill rồi chờ nhân viên đối chiếu.' },
+];
 
 const faq = [
-  { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên cũng không có chuyện chờ đối soát rồi mới được rút.' },
-  { q: 'MONA Pay hỗ trợ ngân hàng nào?', a: `${BANKS_LINE}. ACB là ngân hàng hệ thống này chạy thật từ 2022 cho hơn 6.000 khách hàng của MONA nên mở trước, cả tài khoản cá nhân lẫn doanh nghiệp. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; webhook, Telegram, API dùng chung nên thêm ngân hàng anh chị không phải sửa gì.` },
-  { q: 'Mất bao lâu để tích hợp?', a: `Nối tài khoản ACB trong dashboard mất 4 bước, xác thực 2 lần OTP do ACB gửi. Phần webhook, lập trình viên của anh chị copy code mẫu PHP hoặc Node ở trên là chạy, thường trong vài phút. Nếu anh chị dùng AI như Claude Code hay Codex, dán prompt có sẵn là AI tự làm. Web hay phần mềm làm tại MONA thì tụi em cài luôn. Gọi ${SITE.hotline} nếu cần người ngồi cùng.` },
-  { q: 'Phần mềm của tôi không do MONA làm, dùng được không?', a: 'Được. Webhook là chuẩn HTTP thông thường: MONA Pay POST một gói JSON tới đường dẫn anh chị chỉ định, phần mềm nào nhận được HTTP request là nhận được. WordPress, WooCommerce, Laravel, Node, .NET, phần mềm nội bộ tự viết đều nối được, kèm code mẫu trong tài liệu.' },
-  { q: 'Giá bao nhiêu?', a: isFree ? `${PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}, đủ mọi tính năng: tài khoản ảo, VietQR, webhook, Telegram, API, dashboard. Không thu phần trăm trên số tiền, không phí mở tài khoản. Giới hạn duy nhất là fair-use chống lạm dụng, xem trang bảng giá.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng: tài khoản ảo, VietQR, webhook, Telegram, API, dashboard. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền.` },
-  { q: 'Đăng ký xong dùng ngay được không?', a: 'Được. Tài khoản tự kích hoạt ngay khi tạo, không cần ai duyệt. Anh chị đăng nhập, nối ACB bằng 2 lần OTP, tạo API key và webhook trong dashboard, tất cả tự làm trong vài phút.' },
-  { q: 'Webhook gửi hụt thì sao, có mất giao dịch không?', a: `Không mất. Mọi giao dịch ACB báo về đều được ghi lại trong dashboard, kể cả khi phần mềm của anh chị đang tắt. Mỗi lần gửi webhook đều có lịch sử: HTTP status, thời gian phản hồi, nhãn lỗi (timeout, DNS, SSL, 4xx, 5xx). Gửi hụt thì bấm gửi lại ngay trong dashboard. Lịch gửi lại tự động tối đa 7 lần đang được triển khai, tụi em sẽ công bố tại tài liệu khi lên.` },
+  { q: 'Tôi không rành kỹ thuật, tự dùng được không?', a: `Được. Phần nhận báo có qua Telegram không cần viết dòng code nào: tạo tài khoản, nối ngân hàng bằng 2 mã OTP, thêm bot vào nhóm, làm theo hướng dẫn trong dashboard khoảng 10 phút. Phần nối vào website hay phần mềm thì lập trình viên của anh chị làm 1 lần theo code mẫu, web làm tại MONA thì tụi em cài luôn. Kẹt chỗ nào gọi ${SITE.hotline}.` },
+  { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên không có chuyện chờ đối soát rồi mới được rút.' },
+  { q: 'Miễn phí thật không, có phí ẩn không?', a: isFree ? `${priceCap}, đủ mọi tính năng: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng. Phí duy nhất anh chị có thể gặp là phí ngân hàng thu cho tài khoản của mình, nếu có, MONA không thu thêm gì. Điều khoản ghi rõ: nếu sau này có gói thu phí, tụi em báo trước ít nhất 30 ngày và tài khoản đang dùng không bị tự chuyển sang trả phí.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền.` },
+  { q: 'Cần tài khoản ngân hàng nào?', a: `${BANKS_LINE}. Tài khoản cá nhân hay doanh nghiệp đều nối được. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; Telegram, website, sổ giao dịch dùng chung nên thêm ngân hàng anh chị không phải làm lại gì.` },
+  { q: 'Tôi chỉ bán qua Facebook, Zalo, chưa có website, dùng được không?', a: `Được. Anh chị chỉ cần tài khoản ngân hàng và một nhóm Telegram: tiền vào là nhóm có tin, khỏi mở app ngân hàng kiểm. Cần mã QR đúng số tiền cho từng đơn thì tạo trong dashboard, hoặc dùng <a href="/tao-ma-qr-ngan-hang">tool tạo mã QR ngân hàng</a> miễn phí trên monapay.vn, không cần đăng nhập. Sau này làm website thì nối thêm, tài khoản vẫn giữ nguyên.` },
+  { q: 'Đăng ký xong dùng ngay được không?', a: 'Được. Tài khoản tự kích hoạt ngay khi tạo, không cần ai duyệt. Anh chị đăng nhập, nối ngân hàng bằng 2 mã OTP, thêm bot Telegram hoặc nối website, tất cả tự làm trong vài phút.' },
+  { q: 'Website của tôi không do MONA làm, có nối được không?', a: 'Được. MONA Pay báo cho website bằng một gói tin HTTP thông thường tới đường dẫn anh chị chỉ định, phần mềm nào nhận được yêu cầu từ internet là nhận được. WordPress, WooCommerce, Laravel, Node, .NET, phần mềm nội bộ tự viết đều nối được, có code mẫu trong tài liệu để lập trình viên copy.' },
+  { q: 'Lỡ báo hụt thì có mất giao dịch không?', a: 'Không mất. Mọi giao dịch ngân hàng báo về đều được ghi trong dashboard, kể cả khi website của anh chị đang tắt. Mỗi lần gửi tin về website đều có lịch sử, gửi hụt thì bấm gửi lại ngay trong dashboard. Gửi lại tự động theo lịch, tối đa 7 lần, đang được triển khai, tụi em công bố tại tài liệu khi lên.' },
 ];
 
 const jsonld = [{
@@ -156,7 +80,7 @@ const jsonld = [{
   name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
   url: SITE.url, description: SITE.entity, inLanguage: 'vi',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND', description: isFree ? 'Miễn phí, không giới hạn giao dịch, đủ tính năng' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng, đủ tính năng` },
-  featureList: ['Tài khoản ảo (VA) ACB', 'VietQR động', 'Webhook ký HMAC-SHA256', 'Thông báo Telegram', 'API v1 + OpenAPI + llms.txt', 'Dashboard theo dõi giao dịch'],
+  featureList: ['Báo có tự động khi khách chuyển khoản', 'Thông báo Telegram', 'Đơn hàng tự xác nhận qua webhook ký HMAC-SHA256', 'VietQR động theo đơn', 'Tài khoản ảo (VA) theo khách', 'Dashboard sổ giao dịch, xuất CSV', 'API v1 + OpenAPI + llms.txt'],
   softwareHelp: { '@type': 'CreativeWork', url: SITE.docs },
   publisher: { '@id': SITE.url + '/#organization' },
 }];
@@ -165,29 +89,29 @@ const jsonld = [{
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
-        <span class="eyebrow">Cổng thanh toán của The MONA Group</span>
-        <h1>Cổng thanh toán và API ngân hàng<br class="br-d" /> <span class="accent">xác nhận tiền vào tự động</span></h1>
+        <span class="eyebrow">Cho doanh nghiệp kinh doanh online · The MONA Group</span>
+        <h1>Cổng thanh toán tự động báo có<br class="br-d" /> <span class="accent">miễn phí cho doanh nghiệp online</span></h1>
         <div class="answer-first">
-          <p>{SITE.entity}</p>
-          <p>Tiền vào thẳng tài khoản ACB của anh chị, MONA Pay chỉ đọc thông báo từ ngân hàng rồi báo về website, phần mềm quản lý và nhóm Telegram. Không ai phải ngồi canh app ngân hàng để xác nhận đơn.</p>
+          <p>MONA Pay là cổng thanh toán tự động báo có bằng chuyển khoản ngân hàng: khách chuyển tiền vào tài khoản ngân hàng của anh chị, tiền vừa vào là MONA Pay báo ngay về website, phần mềm bán hàng và nhóm Telegram của cửa hàng, đơn tự chuyển sang đã thanh toán.</p>
+          <p>{priceCap}, không thu phần trăm trên số tiền. Tiền vẫn nằm trong tài khoản ngân hàng đứng tên anh chị, MONA Pay không giữ tiền.</p>
         </div>
         <div class="btn-row">
           <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
-          <a class="btn btn-outline" href="/docs">Xem tài liệu tích hợp</a>
+          <a class="btn btn-outline" href="#cach-hoat-dong">Xem cách hoạt động</a>
         </div>
-        <p class="hero-note">{isFree ? 'Miễn phí, không giới hạn giao dịch' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng`} · Đăng ký xong dùng ngay · Tổng đài <a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
+        <p class="hero-note">Đăng ký xong dùng ngay · Không cần biết lập trình · Tổng đài <a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
       </div>
       <div class="demo card" aria-label="Minh hoạ một giao dịch tiền vào được MONA Pay báo về">
-        <div class="demo-head"><span class="badge badge-ok">Tiền vào ACB</span><span class="demo-tag">minh hoạ</span></div>
+        <div class="demo-head"><span class="badge badge-ok">Tiền vào {liveBank}</span><span class="demo-tag">minh hoạ</span></div>
         <div class="demo-amount">+2.500.000 đ</div>
         <div class="demo-row"><span>Nội dung</span><b>DH10234 NGUYEN VAN A</b></div>
-        <div class="demo-row"><span>Tài khoản nhận</span><b>Tài khoản ảo của đơn DH10234</b></div>
+        <div class="demo-row"><span>Tài khoản nhận</span><b>Số tài khoản riêng của đơn DH10234</b></div>
         <div class="demo-row"><span>Mã giao dịch</span><b>FT26240001234</b></div>
-        <div class="demo-row"><span>Thời gian</span><b>10:30:00 · 28/08/2026</b></div>
+        <div class="demo-row"><span>Thời gian</span><b>23:02:15 · 29/08/2026</b></div>
         <div class="demo-log">
-          <span class="badge badge-ok">Webhook · HTTP 200</span>
-          <span class="badge badge-cta">Telegram · đã gửi</span>
-          <span class="badge">Đơn DH10234 · đã thanh toán</span>
+          <span class="badge badge-cta">Telegram · nhóm Chốt đơn đã nhận</span>
+          <span class="badge badge-ok">Website · đơn DH10234 đã thanh toán</span>
+          <span class="badge">Kho · bắt đầu đóng hàng</span>
         </div>
       </div>
     </div>
@@ -196,26 +120,35 @@ const jsonld = [{
   <section class="section-alt">
     <div class="wrap">
       <div class="stats-5"><Stats items={stats} /></div>
-      <p class="stats-note">Hệ thống MONA tự xây để thu tiền cho chính mình, rồi từ 2022 tới nay hơn 6.000 khách hàng mới của MONA đã thu tiền qua đây trong web, phần mềm tụi em giao. Năm 2026 mới mở cho mọi doanh nghiệp.</p>
+      <p class="stats-note">{SITE.trustLine}</p>
     </div>
   </section>
 
   <section>
     <div class="wrap">
-      <span class="eyebrow">Hoạt động thế nào</span>
-      <h2>Từ lúc khách chuyển khoản<br class="br-d" /> tới lúc đơn tự đổi trạng thái</h2>
-      <p class="lead">4 bước, không bước nào cần người ngồi kiểm tra. Anh chị chỉ cần có tài khoản ACB và một website hoặc phần mềm để nhận thông báo, còn không có phần mềm thì nhận qua Telegram cũng được.</p>
-      <Steps items={steps} />
+      <span class="eyebrow">Chuyện quen ở shop online</span>
+      <h2>Anh chị có đang tự tay<br class="br-d" /> xác nhận từng đơn chuyển khoản?</h2>
+      <p class="lead">Bán hàng online, khách trả bằng chuyển khoản là chính. Tiền về ngân hàng rồi, nhưng để biết tiền đó của đơn nào thì vẫn phải có người làm tay. Tụi em gặp đúng 4 cảnh này ở hầu hết khách tới MONA làm web bán hàng.</p>
+      <div class="grid grid-2 pains">
+        {pains.map((p, i) => (
+          <div class="card pain">
+            <div class="icon">{i + 1}</div>
+            <h3>{p.t}</h3>
+            <p>{p.d}</p>
+          </div>
+        ))}
+      </div>
+      <p class="pain-close">Ngân hàng nào cũng có tin nhắn báo có, nhưng tin đó nằm trong điện thoại của một người, còn đơn hàng nằm ở website, ở phần mềm, ở nhóm chốt đơn. MONA Pay nối hai bên lại: ngân hàng báo có là mọi chỗ cần biết đều biết.</p>
     </div>
   </section>
 
   <section class="section-alt">
     <div class="wrap">
-      <span class="eyebrow">Tính năng</span>
-      <h2>Đủ đồ nghề để thu tiền<br class="br-d" /> mà không cần thêm người</h2>
-      <p class="lead">Mỗi tính năng dưới đây tụi em đã dùng trong việc thu tiền của chính MONA trước khi đưa cho anh chị. Cái nào chưa có, tụi em ghi rõ là chưa có.</p>
+      <span class="eyebrow">Công dụng</span>
+      <h2>MONA Pay làm gì cho anh chị<br class="br-d" /> mỗi ngày</h2>
+      <p class="lead">Tất cả xoay quanh một việc: tiền vừa vào tài khoản ngân hàng là mọi chỗ cần biết đều biết ngay, không cần người đi kiểm tra. Từ đó ra 6 việc cụ thể dưới đây.</p>
       <div class="grid grid-3">
-        {features.map((f) => (
+        {uses.map((f) => (
           <div class="card">
             <div class="icon">{f.k}</div>
             <h3>{f.t}</h3>
@@ -226,11 +159,101 @@ const jsonld = [{
     </div>
   </section>
 
+  <section id="cach-hoat-dong">
+    <div class="wrap">
+      <span class="eyebrow">Hoạt động thế nào</span>
+      <h2>Từ lúc khách chuyển khoản<br class="br-d" /> tới lúc đơn tự đổi trạng thái</h2>
+      <p class="lead">4 bước, không bước nào cần người ngồi kiểm tra. Anh chị cần có tài khoản ngân hàng và một chỗ để nhận tin: nhóm Telegram, website hay phần mềm quản lý, có cái nào dùng cái đó.</p>
+      <Steps items={steps} />
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <span class="eyebrow">Bán qua Facebook, Zalo, TikTok</span>
+      <h2>Chưa có website<br class="br-d" /> vẫn dùng được ngay</h2>
+      <p class="lead">Nhiều anh chị bán qua Facebook, Zalo, TikTok, chưa có website hay phần mềm nào. Vẫn dùng được, chỉ cần 3 thứ:</p>
+      <div class="grid grid-3">
+        {noWeb.map((n, i) => (
+          <div class="card">
+            <div class="icon">{i + 1}</div>
+            <h3>{n.t}</h3>
+            <p>{n.d}</p>
+          </div>
+        ))}
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-outline" href="/chia-se-bien-dong-so-du-telegram">Cách nhận báo có qua Telegram</a>
+        <a class="btn btn-ghost" href="/tao-ma-qr-ngan-hang">Tool tạo mã QR ngân hàng</a>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Ai đang dùng</span>
+      <h2>Mỗi ngành dùng MONA Pay<br class="br-d" /> vào một việc khác nhau</h2>
+      <p class="lead">Cùng một cách chạy, nhưng mỗi ngành cần một kiểu khớp tiền. Tụi em đã gặp đủ các kiểu này trong web và phần mềm giao cho khách, bấm vào từng ngành để xem cách làm cụ thể.</p>
+      <div class="grid grid-3">
+        {industries.map((n) => (
+          <a class="card ind" href={n.href}>
+            <h3>{n.t}</h3>
+            <p>{n.d}</p>
+            <span class="ind-more">Xem cách làm cho ngành này</span>
+          </a>
+        ))}
+      </div>
+      <p class="ind-note">Chính MONA cũng thu tiền bằng hệ thống này: phí hosting ở mona.host, học phí Khánh Hùng Academy, đơn phần mềm Mona.Software. <a href="/khach-hang">Xem các ca dùng thật</a>.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <div class="grid grid-2 why">
+        <div>
+          <span class="eyebrow">Vì sao miễn phí</span>
+          <h2>Miễn phí thật,<br class="br-d" /> không có phí ẩn</h2>
+          <p>Tụi em nói miễn phí là miễn phí đủ mọi thứ: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch, API. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng, không giới hạn số giao dịch. Giới hạn duy nhất là chặn hành vi lạm dụng như bắn hàng nghìn yêu cầu mỗi phút, dùng bình thường không bao giờ chạm tới.</p>
+          <p>Miễn phí được vì MONA Pay không giữ tiền, nên không có chi phí xử lý tiền như cổng thanh toán thông thường. Hệ thống này tụi em xây từ 2022 để thu tiền cho chính mình, rồi nhúng vào web và phần mềm giao cho hơn 6.000 khách hàng mới của MONA. Máy chủ và đội kỹ thuật đã có sẵn, mở thêm cho anh chị dùng không tốn thêm bao nhiêu. The MONA Group sống bằng làm web, phần mềm, hosting. MONA Pay có mặt để khách thu tiền gọn hơn, tụi em không cần thu phí ở đây.</p>
+          <p><a href="/bang-gia">Xem trang bảng giá</a> để đọc đủ những gì có trong bản miễn phí.</p>
+        </div>
+        <div class="card compare">
+          <h3>Để anh chị so với cổng quốc tế</h3>
+          <p>PayPal thu <b>4,40%</b> mỗi giao dịch cộng phí cố định, rút tiền về ngân hàng Việt Nam thêm <b>60.000 đ</b> mỗi lần. Stripe tới ngày 28/08/2026 vẫn chưa mở đăng ký cho doanh nghiệp tại Việt Nam.</p>
+          <p>Hai bài toán khác nhau: cổng quốc tế để nhận thẻ từ khách nước ngoài, MONA Pay để nhận chuyển khoản trong nước với phí <b>0 đ</b>. Bán trong nước thì dùng MONA Pay là đủ.</p>
+          <a class="btn btn-outline" href="/cong-thanh-toan-quoc-te">So với cổng thanh toán quốc tế</a>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">An toàn</span>
+      <h2>Tiền vẫn nằm ở ngân hàng<br class="br-d" /> của anh chị</h2>
+      <div class="grid grid-2 safe">
+        <div>
+          <p>Cổng thanh toán thông thường đứng giữa: tiền khách vào tài khoản của cổng, sau đó cổng mới chuyển lại cho anh chị và trừ phí. MONA Pay làm khác. Khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị, MONA Pay chỉ đọc thông báo giao dịch mà ngân hàng gửi sang rồi báo lại. Tụi em không giữ tiền, không chạm vào tiền, nên không có chuyện chờ đối soát mới được rút. Một ngày anh chị ngừng dùng MONA Pay, tiền và tài khoản ngân hàng vẫn y nguyên.</p>
+          <p>{SITE.entity}</p>
+        </div>
+        <ul class="safe-list">
+          <li><b>Không cần mật khẩu ngân hàng.</b> Nối tài khoản bằng số tài khoản, số điện thoại đăng ký với ngân hàng và 2 mã OTP ngân hàng gửi về. MONA Pay không đăng nhập được app ngân hàng của anh chị.</li>
+          <li><b>Tin gửi về website có chữ ký bảo mật.</b> Phần mềm của anh chị kiểm chữ ký để biết chắc tin do MONA Pay gửi, tin cũ quá 5 phút bị từ chối, không ai giả được lệnh "đã thanh toán".</li>
+          <li><b>Tài khoản quản trị có xác thực 2 lớp.</b> Bật trong dashboard, đăng nhập cần thêm mã từ điện thoại.</li>
+          <li><b>Ngân hàng: {BANKS_SHORT}.</b> Bảng trạng thái từng ngân hàng ở <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>, tình trạng hệ thống ở <a href="/status">trang trạng thái</a>.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <MonaStory />
+
   <section class="section-dark">
     <div class="wrap">
-      <span class="eyebrow">Dành cho AI agent</span>
-      <h2>Dán prompt này vào Claude Code, Codex hoặc Cursor,<br class="br-d" /> AI tự tích hợp cho anh chị</h2>
-      <p class="lead">Tài liệu MONA Pay viết cho cả người lẫn máy đọc: mỗi trang có bản .md, có <a href="/llms.txt">llms.txt</a> và <a href="/openapi.json">openapi.json</a> ngay trên monapay.vn. Lập trình viên không cần đọc hết tài liệu, AI đọc giúp rồi viết code nhận webhook, kiểm chữ ký HMAC, khớp đơn.</p>
+      <span class="eyebrow">Có lập trình viên, hoặc dùng AI</span>
+      <h2>Nối vào website, phần mềm<br class="br-d" /> trong vài phút</h2>
+      <p class="lead">Phần này cho lập trình viên của anh chị, hoặc cho AI. Tài liệu MONA Pay viết cho cả người lẫn máy đọc: mỗi trang có bản .md, có <a href="/llms.txt">llms.txt</a> và <a href="/openapi.json">openapi.json</a> ngay trên monapay.vn. Dán prompt dưới đây vào Claude Code, Codex hay Cursor, AI tự viết phần nhận tin, kiểm chữ ký và khớp đơn.</p>
       <div class="ai-badges">
         <span class="badge">llms.txt ready</span>
         <span class="badge">.md cho mọi trang tài liệu</span>
@@ -248,22 +271,21 @@ const jsonld = [{
         { label: 'Node (Express)', lang: 'js', code: NODE_SAMPLE },
       ]} />
       <div class="btn-row">
-        <a class="btn btn-primary" href="/ai-agent">Trang hướng dẫn cho AI agent</a>
-        <a class="btn btn-outline" href="/docs/bat-dau-nhanh">Bắt đầu nhanh trong 5 phút</a>
+        <a class="btn btn-primary" href="/docs/bat-dau-nhanh">Bắt đầu nhanh trong 5 phút</a>
+        <a class="btn btn-outline" href="/ai-agent">Trang hướng dẫn cho AI agent</a>
+        <a class="btn btn-ghost" href="/docs">Xem tài liệu tích hợp</a>
       </div>
     </div>
   </section>
 
-  <MonaStory />
-
   <section class="section-alt">
     <div class="wrap narrow">
-      <Faq items={faq} eyebrow="Hỏi nhanh" title="6 câu anh chị hay hỏi trước khi dùng" />
+      <Faq items={faq} eyebrow="Hỏi nhanh" title="8 câu anh chị hay hỏi trước khi dùng" />
       <p style="margin-top:1rem"><a href="/faq">Xem đủ 20 câu hỏi thường gặp</a></p>
     </div>
   </section>
 
-  <CtaBand title="Nối tài khoản ACB hôm nay, đơn tự xác nhận từ ngày mai" body={`Tạo tài khoản là dùng ngay, nối ACB trong 4 bước, dán code mẫu hoặc để AI làm. ${PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1)}, không thu phần trăm trên số tiền.`} />
+  <CtaBand title="Nối ngân hàng hôm nay, từ mai đơn tự xác nhận" body={`Tạo tài khoản là dùng ngay, nối ${liveBank} trong 4 bước, thêm bot vào nhóm Telegram là có báo có. ${priceCap}, không thu phần trăm trên số tiền.`} />
 
   <script>
     document.querySelector('[data-copy-prompt]')?.addEventListener('click', async (e) => {
@@ -276,11 +298,9 @@ const jsonld = [{
 
 <style>
   .br-d{display:inline}
-  .stats-5 :global(.stats){grid-template-columns:repeat(5,1fr)}
-  @media (max-width:1000px){.stats-5 :global(.stats){grid-template-columns:repeat(3,1fr)}}
-  @media (max-width:600px){.stats-5 :global(.stats){grid-template-columns:repeat(2,1fr)}}
-  .trust-h2{font-size:clamp(1.4rem,2.3vw,1.85rem)}
   @media (max-width:767px){.br-d{display:none}}
+  .stats-5 :global(.stats){grid-template-columns:repeat(4,1fr)}
+  @media (max-width:1000px){.stats-5 :global(.stats){grid-template-columns:repeat(2,1fr)}}
   .hero-note{margin:1rem 0 0;color:var(--text-soft);font-size:.95rem}
   .demo{padding:1.5rem;box-shadow:var(--shadow-lg)}
   .demo-head{display:flex;justify-content:space-between;align-items:center;margin-bottom:.6rem}
@@ -291,6 +311,26 @@ const jsonld = [{
   .demo-row b{color:var(--ink);text-align:right;font-variant-numeric:tabular-nums}
   .demo-log{display:flex;flex-wrap:wrap;gap:.5rem;padding-top:.9rem}
   .stats-note{margin:1.4rem 0 0;color:var(--text);max-width:860px}
+  .pains{margin-top:.4rem}
+  .pain .icon{font-variant-numeric:tabular-nums}
+  .pain-close{margin:1.6rem 0 0;font-size:1.1rem;color:var(--ink);max-width:860px;padding-left:1.1rem;border-left:4px solid var(--cta)}
+  .ind{display:flex;flex-direction:column;text-decoration:none;color:inherit}
+  .ind:hover{box-shadow:var(--shadow-lg)}
+  .ind h3{color:var(--ink)}
+  .ind p{flex:1}
+  .ind-more{color:var(--cta);font-weight:700;font-size:.92rem;margin-top:.6rem}
+  .ind-note{margin:1.4rem 0 0;color:var(--text-soft);max-width:860px}
+  .why{align-items:start}
+  .why p{font-size:1.05rem}
+  .compare{padding:1.6rem}
+  .compare h3{margin-top:0}
+  .compare p{font-size:1rem}
+  .compare .btn{margin-top:.4rem}
+  .safe{align-items:start;margin-top:.4rem}
+  .safe p{font-size:1.05rem}
+  .safe-list{list-style:none;margin:0;padding:0;display:grid;gap:.9rem}
+  .safe-list li{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius-sm);padding:.9rem 1.1rem;box-shadow:var(--shadow);font-size:.98rem}
+  .safe-list b{color:var(--ink);display:block;margin-bottom:.15rem}
   .ai-badges{display:flex;flex-wrap:wrap;gap:.5rem;margin:0 0 1.4rem}
   .section-dark .ai-badges .badge{background:rgba(255,255,255,.1);color:var(--on-dark)}
   .prompt-box{background:var(--dark-2);border:1px solid var(--dark-border);border-radius:var(--radius-sm);margin:0 0 1.6rem;overflow:hidden}
@@ -299,12 +339,4 @@ const jsonld = [{
   .prompt-box .copy:hover{color:#fff}
   .prompt-box pre{margin:0;background:transparent;font-size:.84rem;white-space:pre-wrap}
   .ai-h3{color:var(--on-dark);margin-top:.4rem}
-  .trust{display:grid;grid-template-columns:1.5fr 1fr;gap:2.5rem;align-items:center}
-  @media (max-width:900px){.trust{grid-template-columns:1fr}}
-  .trust-logo{height:40px;width:auto;margin-bottom:1.2rem}
-  .trust-box{background:var(--surface);border-radius:var(--radius);padding:1.8rem;box-shadow:var(--shadow);text-align:center}
-  .trust-label{margin:0 0 .3rem;color:var(--text-soft)}
-  .trust-hotline{font-size:2rem;font-weight:800;margin:0 0 .3rem;font-variant-numeric:tabular-nums}
-  .trust-hotline a{color:var(--primary)}
-  .trust-box .btn{margin-top:1rem}
 </style>
