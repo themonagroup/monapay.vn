@@ -71,6 +71,6 @@ MONA Pay is a product of The MONA Group, founded in 2016, with 14,000+ web and s
 
 **Do I need to code?** Not necessarily. If you only need to know when money arrives, turn on Telegram notifications in the dashboard. Webhooks and the API are for stores and software that confirm orders automatically.
 
-**Can a new account be used right away?** Yes. Sign up, log in immediately, create your own API key; nobody has to approve you. Only the ACB linking step needs an OTP sent to the phone number registered with the bank. MONA Pay is completely free with no transaction limit (see [pricing](/bang-gia)).
+**Can a new account be used right away?** Yes. Sign up, log in immediately, create your own API key; nobody has to approve you. Only the ACB linking step needs an OTP sent to the phone number registered with the bank. MONA Pay is free for 500 transactions a month, with paid plans above that priced by transaction count (see [pricing](/bang-gia)).
 
 **Are banks other than ACB supported?** ACB is live; MB, BIDV, VietinBank, OCB, MSB, KienlongBank and TPBank are in the partner-registration process, with status updated at [supported banks](/ngan-hang). Webhooks, Telegram and the API are shared across banks and the payload carries `bank_name`, so adding a bank does not change your integration.

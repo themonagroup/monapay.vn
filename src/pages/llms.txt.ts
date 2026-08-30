@@ -33,7 +33,7 @@ export const GET: APIRoute = async () => {
     const byIdEn = Object.fromEntries(docsEn.map((d) => [d.id, d]));
     lines.push(`## English docs (same content in English; every page has a .md twin)`);
     lines.push(``);
-    lines.push(`- [MONA Pay in English](${SITE.url}/en): overview, 6 integration steps, free with no transaction limit.`);
+    lines.push(`- [MONA Pay in English](${SITE.url}/en): overview, 6 integration steps, free tier of 500 transactions/month, paid plans priced by transaction count.`);
     lines.push(`- [For AI agents (English)](${SITE.url}/en/ai-agent): copy-ready prompt and minimal webhook endpoint.`);
     for (const g of DOCS_NAV_EN) for (const i of g.items) {
       const d = byIdEn[i.slug]; if (!d) continue;

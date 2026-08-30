@@ -73,7 +73,7 @@ MONA Pay là sản phẩm của The MONA Group, thành lập năm 2016, đã là
 
 **Cần biết lập trình mới dùng được không?** Không bắt buộc. Nếu chỉ cần biết tiền vào, anh chị bật thông báo Telegram trong dashboard là xong. Webhook và API dành cho web bán hàng hoặc phần mềm cần tự xác nhận đơn.
 
-**Tài khoản mới dùng được ngay chưa?** Được. Đăng ký xong đăng nhập ngay, tự tạo API key, không cần ai duyệt. Chỉ bước nối ACB cần OTP gửi về số điện thoại đăng ký với ngân hàng. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch (xem [bảng giá](/bang-gia)).
+**Tài khoản mới dùng được ngay chưa?** Được. Đăng ký xong đăng nhập ngay, tự tạo API key, không cần ai duyệt. Chỉ bước nối ACB cần OTP gửi về số điện thoại đăng ký với ngân hàng. MONA Pay miễn phí 500 giao dịch mỗi tháng, gói trả phí tính theo số giao dịch (xem [bảng giá](/bang-gia)).
 
 **Có hỗ trợ ngân hàng ngoài ACB không?** ACB đang hoạt động; MB, BIDV, VietinBank, OCB, MSB, KienlongBank, TPBank đang trong quá trình đăng ký kết nối, trạng thái cập nhật tại [ngân hàng hỗ trợ](/ngan-hang). Webhook, Telegram, API dùng chung mọi ngân hàng, payload có `bank_name`, nối thêm ngân hàng không phải sửa tích hợp.
 

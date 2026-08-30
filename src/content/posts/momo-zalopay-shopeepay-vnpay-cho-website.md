@@ -26,7 +26,7 @@ Tụi em rút ra một luật cho khách MONA: đường chuyển khoản dựng
 
 Với ví và cổng thanh toán trong nước, tụi em kiểm ngày 28/08/2026 các trang doanh nghiệp của MoMo, ZaloPay, ShopeePay và VNPAY-QR thì không trang nào niêm yết công khai biểu phí, trang MoMo for Business chỉ ghi "chi phí từ 0 đồng". Phí thật nằm trong hợp đồng merchant, tính theo phần trăm trên mỗi giao dịch, ký xong mới biết. Tụi em không đoán con số thay họ, và khuyên anh chị hỏi thẳng nhân viên kinh doanh của ví trước khi ký, hỏi luôn phí đối soát và chu kỳ chuyển tiền về tài khoản.
 
-Cơ chế tiền về cũng khác. Với ví, tiền khách trả vào tài khoản merchant trong hệ thống của ví, ví đối soát rồi chuyển về tài khoản ngân hàng của anh chị theo chu kỳ trong hợp đồng. Với chuyển khoản qua tài khoản ảo hay VietQR, tiền vào thẳng tài khoản ACB của anh chị ngay lúc khách bấm chuyển, không ghé qua ai. MONA Pay chỉ nhận thông báo từ ACB rồi báo về website trong vòng 10 giây. Không giữ tiền, không trích tiền, miễn phí hoàn toàn và không giới hạn giao dịch, anh chị xem [bảng giá](/bang-gia).
+Cơ chế tiền về cũng khác. Với ví, tiền khách trả vào tài khoản merchant trong hệ thống của ví, ví đối soát rồi chuyển về tài khoản ngân hàng của anh chị theo chu kỳ trong hợp đồng. Với chuyển khoản qua tài khoản ảo hay VietQR, tiền vào thẳng tài khoản ACB của anh chị ngay lúc khách bấm chuyển, không ghé qua ai. MONA Pay chỉ nhận thông báo từ ACB rồi báo về website trong vòng 10 giây. Không giữ tiền, không trích tiền, miễn phí 500 giao dịch mỗi tháng, trên đó gói cố định theo số giao dịch, anh chị xem [bảng giá](/bang-gia).
 
 Để anh chị có mốc so với cổng quốc tế: PayPal Việt Nam thu 4,40% cộng phí cố định theo tiền tệ cho giao dịch từ nước ngoài, rút về ngân hàng mở tại Việt Nam 60.000đ mỗi lần, theo biểu phí công bố tụi em kiểm cùng ngày. Cổng quốc tế hợp khi khách ở nước ngoài, tụi em viết riêng ở bài [cổng thanh toán quốc tế](/cong-thanh-toan-quoc-te).
 
@@ -68,7 +68,7 @@ Một cái tụi em dặn mọi khách dù gắn cổng nào: bật thêm tin b�
 
 ### Cổng thanh toán nào không mất phí cho website bán hàng?
 
-Chuyển khoản qua tài khoản ảo và mã VietQR với MONA Pay là 0 đồng, không phần trăm, không giới hạn giao dịch. Ví và cổng trong nước thu phí theo hợp đồng merchant, không niêm yết công khai tính tới 28/08/2026.
+Chuyển khoản qua tài khoản ảo và mã VietQR với MONA Pay là 0 đồng tới 500 giao dịch mỗi tháng, không phần trăm, trên đó gói cố định từ 99.000đ. Ví và cổng trong nước thu phí theo hợp đồng merchant, không niêm yết công khai tính tới 28/08/2026.
 
 ### Khách chuyển khoản mà không gõ đúng nội dung thì web có khớp đơn không?
 

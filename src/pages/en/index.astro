@@ -4,7 +4,7 @@ import Steps from '../../components/Steps.astro';
 import { SITE } from '../../data/site';
 const ENTITY_EN = 'MONA Pay is the payment gateway and bank API of The MONA Group that lets Vietnamese businesses receive and confirm bank transfers in real time via virtual accounts (VA), VietQR, webhooks and Telegram — built so both developers and AI agents can integrate in minutes.';
 const title = 'MONA Pay: Vietnamese bank transfer API and webhooks, free';
-const description = 'Receive and confirm Vietnamese bank transfers in real time through virtual accounts, VietQR, signed webhooks and Telegram. Free with no transaction limit, self-serve sign-up, docs built for developers and AI agents.';
+const description = 'Receive and confirm Vietnamese bank transfers in real time through virtual accounts, VietQR, signed webhooks and Telegram. Free for 500 transactions a month, paid plans priced by transaction count, self-serve sign-up, docs built for developers and AI agents.';
 const steps = [
   { title: 'Sign up and log in', body: 'Create an account at my.monapay.vn (or POST /api/v1/client/register-client). It works immediately; nobody has to approve it.' },
   { title: 'Create an API key', body: 'POST /api/v1/client-keys/generate returns a client_secret shown once. Send it as X-Client-Secret on every write request.' },
@@ -22,7 +22,7 @@ const jsonld = [{
   <section class="hero"><div class="wrap">
     <span class="eyebrow">English</span>
     <h1>Vietnamese bank transfers,<br class="br-d" /> <span class="accent">confirmed in real time</span></h1>
-    <div class="answer-first"><p>{ENTITY_EN} Money goes straight into the merchant's bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook or a Telegram message. Completely free, no transaction limit, self-serve sign-up.</p></div>
+    <div class="answer-first"><p>{ENTITY_EN} Money goes straight into the merchant's bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook or a Telegram message. Free tier of 500 transactions a month, paid plans priced by transaction count, self-serve sign-up.</p></div>
     <div class="btn-row">
       <a class="btn btn-primary" href={SITE.appRegister}>Create a free account</a>
       <a class="btn btn-outline" href="/en/docs">Read the docs</a>

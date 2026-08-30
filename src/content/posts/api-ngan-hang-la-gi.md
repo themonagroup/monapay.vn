@@ -32,7 +32,7 @@ Câu này quyết định anh chị mất bao nhiêu tháng. Xin API trực ti�
 
 MONA Pay là lớp đứng giữa: tụi em đã nối API của ACB, xử lý phần đăng ký tài khoản ảo, nhận thông báo, sinh mã QR, rồi mở ra cho anh chị một bộ API gọn hơn nhiều và một dashboard cho người không code. Anh chị đăng ký tại my.monapay.vn, dùng ngay không cần duyệt, nối tài khoản ACB theo 4 bước, xong. Với dân kỹ thuật, bộ API đó có tài liệu ở [monapay.vn/docs](/docs), có bản đọc máy tại [llms.txt](/llms.txt) và openapi.json để AI agent tự tích hợp.
 
-Có một thứ MONA Pay không làm: giữ tiền. Tiền vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo rồi báo lại. Vì không giữ tiền nên không có phí trung gian, MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch. Còn cổng thanh toán quốc tế kiểu PayPal thì tiền vào ví của họ trước, thu 4,40% cộng phí cố định cho giao dịch từ nước ngoài, rút về ngân hàng Việt Nam 60.000 đồng mỗi lần, theo biểu phí tụi em kiểm ngày 28/08/2026. Hai mô hình khác nhau từ gốc, một bên giữ tiền rồi thu phí, một bên chỉ đọc thông báo.
+Có một thứ MONA Pay không làm: giữ tiền. Tiền vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo rồi báo lại. Vì không giữ tiền nên không có phí trung gian, MONA Pay miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch. Còn cổng thanh toán quốc tế kiểu PayPal thì tiền vào ví của họ trước, thu 4,40% cộng phí cố định cho giao dịch từ nước ngoài, rút về ngân hàng Việt Nam 60.000 đồng mỗi lần, theo biểu phí tụi em kiểm ngày 28/08/2026. Hai mô hình khác nhau từ gốc, một bên giữ tiền rồi thu phí, một bên chỉ đọc thông báo.
 
 > Anh chị đang có tài khoản ACB và một website hoặc phần mềm cần biết tiền vào, thì thử luôn hôm nay: tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), nối ACB, chuyển 10.000 đồng vào mã QR của chính mình và xem thông báo về trong vài giây. Không cần ký gì, không mất phí.
 
@@ -62,7 +62,7 @@ Các API MONA Pay dùng chỉ theo chiều đọc: nhận thông báo tiền và
 Kết nối API là cho hai phần mềm gọi được nhau qua địa chỉ và khoá xác thực. Với MONA Pay, phần nối ngân hàng tụi em đã làm, anh chị chỉ nối tài khoản ACB trong dashboard. Muốn tiền vào tự mở đơn trên website riêng thì cần dev viết phần nhận webhook, tài liệu có mẫu PHP và Node khoảng 30 dòng.
 
 ### API ngân hàng của MONA Pay có mất phí không?
-Không. Miễn phí hoàn toàn, không giới hạn giao dịch, không thu phần trăm trên số tiền, và tụi em giữ vậy vì tiền không đi qua MONA Pay nên không có chi phí trung gian nào để thu lại từ anh chị. Phí phía ngân hàng nếu có theo biểu phí ACB, anh chị hỏi ACB.
+Không. Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không thu phần trăm trên số tiền, và tụi em giữ vậy vì tiền không đi qua MONA Pay nên không có chi phí trung gian nào để thu lại từ anh chị. Phí phía ngân hàng nếu có theo biểu phí ACB, anh chị hỏi ACB.
 
 ### Tài liệu API ở đâu cho dev và AI agent?
 Tại [monapay.vn/docs](/docs), mỗi trang có bản .md, thêm llms.txt và openapi.json để Claude Code, Codex đọc thẳng và tự viết code tích hợp.

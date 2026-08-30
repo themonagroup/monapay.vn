@@ -12,6 +12,8 @@ for line in open(BANNED, encoding='utf-8'):
     if body.startswith('re: '): regs.append(re.compile(body[4:], re.I))
     elif body and not body.startswith('**'): subs.append(body.lower())
 ENTITY = 'MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group'
+# Giá (Mon chốt 31/08/2026: free 500 GD/tháng + gói trả phí) — cụm cũ 'miễn phí hoàn toàn / không giới hạn giao dịch' là SAI SỰ THẬT → FAIL
+PRICING_BANNED = ['miễn phí hoàn toàn', 'không giới hạn giao dịch', 'không giới hạn số giao dịch', 'không giới hạn số lượng giao dịch', 'no transaction limit', 'completely free']
 def text_of(h):
     h = re.sub(r'<script[^>]*>.*?</script>', ' ', h, flags=re.S)
     h = re.sub(r'<style[^>]*>.*?</style>', ' ', h, flags=re.S)
@@ -34,6 +36,8 @@ for f in files:
         if re.search(r"<img[^>]+src=\"/(?!brand/|_astro/|og/|img/)", raw): issues.append('img src ngoài /brand,/_astro,/og,/img')
         title = re.search(r'<title>(.*?)</title>', raw, re.S)
         if title and len(html.unescape(title.group(1)).strip()) > 70: ws.append('title dài')
+        for s in PRICING_BANNED:
+            if s in t.lower(): issues.append(f'giá cũ (free-all): "{s}"')
         for i in issues: print(f'FAIL {rel}: {i}')
         fails += len(issues); warns += len(ws); continue
     for m in re.finditer(r'\b(\w+) ạ[.!?,]', t): issues.append(f'"ạ" cuối câu: …{m.group(0)}')
@@ -45,6 +49,8 @@ for f in files:
         issues.append(f'xưng "{m.group(0)}": …{ctx}…')
     for s in subs:
         if s in t.lower(): issues.append(f'banned tell: "{s}"')
+    for s in PRICING_BANNED:
+        if s in t.lower(): issues.append(f'giá cũ (free-all): "{s}"')
     for r in regs:
         m = r.search(t)
         if m: issues.append(f'banned regex: "{m.group(0)[:60]}"')

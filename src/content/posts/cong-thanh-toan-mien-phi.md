@@ -1,6 +1,6 @@
 ---
 title: "Cổng thanh toán miễn phí cho website: miễn phí thật là thế nào"
-description: "Cổng thanh toán miễn phí thật là không thu phần trăm, không phí rút, không phí mở, không giới hạn giao dịch. Vì sao MONA Pay làm được và khác miễn phí kiểu ví ở đâu."
+description: "Cổng thanh toán miễn phí thật là không thu phần trăm, không phí rút, không phí mở, hạn mức miễn phí nói rõ. Vì sao MONA Pay để miễn phí 500 giao dịch mỗi tháng và khác miễn phí kiểu ví ở đâu."
 date: 29/08/2026
 keyword: "cổng thanh toán miễn phí"
 category: kien-thuc
@@ -10,19 +10,19 @@ ogImage: /img/blog/cong-thanh-toan-mien-phi.jpg
 
 <div class="answer-first">
 
-Khách đến MONA làm web bán hàng hay hỏi tụi em có cổng thanh toán miễn phí nào không, và câu trả lời thật là có, với điều kiện anh chị hiểu đúng chữ miễn phí. Miễn phí thật là không thu phần trăm trên số tiền, không phí rút, không phí mở tài khoản, không giới hạn giao dịch. Miễn phí kiểu mở tài khoản không mất tiền nhưng mỗi đơn 500.000đ bị trừ vài phần trăm thì không phải miễn phí. MONA Pay thuộc loại thứ nhất, và bài này nói rõ tại sao tụi em làm được vậy, với số phí đối chiếu tụi em kiểm ngày 28/08/2026. Bốn chữ không, kiểm được ngay.
+Khách đến MONA làm web bán hàng hay hỏi tụi em có cổng thanh toán miễn phí nào không, và câu trả lời thật là có, với điều kiện anh chị hiểu đúng chữ miễn phí. Miễn phí thật là không thu phần trăm trên số tiền, không phí rút, không phí mở tài khoản, và một hạn mức miễn phí đủ cho shop dùng thật. Miễn phí kiểu mở tài khoản không mất tiền nhưng mỗi đơn 500.000đ bị trừ vài phần trăm thì không phải miễn phí. MONA Pay thuộc loại thứ nhất, và bài này nói rõ tại sao tụi em làm được vậy, với số phí đối chiếu tụi em kiểm ngày 28/08/2026. Ba chữ không cộng một hạn mức nói rõ, kiểm được ngay.
 
 </div>
 
-## Miễn phí thật gồm bốn chữ không, thiếu một là chưa phải
+## Miễn phí thật gồm ba chữ không và một hạn mức nói rõ
 
 Sau 14.000+ dự án, tụi em thấy chữ miễn phí trong ngành thanh toán bị dùng lỏng lẻo. Mở tài khoản không mất tiền, nghe hay. Nhưng khi tiền khách chuyển vào, mỗi đơn 500.000đ bị giữ lại vài phần trăm, mỗi lần rút về ngân hàng mất thêm một khoản cố định, cuối tháng cộng lại thành một con số không nhỏ. Đó là miễn phí ở cửa vào, trả tiền ở cửa ra.
 
-Miễn phí thật phải đủ bốn chữ không. Không phần trăm trên số tiền: đơn 100.000đ hay 100.000.000đ đều không bị trừ. Không phí rút: vì tiền không nằm trong ví của ai, nó vào thẳng tài khoản ngân hàng của anh chị, không có gì để rút. Không phí mở: tạo tài khoản xong dùng ngay, không ký hợp đồng, không đặt cọc. Không giới hạn giao dịch: 10 đơn hay 10.000 đơn một tháng đều như nhau. Thiếu một chữ không là chưa phải.
+Miễn phí thật phải đủ ba chữ không. Không phần trăm trên số tiền: đơn 100.000đ hay 100.000.000đ đều không bị trừ. Không phí rút: vì tiền không nằm trong ví của ai, nó vào thẳng tài khoản ngân hàng của anh chị, không có gì để rút. Không phí mở: tạo tài khoản xong dùng ngay, không ký hợp đồng, không đặt cọc. Và một hạn mức nói rõ thay vì giấu: gói Miễn phí của MONA Pay là 500 giao dịch tiền vào mỗi tháng, shop bán đều 16 đơn mỗi ngày vẫn không mất đồng nào; trên mức đó có gói trả phí niêm yết theo số giao dịch, từ 99.000đ mỗi tháng cho 2.000 giao dịch, xem [bảng giá](/bang-gia). Thiếu một chữ không, hay giấu hạn mức tới lúc khách bị khoá, là chưa phải.
 
 Tụi em kiểm biểu phí công khai ngày 28/08/2026 để anh chị có mốc so. PayPal Việt Nam thu 4,40% cộng phí cố định theo tiền tệ cho giao dịch thương mại từ nước ngoài, rút về ngân hàng mở tại Việt Nam 60.000đ mỗi lần. Các ví điện tử và cổng thanh toán trong nước như MoMo, ZaloPay, ShopeePay, VNPAY-QR thì không niêm yết biểu phí trên trang doanh nghiệp, trang MoMo for Business chỉ ghi chi phí từ 0 đồng, phí thật nằm trong hợp đồng merchant khi ký. Tụi em không đoán con số đó. Chỉ nhắc anh chị hỏi kỹ trước khi ký.
 
-## Vì sao MONA Pay để miễn phí hoàn toàn mà không lỗ
+## Vì sao MONA Pay để miễn phí 500 giao dịch mỗi tháng mà không lỗ
 
 Câu này khách hỏi tụi em nhiều nhất, và tụi em trả lời bằng cách tiền đi.
 
@@ -30,15 +30,15 @@ Tiền không đi qua MONA Pay. Khách quét mã VietQR hoặc chuyển vào tà
 
 Hạ tầng thì tụi em đã có sẵn. Hệ thống này chạy hơn 4 năm để thu tiền cho chính MONA: phí hosting của Mona.Host, học phí Khánh Hùng Academy với 40.000 học viên, đơn phần mềm của Mona.Software, và từ năm 2022 hơn 6.000 khách hàng mới của MONA thu tiền qua đúng hệ thống này. Máy chủ, cơ sở dữ liệu, kết nối ngân hàng đều đã trả tiền từ lâu, thêm một doanh nghiệp dùng chung gần như không thêm chi phí. Webhook và tin Telegram nhẹ tới mức thêm cả nghìn tài khoản cũng chưa phải nâng máy.
 
-Và MONA sống bằng việc khác. Tụi em làm web ở mona.media, làm phần mềm theo yêu cầu ở mona.software, bán hosting ở mona.host. Một cổng thanh toán tự động chạy trơn làm cho web và phần mềm tụi em giao khách trọn vẹn hơn, khách hài lòng hơn, đó là cái tụi em được. Thu thêm 1% trên mỗi đơn của khách để đổi lấy sự khó chịu đó, tụi em thấy không đáng. Miễn phí là quyết định kinh doanh, không phải khuyến mãi.
+Và MONA sống bằng việc khác. Tụi em làm web ở mona.media, làm phần mềm theo yêu cầu ở mona.software, bán hosting ở mona.host. Một cổng thanh toán tự động chạy trơn làm cho web và phần mềm tụi em giao khách trọn vẹn hơn, khách hài lòng hơn, đó là cái tụi em được. Thu phần trăm trên mỗi đơn của khách để đổi lấy sự khó chịu đó, tụi em thấy không đáng. Khách dùng nhiều thì trả một khoản cố định nhỏ mỗi tháng theo bậc giao dịch, shop nhỏ dùng miễn phí. Đó là quyết định kinh doanh, không phải khuyến mãi.
 
 > Muốn kiểm chữ miễn phí bằng tiền thật, anh chị tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), nối tài khoản ACB theo 4 bước, rồi chuyển 10.000đ vào mã QR của chính mình. Nhìn số dư ngân hàng nhận đủ 10.000đ và webhook báo về trong vòng 10 giây, anh chị tự thấy không có ai đứng giữa.
 
-## Giới hạn duy nhất là fair-use, và nó không đụng tới người dùng thật
+## Hạn mức 500 giao dịch đếm thế nào, vượt thì sao
 
-Miễn phí không giới hạn giao dịch không có nghĩa là mở cửa cho lạm dụng. MONA Pay có giới hạn tốc độ gọi API để chặn kiểu bắn hàng nghìn yêu cầu trong một giây, và chặn việc tạo tài khoản hàng loạt bằng máy. Đó là fair-use. Anh chị dùng thật, bao nhiêu đơn cũng không chạm tới, vì một shop bận rộn nhất tụi em biết cũng chỉ vài trăm giao dịch mỗi ngày, tức khoảng 10.000 đơn một tháng, cách rất xa ngưỡng chặn máy vốn được đặt cho kiểu bắn hàng nghìn yêu cầu trong 1 giây.
+Một giao dịch là một khoản tiền vào ghi nhận trên các tài khoản anh chị đã nối, đếm theo tháng dương lịch. Tiền ra, giao dịch thử ở sandbox, webhook gửi lại không tính, và đơn 50.000đ hay 50.000.000đ đều tính là 1. Gói Miễn phí 500 giao dịch mỗi tháng: tháng đầu tiên vượt mức tụi em vẫn báo đủ, coi như du di; từ tháng kế tiếp nếu chưa nâng gói, phần vượt vẫn ghi vào dashboard nhưng ngưng gửi webhook, Telegram cho tới khi nâng gói. Không mất giao dịch nào. Gói trả phí thì không khoá, phần vượt tính phụ trội vài chục đồng mỗi giao dịch và gom vào hoá đơn cuối tháng. Ngoài hạn mức còn một lớp fair-use chống lạm dụng: giới hạn tốc độ gọi API để chặn kiểu bắn hàng nghìn yêu cầu trong một giây, chặn tạo tài khoản hàng loạt bằng máy; người dùng thật không chạm tới.
 
-Có ba thứ không nằm trong phần miễn phí và tụi em ghi rõ để khỏi hiểu lầm. Phí phía ngân hàng, nếu có, theo biểu phí của ACB, anh chị hỏi ACB. Dịch vụ kèm theo như kỹ sư MONA ngồi tích hợp trực tiếp vào phần mềm riêng, hỗ trợ ưu tiên, hoá đơn theo yêu cầu doanh nghiệp, là dịch vụ tính riêng, gọi 1900 636 648 để hỏi. Còn tính năng thì không có bản rút gọn: tài khoản ảo, VietQR động, webhook ký HMAC-SHA256, Telegram, API, tài liệu cho AI agent, tất cả nằm trong gói miễn phí. Một gói, đủ đồ.
+Có ba thứ không nằm trong phần miễn phí và tụi em ghi rõ để khỏi hiểu lầm. Phí phía ngân hàng, nếu có, theo biểu phí của ACB, anh chị hỏi ACB. Dịch vụ kèm theo như kỹ sư MONA ngồi tích hợp trực tiếp vào phần mềm riêng, hỗ trợ ưu tiên, hoá đơn theo yêu cầu doanh nghiệp, là dịch vụ tính riêng, gọi 1900 636 648 để hỏi. Còn tính năng thì không có bản rút gọn: tài khoản ảo, VietQR động, webhook ký HMAC-SHA256, Telegram, API, tài liệu cho AI agent, tất cả nằm trong gói Miễn phí. Gói trả phí khác ở hạn mức, xuất CSV, số tài khoản ngân hàng, hoá đơn VAT và mức hỗ trợ, không khác ở tính năng lõi. Đủ đồ ở mọi gói.
 
 ## Miễn phí mà vẫn phải tin cậy: tụi em chứng minh bằng gì
 
@@ -50,7 +50,7 @@ Về kỹ thuật, mỗi webhook mang chữ ký HMAC-SHA256 kèm dấu thời gi
 
 ## Ai dùng cổng miễn phí này là đúng, ai chưa cần
 
-Tụi em không nói MONA Pay thay được mọi thứ. Nó làm đúng một việc: xác nhận tiền chuyển khoản trong nước, tự động, miễn phí.
+Tụi em không nói MONA Pay thay được mọi thứ. Nó làm đúng một việc: xác nhận tiền chuyển khoản trong nước, tự động, miễn phí tới 500 giao dịch mỗi tháng.
 
 Đúng người là shop online, trung tâm dạy học, công ty dịch vụ, phần mềm bán theo gói, chủ nhà trọ thu tiền phòng, nói chung là ai đang có người ngồi canh app ngân hàng để xác nhận từng đơn. Đúng người cũng là dân lập trình và AI agent cần một API ngân hàng có tài liệu máy đọc được, tụi em có sẵn [llms.txt](/llms.txt) và [trang dành cho AI agent](/ai-agent).
 
@@ -60,7 +60,7 @@ Chưa cần là ai bán chủ yếu cho khách nước ngoài trả bằng thẻ
 
 ### Cổng thanh toán miễn phí có bị giới hạn số giao dịch mỗi tháng không?
 
-Không. MONA Pay không giới hạn giao dịch, 10 hay 10.000 đơn một tháng đều miễn phí. Chỉ có giới hạn tốc độ gọi API để chặn lạm dụng, người dùng thật không chạm tới.
+Có, và tụi em nói rõ thay vì giấu: gói Miễn phí 500 giao dịch mỗi tháng, đủ cho shop bán đều 16 đơn mỗi ngày. Trên mức đó có gói Khởi nghiệp 99.000đ cho 2.000 giao dịch, Kinh doanh 299.000đ cho 10.000, Doanh nghiệp 799.000đ cho 50.000, xem [bảng giá](/bang-gia). Ngoài ra chỉ có giới hạn tốc độ gọi API để chặn lạm dụng, người dùng thật không chạm tới.
 
 ### Miễn phí thì có thu phần trăm trên số tiền không?
 

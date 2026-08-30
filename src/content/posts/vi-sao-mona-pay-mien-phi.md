@@ -1,14 +1,14 @@
 ---
-title: "Vì sao MONA Pay miễn phí hoàn toàn, không thu phần trăm giao dịch"
-description: "Tụi em nói thẳng vì sao MONA Pay miễn phí không giới hạn giao dịch: hạ tầng đã chạy hơn 4 năm cho 6.000+ khách MONA, tiền không qua trung gian, MONA sống bằng web, hosting, phần mềm."
+title: "Vì sao MONA Pay miễn phí 500 giao dịch mỗi tháng, không thu phần trăm"
+description: "Tụi em nói thẳng vì sao MONA Pay miễn phí 500 giao dịch mỗi tháng và chỉ thu một khoản cố định với khách dùng nhiều: hạ tầng đã chạy hơn 4 năm cho 6.000+ khách MONA, tiền không qua trung gian."
 date: 29/08/2026
 keyword: "MONA Pay miễn phí"
 category: chuyen-mona
-h1: "Vì sao MONA Pay miễn phí hoàn toàn, không thu phần trăm trên tiền của anh chị"
+h1: "Vì sao MONA Pay miễn phí 500 giao dịch mỗi tháng, không thu phần trăm trên tiền của anh chị"
 ogImage: /img/blog/vi-sao-mona-pay-mien-phi.jpg
 ---
 
-MONA Pay miễn phí hoàn toàn: không phí mở tài khoản, không phí nối ngân hàng, không thu phần trăm trên mỗi giao dịch, không giới hạn số giao dịch mỗi tháng. Tụi em làm được vậy vì hệ thống này đã chạy hơn 4 năm để thu tiền cho chính MONA và cho hơn 6.000 khách hàng mới của MONA từ 2022, hạ tầng có sẵn, tiền không đi qua tụi em nên không có phí trung gian, và MONA sống bằng làm web, hosting, phần mềm chứ không sống bằng phí thanh toán. Tụi em thấy khách đến MONA hỏi câu này nhiều nhất, nhiều hơn cả hỏi về tính năng, nên bài này nói rõ từng lý do, kèm cả giới hạn duy nhất tụi em đặt ra và cả 3 thứ tụi em chưa làm được. Miễn phí thật, 0 đồng.
+MONA Pay miễn phí 500 giao dịch mỗi tháng: không phí mở tài khoản, không phí nối ngân hàng, không thu phần trăm trên mỗi giao dịch; trên 500 giao dịch mới có gói trả phí, tính theo số giao dịch, từ 99.000đ mỗi tháng. Tụi em làm được vậy vì hệ thống này đã chạy hơn 4 năm để thu tiền cho chính MONA và cho hơn 6.000 khách hàng mới của MONA từ 2022, hạ tầng có sẵn, tiền không đi qua tụi em nên không có phí trung gian, và MONA sống bằng làm web, hosting, phần mềm chứ không sống bằng phí thanh toán. Tụi em thấy khách đến MONA hỏi câu này nhiều nhất, nhiều hơn cả hỏi về tính năng, nên bài này nói rõ từng lý do, kèm cả cách tính khi vượt mức và cả 3 thứ tụi em chưa làm được. Miễn phí thật cho shop nhỏ và vừa, 0 đồng.
 
 ## Khách đến MONA hỏi câu đầu tiên: miễn phí thì tiền ở đâu ra
 
@@ -16,7 +16,7 @@ Từ lúc mở [monapay.vn](/) cho người ngoài, câu tụi em nghe nhiều n
 
 Tụi em trả lời thế này với từng khách. MONA làm web, phần mềm và hosting từ năm 2016, tới giờ hơn 14.000 dự án và 85% khách quay lại. Doanh thu của tụi em nằm ở ba mảng đó. MONA Pay sinh ra để khâu thu tiền trong web và phần mềm tụi em giao chạy trọn vẹn, tức là nó làm sản phẩm chính bán được hơn, chứ bản thân nó không cần bán. Nhìn theo cách đó thì thu phí trên từng giao dịch của anh chị là tự đánh vào cái tụi em đang bán.
 
-Nói ngắn gọn thì MONA Pay là một phần của dịch vụ MONA giao cho khách, chứ không phải một dịch vụ tách riêng để tính tiền, và tụi em muốn giữ nó đúng vai đó. Anh chị xem [bảng giá](/bang-gia) sẽ thấy đúng một gói. Giá 0 đồng, đủ tính năng.
+Nói ngắn gọn thì MONA Pay là một phần của dịch vụ MONA giao cho khách, và tụi em muốn giữ nó đúng vai đó. Anh chị xem [bảng giá](/bang-gia) sẽ thấy gói Miễn phí 500 giao dịch mỗi tháng đủ tính năng, và 4 gói trả phí cho khách dùng nhiều, giá cố định theo số giao dịch chứ không theo số tiền.
 
 ## Lý do một: hạ tầng đã chạy hơn 4 năm cho 6.000+ khách, thêm khách gần như không thêm chi phí
 
@@ -44,13 +44,13 @@ Cách này không có gì mới với MONA. Mona.Host bán hosting cũng vậy, 
 
 Còn nếu anh chị chỉ dùng MONA Pay rồi thôi, không bao giờ làm web hay phần mềm với MONA, cũng không sao, vì tụi em đã tính phần đó vào từ lúc quyết định mở ra cho người ngoài. Không có điều kiện ngầm.
 
-## Miễn phí thì có giới hạn gì, và giới hạn đó là gì
+## Miễn phí tới đâu, và trên đó tính thế nào
 
-Có đúng một giới hạn, gọi là fair-use, để chặn lạm dụng chứ không để bán gói cao hơn. Anh chị bắn API dồn dập hàng nghìn lần một phút, tạo tài khoản hàng loạt bằng máy, hoặc dùng hệ thống cho việc không phải nhận tiền của chính mình thì tụi em chặn. Dùng thật bao nhiêu giao dịch cũng không chạm ngưỡng, và tụi em không công bố một con số giới hạn thương mại nào vì không có.
+Gói Miễn phí là 500 giao dịch tiền vào mỗi tháng, gấp 10 lần mức miễn phí phổ biến trên thị trường, đủ cho shop bán đều 16 đơn mỗi ngày. Trên mức đó anh chị chọn gói trả phí: Khởi nghiệp 99.000đ cho 2.000 giao dịch, Kinh doanh 299.000đ cho 10.000, Doanh nghiệp 799.000đ cho 50.000, Quy mô lớn 1.990.000đ cho 300.000; trả năm tính 10 tháng. Gói trả phí vượt mức không khoá, phần vượt tính phụ trội vài chục đồng mỗi giao dịch. Gói Miễn phí vượt mức thì tháng đầu vẫn báo đủ, tháng sau phần vượt ngưng báo tới khi nâng gói, giao dịch vẫn ghi nhận. Ngoài ra là fair-use chống lạm dụng: bắn API dồn dập, tạo tài khoản hàng loạt bằng máy, dùng hệ thống cho việc không phải nhận tiền của chính mình thì tụi em chặn.
 
-Còn lại là đủ tính năng, không có tính năng nào giấu sau gói trả phí. Tụi em liệt kê để anh chị đối chiếu. Tài khoản ảo ACB riêng cho từng đơn, mã VietQR động điền sẵn số tiền, webhook ký HMAC-SHA256 với gói tin từ chối nếu lệch giờ quá 5 phút, thông báo Telegram theo từng nhóm, khoá API có hạn 24 giờ, tra giao dịch 100 dòng mỗi trang, bảng điều khiển xem lại từng lần gửi webhook. Hỗ trợ là người thật qua 1900 636 648 trong giờ hành chính.
+Tính năng lõi thì có ở mọi gói, không giấu sau gói trả phí. Tụi em liệt kê để anh chị đối chiếu. Tài khoản ảo ACB riêng cho từng đơn, mã VietQR động điền sẵn số tiền, webhook ký HMAC-SHA256 với gói tin từ chối nếu lệch giờ quá 5 phút, thông báo Telegram theo từng nhóm, khoá API có hạn 24 giờ, tra giao dịch 100 dòng mỗi trang, bảng điều khiển xem lại từng lần gửi webhook. Hỗ trợ là người thật qua 1900 636 648 trong giờ hành chính.
 
-Tụi em có bán một thứ liên quan, nhưng không phải phí dùng: dịch vụ kèm theo cho doanh nghiệp cần kỹ sư MONA ngồi tích hợp trực tiếp vào phần mềm có sẵn, hỗ trợ ưu tiên và hoá đơn. Cái đó là công người, tính riêng, và anh chị không dùng cũng không mất tính năng nào. Tính năng không bao giờ bị khoá.
+Ngoài gói, tụi em có dịch vụ kèm theo cho doanh nghiệp cần kỹ sư MONA ngồi tích hợp trực tiếp vào phần mềm có sẵn, hỗ trợ ưu tiên và hoá đơn theo yêu cầu. Cái đó là công người, tính riêng, và anh chị không dùng cũng không mất tính năng nào. Tính năng lõi không bao giờ bị khoá.
 
 ## Cái tụi em chưa có, nói trước để anh chị khỏi kỳ vọng sai
 
@@ -66,7 +66,7 @@ Nếu anh chị đang trả phí phần trăm cho một cổng chỉ để nhậ
 
 ### MONA Pay miễn phí tới khi nào?
 
-Không có mốc hết hạn. Miễn phí hoàn toàn, không giới hạn giao dịch, chỉ có giới hạn chống lạm dụng, và hệ thống này đã chạy hơn 4 năm cho chính MONA và hơn 6.000 khách MONA trước khi mở ra nên không phải chương trình khuyến mãi tính theo tháng.
+Không có mốc hết hạn cho gói Miễn phí 500 giao dịch mỗi tháng. Gói trả phí niêm yết công khai, đổi giá tụi em báo trước ít nhất 30 ngày, gói đang trả giữ giá tới hết kỳ. Hệ thống này đã chạy hơn 4 năm cho chính MONA và hơn 6.000 khách MONA trước khi mở ra nên không phải chương trình khuyến mãi tính theo tháng.
 
 ### Có thu phần trăm trên số tiền giao dịch không?
 
@@ -74,7 +74,7 @@ Không. Tiền vào thẳng tài khoản ACB của anh chị trong vài giây sa
 
 ### Có tính năng nào phải trả tiền mới mở không?
 
-Không, đủ tính năng ở gói duy nhất, còn dịch vụ kèm theo như kỹ sư tích hợp trực tiếp, hỗ trợ ưu tiên, hoá đơn là công người, tính riêng và không bắt buộc.
+Không, tính năng lõi có ở mọi gói; gói trả phí khác ở hạn mức giao dịch, xuất CSV, nhiều tài khoản ngân hàng, mức hỗ trợ và hoá đơn VAT. Dịch vụ kèm theo như kỹ sư tích hợp trực tiếp là công người, tính riêng và không bắt buộc.
 
 ### MONA kiếm tiền bằng gì?
 

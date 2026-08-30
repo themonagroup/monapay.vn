@@ -38,7 +38,7 @@ MONA Pay ký mỗi gói tin bằng HMAC-SHA256. Trong header có `X-Mona-Timesta
 
 Khoá bí mật đó anh chị tự đặt trong dashboard khi khai webhook, không ai khác biết, kể cả tụi em cũng chỉ lưu bản đã băm. Giữ nó như giữ mật khẩu ngân hàng, và đổi khoá ngay nếu nghi ngờ đã lộ, MONA Pay cho đổi trong 1 phút không cần khai lại địa chỉ.
 
-> Muốn nhìn một webhook thật chạy trên chính website của mình, anh chị tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), khai địa chỉ nhận, bấm gửi thử trong dashboard. Gói tin mẫu bay về trong vài giây, miễn phí hoàn toàn, không giới hạn giao dịch, không cần chờ ai duyệt.
+> Muốn nhìn một webhook thật chạy trên chính website của mình, anh chị tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), khai địa chỉ nhận, bấm gửi thử trong dashboard. Gói tin mẫu bay về trong vài giây, miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không cần chờ ai duyệt.
 
 ## Webhook gửi tới mà website không nhận được thì sao?
 
@@ -71,7 +71,7 @@ Phải trả mã HTTP 200, 201 hoặc 202 trong 10 giây để MONA Pay ghi nh�
 Có khi anh chị bấm gửi lại hoặc khi hai cấu hình webhook cùng trỏ một địa chỉ. `transaction_code` giữ nguyên qua các lần gửi, phần mềm dùng nó làm khoá duy nhất để không ghi nhận tiền hai lần. Một khoá duy nhất cho một giao dịch, ghi một lần.
 
 ### Webhook của MONA Pay có mất phí không?
-Không. MONA Pay miễn phí hoàn toàn, không giới hạn số giao dịch lẫn số webhook, tiền vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo rồi báo lại, không thu phần trăm trên số tiền. Chi tiết từng dòng ở [bảng giá](/bang-gia).
+Không. MONA Pay miễn phí 500 giao dịch mỗi tháng, không giới hạn số webhook, tiền vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo rồi báo lại, không thu phần trăm trên số tiền. Chi tiết từng dòng ở [bảng giá](/bang-gia).
 
 ## Nối webhook đầu tiên trong 5 phút, không cần chờ duyệt
 

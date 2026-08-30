@@ -10,7 +10,7 @@ import Stats from '../components/Stats.astro';
 import CodeTabs from '../components/CodeTabs.astro';
 import { SITE } from '../data/site';
 import { BANKS_LINE, BANKS_SHORT, LIVE_BANKS } from '../data/banks';
-import { PRICING_MODE, FREE_TX_PER_MONTH, PRICE_LINE } from '../data/pricing';
+import { PRICING_MODE, FREE_TX_PER_MONTH, PRICE_LINE, PAID_PLANS, CHEAPEST_PAID, YEARLY_MONTHS, FREE_MULTIPLE_LINE, fmt, fmtVnd } from '../data/pricing';
 import { AI_PROMPT, CURL_SAMPLE, PHP_SAMPLE, NODE_SAMPLE } from '../data/home-samples';
 const isFree = PRICING_MODE === 'free-all';
 const priceCap = PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1);
@@ -210,18 +210,18 @@ const jsonld = [{
 
   <section class="section-alt">
     <div class="wrap">
+      <span class="eyebrow">Giá</span>
+      <h2>Miễn phí {fmt(FREE_TX_PER_MONTH)} giao dịch mỗi tháng,<br class="br-d" /> không thu phần trăm trên số tiền</h2>
       <div class="grid grid-2 why">
         <div>
-          <span class="eyebrow">Vì sao miễn phí</span>
-          <h2>Miễn phí thật,<br class="br-d" /> không có phí ẩn</h2>
-          <p>Tụi em nói miễn phí là miễn phí đủ mọi thứ: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch, API. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng, không giới hạn số giao dịch. Giới hạn duy nhất là chặn hành vi lạm dụng như bắn hàng nghìn yêu cầu mỗi phút, dùng bình thường không bao giờ chạm tới.</p>
-          <p>Miễn phí được vì MONA Pay không giữ tiền, nên không có chi phí xử lý tiền như cổng thanh toán thông thường. Hệ thống này tụi em xây từ 2022 để thu tiền cho chính mình, rồi nhúng vào web và phần mềm giao cho hơn 6.000 khách hàng mới của MONA. Máy chủ và đội kỹ thuật đã có sẵn, mở thêm cho anh chị dùng không tốn thêm bao nhiêu. The MONA Group sống bằng làm web, phần mềm, hosting. MONA Pay có mặt để khách thu tiền gọn hơn, tụi em không cần thu phí ở đây.</p>
-          <p><a href="/bang-gia">Xem trang bảng giá</a> để đọc đủ những gì có trong bản miễn phí.</p>
+          <p>Gói Miễn phí có đủ mọi thứ: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch, API, và {fmt(FREE_TX_PER_MONTH)} giao dịch tiền vào mỗi tháng, {FREE_MULTIPLE_LINE}. Không phí mở tài khoản, không thu phần trăm trên số tiền. Shop bán đều 15 đơn mỗi ngày dùng cả năm không mất đồng nào.</p>
+          <p>Bán nhiều hơn {fmt(FREE_TX_PER_MONTH)} giao dịch mỗi tháng, anh chị chọn gói trả phí từ {fmtVnd(CHEAPEST_PAID.price_month)} mỗi tháng cho {fmt(PAID_PLANS[0].tx_limit)} giao dịch, tính theo số giao dịch chứ không theo số tiền, trả năm chỉ tính {YEARLY_MONTHS} tháng. Tụi em giữ giá thấp được vì MONA Pay không giữ tiền nên không có chi phí xử lý tiền, và hệ thống này đã xây từ 2022 để thu tiền cho chính MONA rồi nhúng vào web, phần mềm giao cho hơn 6.000 khách hàng mới của MONA. Máy chủ và đội kỹ thuật đã có sẵn.</p>
+          <p><a href="/bang-gia">Xem trang bảng giá</a> để đọc đủ 5 gói, cách đếm giao dịch và chuyện vượt mức thì sao.</p>
         </div>
         <div class="card compare">
           <h3>Để anh chị so với cổng quốc tế</h3>
           <p>PayPal thu <b>4,40%</b> mỗi giao dịch cộng phí cố định, rút tiền về ngân hàng Việt Nam thêm <b>60.000 đ</b> mỗi lần. Stripe tới ngày 28/08/2026 vẫn chưa mở đăng ký cho doanh nghiệp tại Việt Nam.</p>
-          <p>Hai bài toán khác nhau: cổng quốc tế để nhận thẻ từ khách nước ngoài, MONA Pay để nhận chuyển khoản trong nước với phí <b>0 đ</b>. Bán trong nước thì dùng MONA Pay là đủ.</p>
+          <p>Hai bài toán khác nhau: cổng quốc tế để nhận thẻ từ khách nước ngoài, MONA Pay để nhận chuyển khoản trong nước, <b>0 đ</b> tới {fmt(FREE_TX_PER_MONTH)} giao dịch mỗi tháng và không bao giờ thu phần trăm. Bán trong nước thì dùng MONA Pay là đủ.</p>
           <a class="btn btn-outline" href="/cong-thanh-toan-quoc-te">So với cổng thanh toán quốc tế</a>
         </div>
       </div>
@@ -320,7 +320,7 @@ const jsonld = [{
   .ind p{flex:1}
   .ind-more{color:var(--cta);font-weight:700;font-size:.92rem;margin-top:.6rem}
   .ind-note{margin:1.4rem 0 0;color:var(--text-soft);max-width:860px}
-  .why{align-items:start}
+  .why{align-items:start;margin-top:.4rem}
   .why p{font-size:1.05rem}
   .compare{padding:1.6rem}
   .compare h3{margin-top:0}

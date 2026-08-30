@@ -8,7 +8,7 @@ h1: "Xác nhận thanh toán tự động khi khách chuyển khoản, tụi em 
 ogImage: /img/blog/xac-nhan-thanh-toan-tu-dong.jpg
 ---
 
-Khách đến MONA làm web bán hàng hay phần mềm quản lý, sau 14.000+ dự án tụi em thấy gần như ai cũng kẹt đúng một khâu: khách chuyển khoản xong, phải có người mở app ngân hàng lên coi rồi mới dám giao hàng. Xác nhận thanh toán tự động là cách bỏ hẳn người đó ra khỏi quy trình. Tiền vào tài khoản ACB, ngân hàng báo, phần mềm tự đổi trạng thái đơn trong vài giây. Không ai phải canh. Tụi em tự xây hệ thống này để thu tiền cho chính mình hơn 4 năm, giờ mở cho mọi doanh nghiệp, [miễn phí hoàn toàn](/bang-gia).
+Khách đến MONA làm web bán hàng hay phần mềm quản lý, sau 14.000+ dự án tụi em thấy gần như ai cũng kẹt đúng một khâu: khách chuyển khoản xong, phải có người mở app ngân hàng lên coi rồi mới dám giao hàng. Xác nhận thanh toán tự động là cách bỏ hẳn người đó ra khỏi quy trình. Tiền vào tài khoản ACB, ngân hàng báo, phần mềm tự đổi trạng thái đơn trong vài giây. Không ai phải canh. Tụi em tự xây hệ thống này để thu tiền cho chính mình hơn 4 năm, giờ mở cho mọi doanh nghiệp, [miễn phí 500 giao dịch mỗi tháng](/bang-gia).
 
 ## Vì sao khách đến MONA làm web đều kẹt ở khâu xác nhận chuyển khoản?
 
@@ -46,7 +46,7 @@ Bước 3, chọn cách nhận thông báo. Muốn cả công ty thấy tiền v
 
 Bước 4, chuyển thử một khoản tiền thật. Tụi em luôn kêu khách làm bước này, đừng tin màn hình gửi thử, phải thấy tiền thật đi trọn một vòng. Nếu website của anh chị chạy WooCommerce hay WordPress, phần nhận webhook có mã mẫu sẵn ở [trang WooCommerce](/cong-thanh-toan-woocommerce) và [trang WordPress](/cong-thanh-toan-wordpress), dev dán vào là chạy.
 
-Anh chị chưa muốn đụng tới code, chỉ muốn thử xem tiền vào có báo không, thì cứ làm bước 1 tới bước 3 với Telegram trước. Không mất tiền, không giới hạn số giao dịch, cả nhóm thấy thông báo là biết hệ thống hợp với mình hay không, rồi hãy tính chuyện nối website sau.
+Anh chị chưa muốn đụng tới code, chỉ muốn thử xem tiền vào có báo không, thì cứ làm bước 1 tới bước 3 với Telegram trước. Không mất tiền tới 500 giao dịch mỗi tháng, cả nhóm thấy thông báo là biết hệ thống hợp với mình hay không, rồi hãy tính chuyện nối website sau.
 
 ## Hố tụi em từng vấp: tạo tài khoản ảo xong mà tiền vào không báo
 
@@ -66,7 +66,7 @@ Gửi thất bại thì sao? Mỗi lần gửi đều có lịch sử trong dash
 
 ## Xác nhận thanh toán tự động tốn bao nhiêu tiền?
 
-Với MONA Pay là 0 đồng. Miễn phí hoàn toàn, không giới hạn số giao dịch, không thu phần trăm trên số tiền, không phí mở tài khoản, không phí nối ngân hàng. Giới hạn duy nhất là fair-use chống lạm dụng, ai dùng bình thường không chạm tới.
+Với MONA Pay là 0 đồng. Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không thu phần trăm trên số tiền, không phí mở tài khoản, không phí nối ngân hàng. Giới hạn duy nhất là fair-use chống lạm dụng, ai dùng bình thường không chạm tới.
 
 Tụi em để miễn phí được vì ba lẽ. Hạ tầng này đã chạy sẵn hơn 4 năm cho chính MONA và cho hơn 6.000 khách hàng MONA từ 2022, mở thêm người dùng gần như không tốn thêm. Tiền không đi qua MONA Pay nên không có phí trung gian để thu. Và MONA sống bằng làm web, hosting, phần mềm, cổng thanh toán tự động chỉ làm mấy thứ đó chạy trọn vẹn hơn.
 
@@ -94,4 +94,4 @@ Hiện ACB đang hoạt động, anh chị mở tài khoản tại ACB rồi n�
 
 ### Có mất phí gì không?
 
-Không. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch. Phí phía ngân hàng theo biểu phí của ACB, anh chị hỏi ACB khi mở tài khoản.
+Không. MONA Pay miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch. Phí phía ngân hàng theo biểu phí của ACB, anh chị hỏi ACB khi mở tài khoản.

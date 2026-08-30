@@ -8,7 +8,7 @@ h1: "Tích hợp cổng thanh toán vào website: 3 cách và cách tụi em khu
 ogImage: /img/blog/gan-cong-thanh-toan-vao-website.jpg
 ---
 
-Khách đến MONA làm web bán hàng, câu hỏi tụi em nghe nhiều nhất sau "bao nhiêu tiền" là "gắn cổng thanh toán nào". Tích hợp cổng thanh toán vào website có đúng 3 đường: ví điện tử và cổng thu phần trăm, cổng quốc tế như PayPal, và chuyển khoản VietQR tự xác nhận. Sau hơn 14.000 dự án, tụi em thấy phần lớn web bán trong nước chỉ cần đường thứ ba, miễn phí hoàn toàn, tiền vào thẳng tài khoản, trong khi cổng quốc tế như PayPal thu 4,40% cộng phí cố định mỗi đơn. Bài này kể vì sao.
+Khách đến MONA làm web bán hàng, câu hỏi tụi em nghe nhiều nhất sau "bao nhiêu tiền" là "gắn cổng thanh toán nào". Tích hợp cổng thanh toán vào website có đúng 3 đường: ví điện tử và cổng thu phần trăm, cổng quốc tế như PayPal, và chuyển khoản VietQR tự xác nhận. Sau hơn 14.000 dự án, tụi em thấy phần lớn web bán trong nước chỉ cần đường thứ ba, miễn phí 500 giao dịch mỗi tháng, tiền vào thẳng tài khoản, trong khi cổng quốc tế như PayPal thu 4,40% cộng phí cố định mỗi đơn. Bài này kể vì sao.
 
 ## Khách đến MONA làm web bán hàng rơi vào 3 nhóm nào?
 
@@ -44,7 +44,7 @@ Vì đây là cách khách Việt đã quen, và nó miễn phí. Khách bấm t
 
 Cơ chế như sau: mỗi đơn hàng được gắn một tài khoản ảo ACB riêng hoặc một mã QR động riêng. Tiền vào, ACB gửi thông báo giao dịch cho MONA Pay theo bộ API dành cho đối tác, MONA Pay khớp với đơn rồi gửi webhook về website của anh chị, ký HMAC-SHA256 kèm dấu thời gian, website đổi trạng thái đơn sang đã thanh toán. Tiền không đi qua MONA Pay. Tụi em chỉ đọc thông báo và báo lại.
 
-Tụi em tự dùng cách này hơn 4 năm để thu phí hosting của Mona.Host, học phí của Khánh Hùng Academy với 40.000 học viên, đơn phần mềm của Mona.Software, rồi từ 2022 nhúng vào web bán hàng làm cho khách, tới nay hơn 6.000 khách hàng mới của MONA dùng. Trước khi mở cho mọi doanh nghiệp, tụi em chạy lại toàn bộ như một khách mới: tiền vào, thông báo về, webhook về, chữ ký khớp. Giá là 0 đồng, không giới hạn giao dịch, không thu phần trăm, xem [bảng giá](/bang-gia).
+Tụi em tự dùng cách này hơn 4 năm để thu phí hosting của Mona.Host, học phí của Khánh Hùng Academy với 40.000 học viên, đơn phần mềm của Mona.Software, rồi từ 2022 nhúng vào web bán hàng làm cho khách, tới nay hơn 6.000 khách hàng mới của MONA dùng. Trước khi mở cho mọi doanh nghiệp, tụi em chạy lại toàn bộ như một khách mới: tiền vào, thông báo về, webhook về, chữ ký khớp. Giá là 0 đồng tới 500 giao dịch mỗi tháng, trên đó gói cố định theo số giao dịch, không thu phần trăm, xem [bảng giá](/bang-gia).
 
 Anh chị chưa cần quyết ngay, cứ tạo tài khoản, nối ACB, bật báo tiền vào qua Telegram cho nhóm bán hàng trước, chưa cần đụng tới website. Thấy tin về đều rồi hãy kêu dev nối webhook.
 
@@ -78,7 +78,7 @@ Hai, đừng ráp việc thu tiền bằng công cụ tự động không cần 
 
 Ba, chạy tiền thật trước khi mở bán. Chuyển 10.000 đồng, xem đơn có đổi trạng thái không, xem tin có về nhóm không. Mọi thứ trên màn hình xanh hết mà thiếu một cái OTP thì tiền vẫn không báo. Tụi em dính rồi.
 
-Anh chị đang làm web bán hàng và còn phân vân gắn cổng nào, gọi 1900 636 648 giờ hành chính, kể tụi em nghe khách của anh chị ở đâu và trả tiền kiểu gì, tụi em nói thẳng đường nào hợp, kể cả khi đường đó không phải MONA Pay. Muốn tự thử trước thì tạo tài khoản tại [my.monapay.vn/auth?mode=register](https://my.monapay.vn/auth?mode=register), nối ACB, bật Telegram, chuyển thử 10.000 đồng, miễn phí, không giới hạn giao dịch.
+Anh chị đang làm web bán hàng và còn phân vân gắn cổng nào, gọi 1900 636 648 giờ hành chính, kể tụi em nghe khách của anh chị ở đâu và trả tiền kiểu gì, tụi em nói thẳng đường nào hợp, kể cả khi đường đó không phải MONA Pay. Muốn tự thử trước thì tạo tài khoản tại [my.monapay.vn/auth?mode=register](https://my.monapay.vn/auth?mode=register), nối ACB, bật Telegram, chuyển thử 10.000 đồng, miễn phí tới 500 giao dịch mỗi tháng.
 
 ## Câu hỏi thường gặp
 
@@ -96,7 +96,7 @@ Không. Tiền vào thẳng tài khoản ngân hàng của anh chị như chuy�
 
 ### Gắn xong có mất phí hàng tháng không?
 
-Không. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch, không phí tháng, không phần trăm trên số tiền. Máy nhận webhook trả 200 trong 10 giây là xong một vòng, chữ ký lệch quá 5 phút là từ chối.
+Không. MONA Pay miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không phí tháng, không phần trăm trên số tiền. Máy nhận webhook trả 200 trong 10 giây là xong một vòng, chữ ký lệch quá 5 phút là từ chối.
 
 ### Đơn bị đánh dấu thanh toán sai thì sửa ở đâu?
 

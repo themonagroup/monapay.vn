@@ -1,24 +1,39 @@
-// BẢNG GIÁ — nơi ở duy nhất của giá. Mon quyết chế độ bằng PRICING_MODE:
-//  'free-all'  = MIỄN PHÍ HOÀN TOÀN, không giới hạn giao dịch, chỉ fair-use chống spam (đề xuất 28/08 nếu ACB không thu MONA phí theo GD/VA)
-//  'tiers'     = gói theo giao dịch (số đề xuất dưới), cần PRICING_APPROVED=true mới hiện giá gói trả phí
+// BẢNG GIÁ — đọc từ ../../../pricing/plans.json (nguồn duy nhất, copy ở ./plans.json qua scripts-sync-plans.sh).
+// Mon chốt 31/08/2026: gói Miễn phí 500 giao dịch/tháng (gấp 10 mức phổ biến trên thị trường), trên đó 4 gói trả phí tính theo số giao dịch.
+// Đổi giá: sửa pricing/plans.json → chạy ./scripts-sync-plans.sh → build. KHÔNG gõ số giá ở trang.
+import plansJson from './plans.json';
+
 export type PricingMode = 'free-all' | 'tiers';
-export const PRICING_MODE: PricingMode = 'free-all';
-export const PRICING_APPROVED = false;              // chỉ dùng khi PRICING_MODE = 'tiers'
-export const FREE_TX_PER_MONTH = 100;               // chỉ dùng khi PRICING_MODE = 'tiers'
-export const FAIR_USE = {                           // free-all: giới hạn chống lạm dụng, không phải giới hạn thương mại
-  webhookPerConfig: 'không giới hạn giao dịch',
-  rateLimit: 'Có giới hạn tốc độ gọi API để chặn bắn dồn dập; dùng bình thường không bao giờ chạm ngưỡng.',
-  note: 'Dùng thật bao nhiêu cũng miễn phí. Chỉ chặn hành vi bất thường (bắn API dồn dập, tạo tài khoản hàng loạt).',
+export const PRICING_MODE: PricingMode = 'tiers';
+export const PRICING_APPROVED = true;
+
+export type Plan = {
+  code: string; name: string; price_month: number; price_year: number;
+  tx_limit: number; overage_per_tx: number | null; featured: boolean; sort: number; features: string[];
 };
-export const PLANS = [
-  { id: 'free', name: 'Miễn phí', price: 0, unit: 'đ/tháng', tx: `${FREE_TX_PER_MONTH} giao dịch/tháng`, featured: false,
-    features: ['Đủ tính năng: VA, VietQR, webhook, Telegram, API', 'Không giới hạn số webhook', 'Dashboard theo dõi giao dịch + lịch sử gửi webhook', 'Hỗ trợ qua tổng đài 1900 636 648'] },
-  { id: 'startup', name: 'Khởi nghiệp', price: 199000, unit: 'đ/tháng', tx: '2.000 giao dịch/tháng', featured: true,
-    features: ['Mọi thứ của gói Miễn phí', 'Vượt hạn mức: tính thêm theo giao dịch, không khoá dịch vụ', 'Ưu tiên hỗ trợ kỹ thuật', 'Xuất CSV đối soát'] },
-  { id: 'business', name: 'Doanh nghiệp', price: 799000, unit: 'đ/tháng', tx: '15.000 giao dịch/tháng', featured: false,
-    features: ['Mọi thứ của gói Khởi nghiệp', 'Nhiều tài khoản ngân hàng, nhiều VA', 'Kỹ sư MONA hỗ trợ tích hợp trực tiếp', 'Hoá đơn VAT'] },
-];
-// Câu giá dùng chung mọi trang (import thay vì gõ tay) — đổi mode là đổi toàn site
-export const PRICE_LINE = PRICING_MODE === 'free-all'
-  ? 'miễn phí hoàn toàn, không giới hạn giao dịch'
-  : `miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng`;
+export const YEARLY_MONTHS: number = plansJson.yearly_months;
+export const PLANS: Plan[] = [...plansJson.plans]
+  .sort((a, b) => a.sort - b.sort)
+  .map((p) => ({ ...p, price_year: p.price_month * YEARLY_MONTHS }));
+export const FREE_PLAN = PLANS.find((p) => p.code === 'free')!;
+export const PAID_PLANS = PLANS.filter((p) => p.price_month > 0);
+export const CHEAPEST_PAID = PAID_PLANS[0];
+export const FREE_TX_PER_MONTH = FREE_PLAN.tx_limit; // 500
+
+export const fmt = (n: number) => new Intl.NumberFormat('vi-VN').format(n);
+export const fmtVnd = (n: number) => `${fmt(n)} đ`;
+
+export const TX_RULE: string = plansJson.tx_rule;
+export const FREE_OVER_QUOTA_POLICY: string = plansJson.free_over_quota_policy;
+export const PAID_OVER_QUOTA_POLICY: string = plansJson.paid_over_quota_policy;
+export const INVOICE_TTL_HOURS: number = plansJson.invoice_ttl_hours;
+
+export const FAIR_USE = {
+  rateLimit: 'Có giới hạn tốc độ gọi API để chặn bắn dồn dập; dùng bình thường không bao giờ chạm ngưỡng.',
+  note: 'Ngoài hạn mức giao dịch theo gói, chỉ chặn hành vi bất thường (bắn API dồn dập, tạo tài khoản hàng loạt).',
+};
+
+// Câu giá dùng chung mọi trang (import thay vì gõ tay) — đổi plans.json là đổi toàn site
+export const PRICE_LINE = `miễn phí ${fmt(FREE_TX_PER_MONTH)} giao dịch mỗi tháng`;
+export const PRICE_LINE_FULL = `${PRICE_LINE}, gói trả phí từ ${fmtVnd(CHEAPEST_PAID.price_month)}/tháng tính theo số giao dịch`;
+export const FREE_MULTIPLE_LINE = `gấp 10 lần mức miễn phí phổ biến trên thị trường`;

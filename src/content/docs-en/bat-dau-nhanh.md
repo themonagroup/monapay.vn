@@ -22,7 +22,7 @@ curl -X POST https://api.monapay.vn/api/v1/client/register-client \
   -d '{"username":"my-shop","password":"a-strong-password","name":"My Shop"}'
 ```
 
-The account is usable immediately: log in at step 2, nobody has to approve it. MONA Pay is completely free with no transaction limit (see [pricing](/bang-gia)).
+The account is usable immediately: log in at step 2, nobody has to approve it. MONA Pay is free for 500 transactions a month, with paid plans above that priced by transaction count (see [pricing](/bang-gia)).
 
 ## Step 2. Log in for a token
 

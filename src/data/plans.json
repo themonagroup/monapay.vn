@@ -1,0 +1,22 @@
+{
+  "_note": "NGUỒN DUY NHẤT về gói giá MONA Pay (Mon chốt 31/08/2026: free = 500 GD/tháng, gấp 10 SePay). Site đọc file này qua src/data/pricing.ts; BE acb-ipn đọc qua billing/plans.json (copy bằng scripts/sync-plans.sh); FE fe-payment copy ở src/lib/plans.json. Đổi số ở đây rồi chạy sync.",
+  "currency": "VND",
+  "tx_rule": "Giao dịch = 1 khoản tiền VÀO (credit) ghi nhận trên mọi tài khoản/tài khoản ảo đã nối, tính theo tháng dương lịch giờ Việt Nam. Tiền ra, sandbox, webhook gửi lại không tính.",
+  "yearly_months": 10,
+  "invoice_code_prefix": "MPAY",
+  "invoice_ttl_hours": 48,
+  "free_over_quota_policy": "Gói Miễn phí vượt hạn mức: tháng đầu tiên vượt vẫn báo đủ (du di). Từ tháng kế tiếp nếu chưa nâng gói, giao dịch vượt mức vẫn ghi nhận trong dashboard nhưng không gửi webhook, Telegram cho tới khi nâng gói. Không mất giao dịch.",
+  "paid_over_quota_policy": "Gói trả phí vượt hạn mức: không khoá, phần vượt tính phụ trội theo giao dịch, gom vào hoá đơn cuối tháng.",
+  "plans": [
+    { "code": "free",       "name": "Miễn phí",     "price_month": 0,       "tx_limit": 500,    "overage_per_tx": null, "featured": false, "sort": 1,
+      "features": ["Đủ tính năng: tài khoản ảo, VietQR, webhook, Telegram, API", "Không giới hạn số webhook, số nhóm Telegram", "Dashboard sổ giao dịch, lịch sử gửi webhook", "Hỗ trợ qua tổng đài 1900 636 648"] },
+    { "code": "startup",    "name": "Khởi nghiệp",  "price_month": 99000,   "tx_limit": 2000,   "overage_per_tx": 100,  "featured": true,  "sort": 2,
+      "features": ["Mọi thứ của gói Miễn phí", "Vượt hạn mức không khoá, tính thêm 100 đ mỗi giao dịch", "Xuất CSV đối soát", "Ưu tiên hỗ trợ kỹ thuật"] },
+    { "code": "business",   "name": "Kinh doanh",   "price_month": 299000,  "tx_limit": 10000,  "overage_per_tx": 50,   "featured": false, "sort": 3,
+      "features": ["Mọi thứ của gói Khởi nghiệp", "Vượt hạn mức tính thêm 50 đ mỗi giao dịch", "Nhiều tài khoản ngân hàng, nhiều tài khoản ảo", "Hoá đơn VAT"] },
+    { "code": "enterprise", "name": "Doanh nghiệp", "price_month": 799000,  "tx_limit": 50000,  "overage_per_tx": 30,   "featured": false, "sort": 4,
+      "features": ["Mọi thứ của gói Kinh doanh", "Vượt hạn mức tính thêm 30 đ mỗi giao dịch", "Kỹ sư MONA hỗ trợ tích hợp trực tiếp", "Hoá đơn VAT"] },
+    { "code": "scale",      "name": "Quy mô lớn",   "price_month": 1990000, "tx_limit": 300000, "overage_per_tx": 15,   "featured": false, "sort": 5,
+      "features": ["Mọi thứ của gói Doanh nghiệp", "Vượt hạn mức tính thêm 15 đ mỗi giao dịch", "Người trực riêng cho hệ thống lớn", "Hoá đơn VAT"] }
+  ]
+}

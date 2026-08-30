@@ -10,7 +10,7 @@ export const ROADMAP: RGroup[] = [
     { name: 'Sandbox tạo giao dịch giả để thử', status: 'dang-lam', note: 'mã đã xong, chờ lên máy chủ' },
     { name: 'Đối soát theo con trỏ since_id, xuất CSV', status: 'dang-lam', note: 'dashboard đã xuất CSV; since_id chờ lên' },
     { name: 'Nhiều người dùng một doanh nghiệp, phân quyền', status: 'ke-hoach' },
-    { name: 'Gói cước', status: 'da-co', note: 'miễn phí hoàn toàn, không giới hạn giao dịch; chỉ fair-use' },
+    { name: 'Gói cước', status: 'da-co', note: 'gói Miễn phí 500 giao dịch/tháng + 4 gói trả phí theo số giao dịch, thanh toán gói bằng chuyển khoản, tự kích hoạt' },
   ]},
   { title: 'SDK và mã nguồn mở', why: 'Mỗi ngôn ngữ một package để dev và AI agent cài là chạy.', items: [
     { name: 'Node.js / TypeScript, Python, PHP', status: 'da-co', note: 'mã nguồn v0.1.0 trên GitHub; bản trên npm, PyPI, Packagist lên sau' },

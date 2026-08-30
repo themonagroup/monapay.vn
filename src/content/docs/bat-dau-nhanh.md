@@ -22,7 +22,7 @@ curl -X POST https://api.monapay.vn/api/v1/client/register-client \
   -d '{"username":"shop-cua-toi","password":"mat-khau-manh","name":"Shop của tôi"}'
 ```
 
-Tài khoản tạo xong dùng được ngay: đăng nhập liền ở bước 2, không cần ai duyệt. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch (xem [bảng giá](/bang-gia)).
+Tài khoản tạo xong dùng được ngay: đăng nhập liền ở bước 2, không cần ai duyệt. MONA Pay miễn phí 500 giao dịch mỗi tháng, gói trả phí tính theo số giao dịch (xem [bảng giá](/bang-gia)).
 
 ## Bước 2. Đăng nhập lấy token
 

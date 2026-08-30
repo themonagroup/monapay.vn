@@ -39,7 +39,7 @@ Câu này quyết định tự động hoá có thật hay không. Sinh mã đ�
 
 Đường đi cụ thể tụi em ghi ở [tài liệu QR thanh toán](/docs/api/qr-thanh-toan): gọi POST tạo mã với `orderId`, `amount` tối đa 1.000.000.000 đồng, `description` tối đa 255 ký tự; huỷ mã khi đơn bị huỷ. Với web làm tại MONA, phần này tụi em cài sẵn khi giao, khách chỉ nối tài khoản ACB theo 4 bước với 2 lần OTP, mất chừng 5 phút. Dashboard my.monapay.vn cũng có màn Tạo QR để anh chị sinh tay khi cần, ví dụ đơn đặt qua điện thoại.
 
-> Anh chị muốn thấy mã động chạy thật: tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), nối ACB 4 bước, vào màn Tạo QR sinh một mã 10.000 đồng rồi tự quét bằng app ngân hàng của mình. Tiền vào, tin Telegram báo, webhook bay về. Miễn phí hoàn toàn, không giới hạn giao dịch.
+> Anh chị muốn thấy mã động chạy thật: tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), nối ACB 4 bước, vào màn Tạo QR sinh một mã 10.000 đồng rồi tự quét bằng app ngân hàng của mình. Tiền vào, tin Telegram báo, webhook bay về. Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch.
 
 ## Quét VietQR xong, tiền đi đâu và ai xác nhận?
 

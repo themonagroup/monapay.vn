@@ -22,7 +22,7 @@ Cái vướng nằm ở phía người bán. Khách chuyển xong thì ai xác n
 
 Cơ chế thu tiền Việt tự động chỉ có ba mảnh ghép. Một, mỗi đơn hàng có một tài khoản ảo ACB riêng hoặc một mã VietQR động điền sẵn số tiền và nội dung. Hai, khách chuyển vào, ACB gửi thông báo giao dịch tới MONA Pay. Ba, MONA Pay bắn webhook có chữ ký HMAC-SHA256 về website hay phần mềm của anh chị trong vòng 10 giây, và gửi thêm một tin vào nhóm Telegram nếu anh chị muốn. Tiền không đi qua tụi em. Nó nằm trong tài khoản ACB của anh chị từ giây đầu tiên, MONA Pay chỉ đọc thông báo rồi báo lại.
 
-Phí của đường này là 0 đồng. Không phần trăm trên số tiền, không phí rút, không phí mở tài khoản, không giới hạn số giao dịch. Anh chị xem chi tiết ở [bảng giá](/bang-gia) và cách nối ngân hàng ở trang [nhận tiền ACB](/acb).
+Phí của đường này là 0 đồng. Không phần trăm trên số tiền, không phí rút, không phí mở tài khoản, miễn phí tới 500 giao dịch mỗi tháng. Anh chị xem chi tiết ở [bảng giá](/bang-gia) và cách nối ngân hàng ở trang [nhận tiền ACB](/acb).
 
 ## Tiền đô từ khách nước ngoài: PayPal lấy 4,40% cộng phí cố định
 
@@ -40,7 +40,7 @@ Nhiều anh chị làm phần mềm hỏi tụi em về Stripe vì tài liệu c
 
 Cách một số công ty vẫn dùng Stripe là lập pháp nhân ở nước Stripe hỗ trợ, ví dụ Singapore hay Mỹ, rồi đăng ký bằng pháp nhân đó. Tụi em nêu để anh chị biết là có con đường này, không hướng dẫn lách. Đi đường đó là chuyện thuế, chuyện dòng tiền giữa hai pháp nhân, và chuyện chi phí duy trì công ty nước ngoài, phải hỏi kế toán và luật sư trước. Tụi em từng thấy khách hỏi xong con số duy trì hằng năm rồi quyết định giữ nguyên PayPal, vì lượng đơn nước ngoài mỗi tháng chưa đủ để gánh một pháp nhân riêng. Với phần lớn khách MONA bán chủ yếu trong nước, tụi em nói thẳng: chưa cần. Đọc thêm ở bài [Stripe tại Việt Nam](/stripe-viet-nam).
 
-> Anh chị bán chủ yếu trong nước mà đang tính mở PayPal chỉ để "cho chuyên nghiệp" thì thử đường chuyển khoản tự xác nhận trước. Tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register) miễn phí hoàn toàn, nối ACB trong 4 bước, chuyển thử 10.000đ vào là thấy đơn tự khớp. Chưa tốn đồng nào đã biết mình có cần cổng quốc tế hay không.
+> Anh chị bán chủ yếu trong nước mà đang tính mở PayPal chỉ để "cho chuyên nghiệp" thì thử đường chuyển khoản tự xác nhận trước. Tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register) miễn phí 500 giao dịch mỗi tháng, nối ACB trong 4 bước, chuyển thử 10.000đ vào là thấy đơn tự khớp. Chưa tốn đồng nào đã biết mình có cần cổng quốc tế hay không.
 
 ## Chạy song song hai đường tiền: cách tụi em sắp xếp cho khách MONA
 
@@ -68,7 +68,7 @@ Không bắt buộc, nhưng với khách lẻ ở Mỹ, Úc, châu Âu thì PayP
 
 ### Thu tiền Việt bằng MONA Pay có mất phí gì không?
 
-Không. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch, không thu phần trăm trên số tiền. Tiền vào thẳng tài khoản ACB của anh chị. Chỉ có giới hạn fair-use để chặn lạm dụng như bắn API dồn dập. Anh chị dùng thật bao nhiêu đơn một tháng cũng không chạm tới ngưỡng đó, vì nó được đặt cho máy chứ không đặt cho người bán hàng.
+Không. MONA Pay miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không thu phần trăm trên số tiền. Tiền vào thẳng tài khoản ACB của anh chị. Chỉ có giới hạn fair-use để chặn lạm dụng như bắn API dồn dập. Anh chị dùng thật bao nhiêu đơn một tháng cũng không chạm tới ngưỡng đó, vì nó được đặt cho máy chứ không đặt cho người bán hàng.
 
 ### Khách Việt trả bằng thẻ quốc tế thì sao?
 

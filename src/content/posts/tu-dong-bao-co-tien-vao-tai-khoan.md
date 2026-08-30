@@ -70,7 +70,7 @@ Nối ACB đúng quy trình là 2 lần OTP, thiếu 1 lần là tiền vào kh�
 
 ## Báo có tự động bằng MONA Pay tốn bao nhiêu?
 
-Không đồng nào. MONA Pay miễn phí hoàn toàn, không giới hạn số giao dịch, không giới hạn số nhóm Telegram, không thu phần trăm trên số tiền. Tụi em để miễn phí được vì hệ thống đã chạy sẵn hơn 4 năm cho chính MONA và cho hơn 6.000 khách hàng mới của MONA từ 2022, tiền không đi qua MONA Pay nên không có phí trung gian, và MONA sống bằng làm web, hosting, phần mềm chứ không sống bằng phí thu tiền của anh chị. Phí phía ngân hàng, nếu có, theo biểu phí của ACB, anh chị hỏi ACB khi mở tài khoản.
+Không đồng nào. MONA Pay miễn phí 500 giao dịch mỗi tháng, không giới hạn số nhóm Telegram, không thu phần trăm trên số tiền. Tụi em để miễn phí được vì hệ thống đã chạy sẵn hơn 4 năm cho chính MONA và cho hơn 6.000 khách hàng mới của MONA từ 2022, tiền không đi qua MONA Pay nên không có phí trung gian, và MONA sống bằng làm web, hosting, phần mềm chứ không sống bằng phí thu tiền của anh chị. Phí phía ngân hàng, nếu có, theo biểu phí của ACB, anh chị hỏi ACB khi mở tài khoản.
 
 Nếu hôm nay anh chị vẫn đang chụp màn hình app ngân hàng gửi vào nhóm, hoặc đang đưa app ngân hàng cho nhân viên vì không còn cách nào khác, thì thử ngay chiều nay: tạo tài khoản tại [my.monapay.vn/auth?mode=register](https://my.monapay.vn/auth?mode=register), nối ACB với 2 lần OTP, thêm bot vào một nhóm nhỏ, chuyển thử 10.000 đồng. Tin về là anh chị cất được cái điện thoại xuống. Kẹt bước nào gọi 1900 636 648 giờ hành chính, kỹ sư MONA ngồi cùng anh chị tới khi tin đầu tiên chạy về. Khách làm phần mềm tại [Mona.Software](https://mona.software) thì tụi em cấu hình luôn trong lúc bàn giao.
 

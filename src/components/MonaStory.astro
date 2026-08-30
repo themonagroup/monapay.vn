@@ -1,6 +1,7 @@
 ---
 // Khối "Chuyện MONA" dùng chung home + giới thiệu: câu chuyện công ty + ảnh thật + số. Ảnh đã đối chiếu blacklist.
 import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
 interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
 const photos = [
@@ -17,7 +18,7 @@ const photos = [
       <div class="story-text">
         <p>Tụi em bắt đầu năm {SITE.founded} bằng việc làm website cho doanh nghiệp. Làm web thì khách hỏi tiếp phần mềm quản lý, rồi hỏi chỗ đặt web cho ổn định. Ba mảng đó thành ba thương hiệu: <a href="https://mona.media">Mona.Media</a> làm web và marketing, <a href="https://mona.software">Mona.Software</a> làm phần mềm theo yêu cầu, <a href="https://mona.host">Mona.Host</a> lo hosting và máy chủ. Tới nay là {SITE.projects} dự án, {SITE.retention} khách làm xong quay lại làm tiếp.</p>
         <p>Làm nhiều web bán hàng và phần mềm thu tiền, tụi em thấy khách nào cũng kẹt đúng một chỗ: khách chuyển khoản xong phải có người ngồi mở app ngân hàng để xác nhận. Tụi em viết hệ thống nhận và xác nhận chuyển khoản để dùng cho chính mình trước, thu phí hosting, học phí, đơn phần mềm. Từ 2022, hệ thống này nhúng vào web và phần mềm giao cho khách, tới nay hơn {SITE.customersSince2022.replace('+', '')} khách hàng mới của MONA thu tiền qua đây.</p>
-        {!compact && <p>Năm 2026 tụi em đặt tên nó là MONA Pay, mở tại monapay.vn cho mọi doanh nghiệp, {'miễn phí hoàn toàn'}. Tiền vẫn nằm ở ngân hàng của anh chị, MONA Pay chỉ đọc thông báo giao dịch và báo về đúng chỗ. Gọi {SITE.hotline} là gặp đúng đội đã làm việc này nhiều năm.</p>}
+        {!compact && <p>Năm 2026 tụi em đặt tên nó là MONA Pay, mở tại monapay.vn cho mọi doanh nghiệp, {PRICE_LINE}. Tiền vẫn nằm ở ngân hàng của anh chị, MONA Pay chỉ đọc thông báo giao dịch và báo về đúng chỗ. Gọi {SITE.hotline} là gặp đúng đội đã làm việc này nhiều năm.</p>}
         <div class="btn-row"><a class="btn btn-outline" href="/gioi-thieu">Đọc chuyện MONA Pay</a><a class="btn btn-ghost" href="https://mona.media">Về The MONA Group</a></div>
       </div>
       <div class="story-photos">

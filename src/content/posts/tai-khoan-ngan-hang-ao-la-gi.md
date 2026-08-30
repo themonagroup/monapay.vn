@@ -34,7 +34,7 @@ Bước ba là bước tụi em từng bỏ sót. Chính tụi em từng tạo t
 
 Với dân kỹ thuật, toàn bộ trình tự có API tương ứng ở [tài liệu tài khoản ảo](/docs/api/tai-khoan-ao-va): đăng ký VA, xác thực OTP, đăng ký thông báo, xác thực OTP lần hai, tra danh sách VA, huỷ VA.
 
-> Anh chị có tài khoản ACB thì nối thử hôm nay: tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), đi 4 bước với 2 lần OTP, tạo một số ảo, chuyển 10.000 đồng vào và xem thông báo về trong vài giây. Miễn phí hoàn toàn, không giới hạn số tài khoản ảo lẫn số giao dịch.
+> Anh chị có tài khoản ACB thì nối thử hôm nay: tạo tài khoản [MONA Pay](https://my.monapay.vn/auth?mode=register), đi 4 bước với 2 lần OTP, tạo một số ảo, chuyển 10.000 đồng vào và xem thông báo về trong vài giây. Miễn phí 500 giao dịch mỗi tháng, không giới hạn số tài khoản ảo lẫn số giao dịch.
 
 ## Tiền vào tài khoản ảo rồi thì phần mềm nhận tin bằng cách nào?
 

@@ -34,7 +34,7 @@ Ngay tuần đầu tụi em học được bài đắt. Không chữ ký, ai g�
 
 Còn phần thông báo cho người, tụi em đưa vào Telegram. Mỗi khoản tiền vào là một tin nhắn trong nhóm có tên ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Kế toán, kỹ thuật trực, chủ đều thấy cùng lúc mà không ai phải cầm app ngân hàng. Anh chị xem cách cấu hình ở trang [báo biến động số dư qua Telegram](/chia-se-bien-dong-so-du-telegram).
 
-Anh chị đang tự thu tiền cho phần mềm hay dịch vụ định kỳ của mình? Tạo tài khoản ở [my.monapay.vn](https://my.monapay.vn/auth?mode=register), nối ACB, khai địa chỉ webhook của phần mềm, và chuyển thử 10.000 đồng để xem gói tin về. Miễn phí hoàn toàn, không giới hạn giao dịch.
+Anh chị đang tự thu tiền cho phần mềm hay dịch vụ định kỳ của mình? Tạo tài khoản ở [my.monapay.vn](https://my.monapay.vn/auth?mode=register), nối ACB, khai địa chỉ webhook của phần mềm, và chuyển thử 10.000 đồng để xem gói tin về. Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch.
 
 ## Bài học ba: máy nhận sẽ có lúc chết, nên phải có lịch sử và nút gửi lại
 
@@ -76,4 +76,4 @@ Mỗi gói tin ký HMAC-SHA256 bằng khoá riêng của anh chị, kèm dấu t
 
 ### Có mất phí không?
 
-Không. MONA Pay miễn phí hoàn toàn, không giới hạn giao dịch, xem [bảng giá](/bang-gia).
+Không. MONA Pay miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, xem [bảng giá](/bang-gia).

@@ -8,7 +8,7 @@ h1: "MONA Pay mở cho mọi doanh nghiệp sau 4 năm phục vụ hơn 6.000 kh
 ogImage: /img/blog/mona-pay-mo-public-sau-4-nam.jpg
 ---
 
-MONA Pay là hệ thống nhận và xác nhận tiền chuyển khoản mà tụi em tự xây từ hơn 4 năm trước, ban đầu để thu phí hosting, học phí và tiền phần mềm của chính MONA, rồi từ năm 2022 tới nay đã thu tiền cho hơn 6.000 khách hàng mới của MONA qua web bán hàng, phần mềm tụi em giao. Tháng 8 năm 2026 tụi em mở nó ra cho mọi doanh nghiệp tại [monapay.vn](/), đăng ký xong dùng ngay, miễn phí hoàn toàn và không giới hạn giao dịch. Bài này kể vì sao có nó, vì sao giờ mới mở, và mở ra thì anh chị được gì. Kể thật, không tô.
+MONA Pay là hệ thống nhận và xác nhận tiền chuyển khoản mà tụi em tự xây từ hơn 4 năm trước, ban đầu để thu phí hosting, học phí và tiền phần mềm của chính MONA, rồi từ năm 2022 tới nay đã thu tiền cho hơn 6.000 khách hàng mới của MONA qua web bán hàng, phần mềm tụi em giao. Tháng 8 năm 2026 tụi em mở nó ra cho mọi doanh nghiệp tại [monapay.vn](/), đăng ký xong dùng ngay, miễn phí 500 giao dịch mỗi tháng, trên đó gói cố định theo số giao dịch. Bài này kể vì sao có nó, vì sao giờ mới mở, và mở ra thì anh chị được gì. Kể thật, không tô.
 
 ## Hơn 4 năm, MONA Pay chỉ đến tay một nhóm: chính tụi em và hơn 6.000 khách làm web, phần mềm tại MONA
 
@@ -44,7 +44,7 @@ Thứ nhất là tự phục vụ. Hồi trước muốn thêm một web mới v
 
 Thứ hai là tài liệu viết cho cả máy đọc. Tụi em để nguyên bản markdown của từng trang tài liệu, thêm tệp llms.txt và openapi.json ngay trên tên miền chính, để một AI agent như Claude Code hay Codex đọc là tự viết được đoạn nhận webhook cho anh chị. Chi tiết ở trang [dành cho AI agent](/ai-agent). Đây là thứ tụi em làm thêm khi mở public, vì khách mới không có kỹ sư MONA ngồi cạnh.
 
-Thứ ba là giá. Miễn phí hoàn toàn, không giới hạn giao dịch, không thu phần trăm trên số tiền, xem [bảng giá](/bang-gia). Tiền chưa bao giờ đi qua MONA Pay, nó vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo từ ngân hàng rồi báo về web hoặc nhóm Telegram. Không cầm tiền thì không có phí giữ tiền, không có phí rút. Còn phần kỹ thuật thì giữ nguyên như bản nội bộ: webhook ký HMAC-SHA256, từ chối gói tin lệch giờ quá 5 phút, máy nhận của anh chị trả lời trong 10 giây là tính thành công, mỗi lần gửi đều có lịch sử để xem lại.
+Thứ ba là giá. Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, không thu phần trăm trên số tiền, xem [bảng giá](/bang-gia). Tiền chưa bao giờ đi qua MONA Pay, nó vào thẳng tài khoản ACB của anh chị, tụi em chỉ đọc thông báo từ ngân hàng rồi báo về web hoặc nhóm Telegram. Không cầm tiền thì không có phí giữ tiền, không có phí rút. Còn phần kỹ thuật thì giữ nguyên như bản nội bộ: webhook ký HMAC-SHA256, từ chối gói tin lệch giờ quá 5 phút, máy nhận của anh chị trả lời trong 10 giây là tính thành công, mỗi lần gửi đều có lịch sử để xem lại.
 
 ## Trước khi mở cửa, tụi em đi lại đúng đường của một khách mới
 
@@ -78,7 +78,7 @@ Không. Tiền vào thẳng tài khoản ACB của anh chị, MONA Pay chỉ nh�
 
 ### Miễn phí tới bao giờ?
 
-Miễn phí hoàn toàn, không giới hạn giao dịch, chỉ có giới hạn chống lạm dụng. MONA sống bằng làm web, hosting và phần mềm từ năm 2016. Phí thanh toán không phải nguồn thu của tụi em.
+Miễn phí 500 giao dịch mỗi tháng, trên đó tính theo số giao dịch, chỉ có giới hạn chống lạm dụng. MONA sống bằng làm web, hosting và phần mềm từ năm 2016. Phí thanh toán không phải nguồn thu của tụi em.
 
 ### Đăng ký xong có phải chờ MONA duyệt không?
 
