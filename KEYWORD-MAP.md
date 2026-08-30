@@ -4,7 +4,7 @@ Luật: **title + H1 + đoạn mở đều mở bằng keyword chính**; keyword
 
 | Trang | Keyword chính (vol · KD) | Keyword phụ | Title (55–65) |
 |---|---|---|---|
-| `/` | `cổng thanh toán` 300 · KD1 | `api ngân hàng` 200 · KD0, `tích hợp cổng thanh toán` 20 | Cổng thanh toán và API ngân hàng nhận tiền tự động \| MONA Pay |
+| `/` | `cổng thanh toán` 300 · KD1 | `api ngân hàng` 200 · KD0, `tích hợp cổng thanh toán` 20 | Cổng thanh toán tự động báo có chuyển khoản, miễn phí \| MONA Pay (đổi 30/08: góc người dùng non-tech, "báo có tự động" là keyword phụ blog) |
 | `/acb` | `api acb` ~90 (cụm `api [bank]`) | `biến động số dư` 200, `tài khoản ngân hàng ảo` 300 | API ACB: biến động số dư, tài khoản ảo ACB theo thời gian thực |
 | `/cong-thanh-toan-woocommerce` | `cổng thanh toán woocommerce` (biến thể cụm G) | `tích hợp cổng thanh toán` 20, `tích hợp thanh toán vào website` 50 | Cổng thanh toán WooCommerce chuyển khoản, tự xác nhận đơn |
 | `/cong-thanh-toan-wordpress` | `tích hợp cổng thanh toán vào website` 50 | `plugin thanh toán wordpress` 20 | Tích hợp cổng thanh toán vào website WordPress (chuyển khoản ACB) |
