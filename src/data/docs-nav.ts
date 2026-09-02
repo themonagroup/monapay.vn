@@ -19,6 +19,7 @@ export const DOCS_NAV: { group: string; items: { slug: string; label: string }[]
     { slug: 'api/qr-thanh-toan', label: 'QR thanh toán' },
     { slug: 'api/giao-dich', label: 'Giao dịch' },
     { slug: 'api/webhook-configs', label: 'Cấu hình webhook qua API' },
+    { slug: 'api/goi-va-hoa-don', label: 'Gói và hoá đơn (billing)' },
   ]},
   { group: 'Kênh thông báo', items: [
     { slug: 'telegram', label: 'Telegram' },

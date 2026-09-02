@@ -21,6 +21,18 @@ const out = {
   paths: Object.fromEntries(Object.entries(src.paths).filter(([p]) => PUBLIC.includes(p))),
   components: src.components,
 };
+// Billing (gói + hoá đơn) — BE mới hơn bản openapi.json export, khai tay các route dành cho khách.
+const R = (desc) => ({ description: desc, content: { 'application/json': { schema: { type: 'object', properties: { success: { type: 'boolean' }, message: { type: 'string' }, data: {} } } } } });
+Object.assign(out.paths, {
+  '/api/v1/billing/plans': { get: { tags: ['billing'], summary: 'Danh sách 5 gói (public, không cần đăng nhập)', security: [], responses: { 200: R('5 gói: code, name, price_month, price_year (= price_month × 10), tx_limit, overage_per_tx, features') } } },
+  '/api/v1/billing/usage': { get: { tags: ['billing'], summary: 'Mức dùng tháng hiện tại của client', description: 'Giao dịch = 1 khoản tiền VÀO ghi nhận trên mọi tài khoản/VA đã nối, cắt tháng theo giờ Việt Nam (UTC+7). Sandbox và webhook gửi lại không tính.', responses: { 200: R('plan_code, plan_cycle, plan_expires_at, tx_used, tx_limit, overage_tx, overage_amount') } } },
+  '/api/v1/billing/invoices': {
+    get: { tags: ['billing'], summary: 'Danh sách hoá đơn (phân trang, mới nhất trước)', parameters: [ { name: 'status', in: 'query', schema: { type: 'string' } }, { name: 'page', in: 'query', schema: { type: 'integer' } }, { name: 'limit', in: 'query', schema: { type: 'integer' } } ], responses: { 200: R('{ data: [...], total }') } },
+    post: { tags: ['billing'], summary: 'Tạo hoá đơn nâng gói (cần X-Client-Secret)', requestBody: { required: true, content: { 'application/json': { schema: { type: 'object', required: ['plan_code', 'cycle'], properties: { plan_code: { type: 'string', enum: ['startup', 'business', 'enterprise', 'scale'] }, cycle: { type: 'string', enum: ['month', 'year'] } } } } } }, responses: { 201: R('Hoá đơn pending, hạn 48h, mã chuyển khoản MPAY + 6 số, kèm payment: ảnh VietQR + payload EMVCo. Chuyển đúng số tiền với nội dung là mã MPAY, hệ tự khớp trong vài giây.') } },
+  },
+  '/api/v1/billing/invoices/{invoice_id}': { get: { tags: ['billing'], summary: 'Chi tiết hoá đơn (poll trạng thái paid)', parameters: [{ name: 'invoice_id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }], responses: { 200: R('Hoá đơn + payment nếu còn pending; status: pending | paid | cancelled | expired') } } },
+  '/api/v1/billing/invoices/{invoice_id}/cancel': { post: { tags: ['billing'], summary: 'Huỷ hoá đơn pending (cần X-Client-Secret)', parameters: [{ name: 'invoice_id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } }], responses: { 200: R('pending → cancelled') } } },
+});
 // Gắn security scheme cho rõ
 out.components = out.components || {};
 out.components.securitySchemes = {
