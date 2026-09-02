@@ -1,0 +1,5 @@
+Contact: mailto:info@themona.global
+Expires: 2027-09-01T00:00:00.000Z
+Preferred-Languages: vi, en
+Canonical: https://monapay.vn/.well-known/security.txt
+Policy: https://github.com/themonagroup/.github/blob/main/SECURITY.md
