@@ -1,0 +1,44 @@
+---
+// Strip ảnh thật khoe quy mô MONA (luật hình MONA trên landing 30/08/2026):
+// ảnh chụp thật sàn văn phòng, đội ngũ, giải thưởng — đã đối chiếu blacklist trước khi đưa vào.
+const shots = [
+  { src: '/img/mona/mona-san-van-phong-dev.jpg', alt: 'Sàn văn phòng The MONA Group với hàng chục nhân sự đang làm việc', w: 1600, h: 1067 },
+  { src: '/img/mona/mona-doi-account-giai-thuong-quy.jpg', alt: 'Đội Account MONA nhận đai vô địch và bằng khen doanh số quý', w: 1600, h: 1067 },
+  { src: '/img/mona/mona-van-phong-panda-dong-nguoi.jpg', alt: 'Khu làm việc MONA với tường vẽ gấu trúc, nhân sự ngồi kín bàn', w: 1600, h: 1067 },
+  { src: '/img/mona/mona-mentor-huong-dan-dev.jpg', alt: 'Trưởng nhóm MONA đứng hướng dẫn lập trình viên ngay tại bàn làm việc', w: 1600, h: 900 },
+  { src: '/img/mona/mona-van-phong-media-software-host.jpg', alt: 'Văn phòng MONA với ba khu Media, Software, Host trên vách kính', w: 1600, h: 1048 },
+  { src: '/img/mona/mona-doi-dev-duoi-logo-the-mona.jpg', alt: 'Đội lập trình viên MONA ngồi dưới logo The MONA', w: 1600, h: 1067 },
+];
+---
+<section class="mona-scale">
+  <div class="wrap">
+    <span class="eyebrow">Đằng sau hệ thống</span>
+    <h2>Một sàn văn phòng thật<br class="br-d" /> đang vận hành MONA Pay</h2>
+    <p class="lead">MONA Pay không phải phần mềm dựng lên cho có. Đằng sau là văn phòng The MONA Group: đội làm web, đội phần mềm, đội hosting ngồi cùng nhau, và chính các đội này đã xây, đã dùng hệ thống thu tiền này từ 2022 tới giờ.</p>
+  </div>
+  <div class="strip" aria-label="Ảnh chụp thật văn phòng và đội ngũ MONA">
+    <div class="track">
+      {shots.map((s) => <figure><img src={s.src} alt={s.alt} width={s.w} height={s.h} loading="lazy" /></figure>)}
+      {shots.map((s) => <figure aria-hidden="true"><img src={s.src} alt="" width={s.w} height={s.h} loading="lazy" /></figure>)}
+    </div>
+  </div>
+  <div class="wrap"><p class="strip-note">Ảnh chụp thật tại văn phòng The MONA Group, quận Tân Bình, TP.HCM. Ghé chơi thì gọi trước cho tụi em một tiếng.</p></div>
+</section>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .mona-scale{overflow:hidden}
+  .strip{margin-top:1.6rem;overflow:hidden}
+  .track{display:flex;gap:1rem;width:max-content;animation:scale-run 55s linear infinite}
+  .strip:hover .track{animation-play-state:paused}
+  .track figure{margin:0;flex:none}
+  .track img{display:block;height:240px;width:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
+  @media (max-width:767px){.track img{height:170px}}
+  @keyframes scale-run{from{transform:translateX(0)}to{transform:translateX(-50%)}}
+  @media (prefers-reduced-motion: reduce){
+    .track{animation:none;width:auto}
+    .strip{overflow-x:auto;-webkit-overflow-scrolling:touch}
+    .track figure[aria-hidden="true"]{display:none}
+  }
+  .strip-note{margin:1rem 0 0;color:var(--text-soft);font-size:.92rem}
+</style>

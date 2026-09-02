@@ -5,6 +5,8 @@ import Base from '../layouts/Base.astro';
 import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import MonaStory from '../components/MonaStory.astro';
+import MonaScale from '../components/MonaScale.astro';
+import MonaVisit from '../components/MonaVisit.astro';
 import Steps from '../components/Steps.astro';
 import Stats from '../components/Stats.astro';
 import CodeTabs from '../components/CodeTabs.astro';
@@ -123,6 +125,8 @@ const jsonld = [{
       <p class="stats-note">{SITE.trustLine}</p>
     </div>
   </section>
+
+  <MonaScale />
 
   <section>
     <div class="wrap">
@@ -284,6 +288,8 @@ const jsonld = [{
       <p style="margin-top:1rem"><a href="/faq">Xem đủ 20 câu hỏi thường gặp</a></p>
     </div>
   </section>
+
+  <MonaVisit />
 
   <CtaBand title="Nối ngân hàng hôm nay, từ mai đơn tự xác nhận" body={`Tạo tài khoản là dùng ngay, nối ${liveBank} trong 4 bước, thêm bot vào nhóm Telegram là có báo có. ${priceCap}, không thu phần trăm trên số tiền.`} />
 

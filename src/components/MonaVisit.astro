@@ -1,0 +1,37 @@
+---
+// Grid ảnh thật MONA đi gặp khách — đặt ngay trước CTA cuối trang (luật: gần CTA phải có mặt người MONA).
+// Ảnh lấy từ kho gap-khach + bộ vpm-meet, đã đối chiếu blacklist trước khi đưa vào.
+import { SITE } from '../data/site';
+const shots = [
+  { src: '/img/mona/mona-hop-du-an-cung-khach.jpg', alt: 'Buổi họp dự án đông người tại phòng họp The MONA', cap: 'Họp dự án tại văn phòng: web, phần mềm và khâu thu tiền bàn trong cùng một buổi.', w: 1600, h: 1200, big: true },
+  { src: '/img/mona/mona-trinh-bay-giai-phap-cho-khach.jpg', alt: 'Nhân sự MONA trình bày giải pháp cho khách hàng trên màn hình lớn', cap: 'Trình bày giải pháp cho khách trước khi ký.', w: 1400, h: 1050, big: false },
+  { src: '/img/mona/mona-cung-khach-su-kien-10-nam.jpg', alt: 'Đội MONA chụp cùng khách hàng tại sự kiện kỷ niệm 10 năm của khách', cap: 'Dự sinh nhật 10 năm của khách: làm lâu rồi thành người quen.', w: 1600, h: 1200, big: false },
+  { src: '/img/mona/doi-mona-va-khach-hang-sau-buoi-lam-viec.jpg', alt: 'Đội MONA và khách hàng chụp chung sau buổi làm việc', cap: 'Sau buổi làm việc với khách doanh nghiệp.', w: 1400, h: 1050, big: false },
+  { src: '/img/mona/mona-software-van-phong-ha-noi.jpg', alt: 'Khách ghé văn phòng Mona Software, đứng dưới bảng hiệu gấu trúc', cap: 'Khách ghé văn phòng Mona Software.', w: 1100, h: 1193, big: false },
+];
+---
+<section class="mona-visit">
+  <div class="wrap">
+    <span class="eyebrow">Người thật, việc thật</span>
+    <h2>Tụi em gặp khách mỗi tuần,<br class="br-d" /> anh chị kẹt là có người ngồi cùng</h2>
+    <p class="lead">Dùng MONA Pay, anh chị không làm việc với một cái website vô danh. Đằng sau là đội ngũ đi gặp khách mỗi tuần, tới tận xưởng, tận văn phòng của khách khi cần. Nối ngân hàng kẹt ở bước nào, gọi {SITE.hotline} là gặp người đã làm việc này nhiều năm.</p>
+    <div class="vgrid">
+      {shots.map((s) => (
+        <figure class={s.big ? 'big' : ''}>
+          <img src={s.src} alt={s.alt} width={s.w} height={s.h} loading="lazy" />
+          <figcaption>{s.cap}</figcaption>
+        </figure>
+      ))}
+    </div>
+  </div>
+</section>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .vgrid{columns:3;column-gap:1rem;margin-top:1.6rem}
+  .vgrid figure{margin:0 0 1rem;break-inside:avoid}
+  .vgrid img{display:block;width:100%;height:auto;border-radius:var(--radius);box-shadow:var(--shadow)}
+  .vgrid figcaption{font-size:.85rem;color:var(--text-soft);margin-top:.4rem}
+  @media (max-width:900px){.vgrid{columns:2}}
+  @media (max-width:560px){.vgrid{columns:1}}
+</style>
