@@ -49,6 +49,7 @@ export const MEGA: NavGroup[] = [
   },
   { label: 'Tài liệu', href: '/docs', match: ['/docs'] },
   { label: 'Bảng giá', href: '/bang-gia', match: ['/bang-gia'] },
+  { label: 'Bảo mật', href: '/cam-ket-bao-mat', match: ['/cam-ket-bao-mat'] },
   { label: 'Blog', href: '/blog', match: ['/blog'] },
   { label: 'Hỏi đáp', href: '/faq', match: ['/faq'] },
 ];

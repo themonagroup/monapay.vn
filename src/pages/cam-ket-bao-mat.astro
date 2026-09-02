@@ -1,0 +1,57 @@
+---
+// Tuyên ngôn bảo mật dữ liệu MONA Pay (Mon lệnh 02/09/2026: home + menu phải có tuyên ngôn "MONA không bao giờ tiết lộ dữ liệu của anh chị").
+import Base from '../layouts/Base.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+
+const title = 'Cam kết bảo mật dữ liệu của MONA Pay | MONA Pay';
+const description = 'Cam kết bảo mật MONA Pay: không giữ tiền, không bán hay tiết lộ dữ liệu giao dịch cho bên thứ ba, không cần mật khẩu ngân hàng, webhook ký HMAC-SHA256, xác thực 2 lớp.';
+
+const vows = [
+  { t: 'Tiền không đi qua MONA Pay', d: 'Khách của anh chị chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. Tụi em không giữ tiền, không chạm vào tiền, không có quyền rút hay chuyển. Một ngày anh chị ngừng dùng MONA Pay, tài khoản ngân hàng và tiền vẫn y nguyên, không phải chờ đối soát, không phải xin rút.' },
+  { t: 'Không bao giờ tiết lộ dữ liệu của anh chị', d: 'Dữ liệu giao dịch của anh chị chỉ dùng cho đúng một việc: báo có về website, phần mềm và nhóm Telegram của chính anh chị. Tụi em không bán, không chia sẻ, không đưa cho bên thứ ba nào, không dùng để chạy quảng cáo, không dùng để phân tích chào hàng. Doanh thu của anh chị là chuyện làm ăn của anh chị, MONA không có quyền kể cho ai.' },
+  { t: 'Không cần mật khẩu ngân hàng của anh chị', d: 'Nối tài khoản chỉ cần số tài khoản, số điện thoại đăng ký với ngân hàng và 2 mã OTP ngân hàng gửi thẳng về điện thoại anh chị. MONA Pay không bao giờ hỏi mật khẩu app ngân hàng, và về mặt kỹ thuật cũng không đăng nhập được vào tài khoản ngân hàng của anh chị.' },
+  { t: 'Tin báo có giả mạo không lọt được', d: 'Mỗi gói tin MONA Pay gửi về website của anh chị đều ký bằng HMAC-SHA256 với khoá bí mật riêng của anh chị, tin cũ quá 5 phút bị từ chối. Không ai giả được lệnh "đã thanh toán" để lừa kho xuất hàng. Cách kiểm chữ ký công bố công khai trong tài liệu để lập trình viên của anh chị tự xác minh.' },
+  { t: 'Tài khoản quản trị có xác thực 2 lớp', d: 'Dashboard my.monapay.vn bật được xác thực 2 lớp: đăng nhập cần thêm mã từ điện thoại của anh chị. Lộ mật khẩu cũng không ai vào xem được sổ giao dịch.' },
+  { t: 'Lỗ hổng được tiếp nhận công khai, minh bạch', d: `Quy trình báo lỗ hổng bảo mật công bố tại monapay.vn/.well-known/security.txt, ai phát hiện vấn đề gửi về ${SITE.email}, tụi em xác nhận trong 2 ngày làm việc và xử lý tới nơi. Chuyện bảo mật tụi em không giấu, vì hệ thống này thu tiền cho chính MONA trước khi thu cho anh chị.` },
+];
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'WebPage',
+  name: 'Cam kết bảo mật dữ liệu của MONA Pay', url: SITE.url + '/cam-ket-bao-mat', inLanguage: 'vi',
+  description,
+}];
+---
+<Base title={title} description={description} path="/cam-ket-bao-mat" jsonld={jsonld}>
+  <section class="hero">
+    <div class="wrap narrow">
+      <span class="eyebrow">Cam kết bảo mật</span>
+      <h1>MONA không bao giờ tiết lộ<br class="br-d" /> dữ liệu của anh chị</h1>
+      <div class="answer-first">
+        <p>Hệ thống đứng sau MONA Pay thu tiền cho chính MONA từ 2022, rồi mới thu cho hơn {SITE.customersSince2022} khách hàng của MONA. Tụi em hiểu rõ một điều: dữ liệu tiền vào tiền ra là chuyện làm ăn riêng của từng doanh nghiệp. Vậy nên cam kết dưới đây không phải câu chữ pháp lý cho có, nó là cách hệ thống này được thiết kế từ đầu.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap">
+      <div class="grid grid-2">
+        {vows.map((v, i) => (
+          <div class="card">
+            <div class="icon">{i + 1}</div>
+            <h3>{v.t}</h3>
+            <p>{v.d}</p>
+          </div>
+        ))}
+      </div>
+      <p class="more">Chi tiết lưu gì, lưu bao lâu, xoá thế nào: <a href="/chinh-sach-bao-mat">chính sách bảo mật đầy đủ</a>. Phần kỹ thuật cho lập trình viên: <a href="/docs/webhooks/bao-mat">bảo mật webhook, HMAC và chống phát lại</a>. Kênh báo lỗ hổng: <a href="/.well-known/security.txt">security.txt</a>.</p>
+    </div>
+  </section>
+
+  <CtaBand title="Dùng thử rồi tự kiểm tra lời hứa" body={`Tạo tài khoản miễn phí, nối ngân hàng bằng 2 mã OTP, tự soi từng gói tin có chữ ký. Thắc mắc chỗ nào gọi ${SITE.hotline}, tụi em trả lời thẳng.`} />
+</Base>
+<style>
+  .br-d{display:inline}
+  @media (max-width:767px){.br-d{display:none}}
+  .more{margin:1.6rem 0 0;color:var(--text-soft)}
+</style>

@@ -40,5 +40,6 @@ export const PAGES = [
   { path: '/roadmap', title: 'Lộ trình MONA Pay', desc: '7 nhóm tính năng với trạng thái đã có / đang làm / kế hoạch; góp ý qua GitHub Discussions.' },
   { path: '/status', title: 'Trạng thái hệ thống MONA Pay', desc: 'Kiểm tra 5 phút/lần website, dashboard, API; uptime 24h/30 ngày; JSON máy đọc /status.json.' },
   { path: '/dieu-khoan', title: 'Điều khoản sử dụng MONA Pay', desc: 'Miễn phí, không giữ tiền, trách nhiệm hai bên, fair-use, ngừng dịch vụ.' },
+  { path: '/cam-ket-bao-mat', title: 'Cam kết bảo mật dữ liệu của MONA Pay', desc: 'Tuyên ngôn: không giữ tiền, không bao giờ tiết lộ hay bán dữ liệu giao dịch, không cần mật khẩu ngân hàng, webhook ký HMAC-SHA256, 2FA, kênh báo lỗ hổng công khai.' },
   { path: '/chinh-sach-bao-mat', title: 'Chính sách bảo mật MONA Pay', desc: 'Dữ liệu thu thập (chỉ thông báo giao dịch), mục đích, thời gian lưu, quyền của người dùng.' },
 ];

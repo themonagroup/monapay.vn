@@ -5,9 +5,9 @@ import { PRICE_LINE } from '../data/pricing';
 interface Props { compact?: boolean }
 const { compact = false } = Astro.props;
 const photos = [
-  { src: '/img/mona/mona-hop-khach-hang-doanh-nghiep.jpg', alt: 'Đội MONA họp với khách hàng doanh nghiệp, trình bày giải pháp trên màn hình lớn', cap: 'Họp với khách doanh nghiệp: web, phần mềm và khâu thu tiền bàn cùng một lúc.', w: 1400, h: 1050 },
-  { src: '/img/mona/mona-gap-khach-tai-xuong.jpg', alt: 'Nhân viên MONA mặc áo THE MONA chụp cùng khách hàng trước xưởng sản xuất', cap: 'Đi gặp khách tận xưởng: phần mềm quản lý và thu tiền phải chạy đúng cách xưởng vận hành.', w: 1400, h: 1050 },
-  { src: '/img/mona/mona-team-building.jpg', alt: 'Đội ngũ MONA trong ngày team building ở biển', cap: 'Đội ngũ MONA: đội làm web, làm phần mềm, làm hosting, và đội tự xây MONA Pay.', w: 1400, h: 926 },
+  { src: '/img/mona/mona-san-van-phong-doi-ngu.jpg', alt: 'Sàn văn phòng The MONA Group với hàng chục nhân sự làm việc, tường vẽ gấu trúc', cap: 'Sàn văn phòng MONA: đội web, đội phần mềm, đội hosting ngồi chung một chỗ.', w: 1600, h: 1067 },
+  { src: '/img/mona/mona-tuong-bang-khen-quy.jpg', alt: 'Nhân sự MONA đứng trước tường bằng khen doanh số theo quý', cap: 'Tường bằng khen theo quý: làm tốt là có tên trên tường.', w: 1400, h: 933 },
+  { src: '/img/mona/mona-dev-viet-phan-mem.jpg', alt: 'Hai lập trình viên MONA mặc áo THE MONA đang viết phần mềm', cap: 'Chính đội này viết và trực hệ thống MONA Pay mỗi ngày.', w: 1400, h: 933 },
 ];
 ---
 <section class="mona-story section-alt">
@@ -37,7 +37,7 @@ const photos = [
   .story-photos{display:grid;grid-template-columns:1fr 1fr;gap:.9rem}
   .story-photos figure{margin:0}
   .story-photos figure:first-child{grid-column:1/-1}
-  .story-photos img{width:100%;height:100%;object-fit:cover;border-radius:var(--radius);box-shadow:var(--shadow);aspect-ratio:4/3}
+  .story-photos img{width:100%;height:auto;object-fit:cover;border-radius:var(--radius);box-shadow:var(--shadow);aspect-ratio:4/3}
   .story-photos figure:first-child img{aspect-ratio:16/10}
   .story-photos figcaption{font-size:.85rem;color:var(--text-soft);margin-top:.4rem}
   .story-logo{display:flex;flex-wrap:wrap;align-items:center;gap:1rem;margin-top:1.6rem;color:var(--text-soft);font-size:.92rem}
