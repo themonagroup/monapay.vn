@@ -9,12 +9,17 @@ export const PRICING_APPROVED = true;
 
 export type Plan = {
   code: string; name: string; price_month: number; price_year: number;
-  tx_limit: number; overage_per_tx: number | null; featured: boolean; sort: number; features: string[];
+  tx_limit: number; overage_per_tx: number | null; featured: boolean; sort: number; features: string[]; hidden?: boolean;
 };
 export const YEARLY_MONTHS: number = plansJson.yearly_months;
-export const PLANS: Plan[] = [...plansJson.plans]
+const ALL_PLANS: Plan[] = [...plansJson.plans]
   .sort((a, b) => a.sort - b.sort)
   .map((p) => ({ ...p, price_year: p.price_month * YEARLY_MONTHS }));
+// PLANS công khai KHÔNG gồm gói ẩn (vd 'mona') — bảng giá đang xài index nên đừng đổi
+export const PLANS: Plan[] = ALL_PLANS.filter((p) => !p.hidden);
+// Gói khách hàng MONA (Mon chốt 02/09): miễn phí hoàn toàn, không giới hạn, admin gán tay
+export const MONA_CUSTOMER_PLAN = ALL_PLANS.find((p) => p.code === 'mona');
+export const MONA_FREE_LINE = 'Miễn phí hoàn toàn, không giới hạn giao dịch, cho khách hàng của MONA';
 export const FREE_PLAN = PLANS.find((p) => p.code === 'free')!;
 export const PAID_PLANS = PLANS.filter((p) => p.price_month > 0);
 export const CHEAPEST_PAID = PAID_PLANS[0];

@@ -1,0 +1,15 @@
+---
+// Banner "Miễn phí hoàn toàn cho khách hàng của MONA" (Mon chốt 02/09/2026) — dùng ở home (khối Giá) + /bang-gia.
+import { SITE } from '../data/site';
+---
+<div class="mfb">
+  <p class="mfb-big">Miễn phí hoàn toàn cho khách hàng của MONA</p>
+  <p class="mfb-sub">Anh chị đang dùng dịch vụ web, phần mềm hay hosting của The MONA Group thì MONA Pay không giới hạn giao dịch, không thu đồng nào, trong suốt thời gian anh chị còn là khách của MONA. Hệ thống này vốn sinh ra để thu tiền cho khách MONA từ 2022, nay chỉ là nói rõ thành lời. Đội MONA gán gói khi bàn giao dự án, hoặc anh chị gọi <a href={SITE.hotlineTel}>{SITE.hotline}</a> là xong trong một cuộc điện thoại.</p>
+</div>
+<style>
+  .mfb{background:linear-gradient(120deg, var(--cta), #00463f);border-radius:var(--radius);padding:1.8rem 2rem;margin:0 0 1.8rem;box-shadow:var(--shadow-lg)}
+  .mfb-big{margin:0 0 .6rem;color:#fff;font-weight:900;font-size:clamp(1.35rem, 2.6vw, 2rem);line-height:1.3;text-wrap:balance}
+  @media (max-width:1023px){.mfb-big{text-wrap:pretty}}
+  .mfb-sub{margin:0;color:#fff;opacity:.92;font-size:1.05rem;max-width:900px}
+  .mfb-sub a{color:#fff;font-weight:700;text-decoration:underline}
+</style>

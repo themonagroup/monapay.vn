@@ -4,6 +4,7 @@ import Faq from '../components/Faq.astro';
 import CtaBand from '../components/CtaBand.astro';
 import { SITE } from '../data/site';
 import { PLANS, PAID_PLANS, CHEAPEST_PAID, FREE_TX_PER_MONTH, YEARLY_MONTHS, TX_RULE, FREE_OVER_QUOTA_POLICY, PAID_OVER_QUOTA_POLICY, FAIR_USE, fmt, fmtVnd } from '../data/pricing';
+import MonaFreeBanner from '../components/MonaFreeBanner.astro';
 
 // Trang giá: 1 gói Miễn phí + 4 gói trả phí theo số giao dịch (nguồn: pricing/plans.json). Mon chốt 31/08/2026.
 const title = `Bảng giá cổng thanh toán MONA Pay: miễn phí ${fmt(FREE_TX_PER_MONTH)} giao dịch/tháng`;
@@ -84,6 +85,7 @@ const jsonld = [{
 
   <section>
     <div class="wrap">
+      <MonaFreeBanner />
       <div class="plans">
         {PLANS.map((p) => (
           <div class={'price-card' + (p.featured ? ' featured' : '')} id={'goi-' + p.code}>

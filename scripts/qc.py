@@ -14,6 +14,10 @@ for line in open(BANNED, encoding='utf-8'):
 ENTITY = 'MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group'
 # Giá (Mon chốt 31/08/2026: free 500 GD/tháng + gói trả phí) — cụm cũ 'miễn phí hoàn toàn / không giới hạn giao dịch' là SAI SỰ THẬT → FAIL
 PRICING_BANNED = ['miễn phí hoàn toàn', 'không giới hạn giao dịch', 'không giới hạn số giao dịch', 'không giới hạn số lượng giao dịch', 'no transaction limit', 'completely free']
+# Ngoại lệ Mon chốt 02/09: cụm trên HỢP LỆ khi nói về tầng khách hàng MONA — gỡ ngữ cảnh đó khỏi text trước khi quét
+PRICING_ALLOWED_CTX = re.compile(r'.{0,160}(khách hàng của mona|khách hàng của the mona|mona customers).{0,160}', re.I)
+def strip_pricing_allowed(t):
+    return PRICING_ALLOWED_CTX.sub(' ', t)
 def text_of(h):
     h = re.sub(r'<script[^>]*>.*?</script>', ' ', h, flags=re.S)
     h = re.sub(r'<style[^>]*>.*?</style>', ' ', h, flags=re.S)
@@ -37,7 +41,7 @@ for f in files:
         title = re.search(r'<title>(.*?)</title>', raw, re.S)
         if title and len(html.unescape(title.group(1)).strip()) > 70: ws.append('title dài')
         for s in PRICING_BANNED:
-            if s in t.lower(): issues.append(f'giá cũ (free-all): "{s}"')
+            if s in strip_pricing_allowed(t).lower(): issues.append(f'giá cũ (free-all): "{s}"')
         for i in issues: print(f'FAIL {rel}: {i}')
         fails += len(issues); warns += len(ws); continue
     for m in re.finditer(r'\b(\w+) ạ[.!?,]', t): issues.append(f'"ạ" cuối câu: …{m.group(0)}')
@@ -50,7 +54,7 @@ for f in files:
     for s in subs:
         if s in t.lower(): issues.append(f'banned tell: "{s}"')
     for s in PRICING_BANNED:
-        if s in t.lower(): issues.append(f'giá cũ (free-all): "{s}"')
+        if s in strip_pricing_allowed(t).lower(): issues.append(f'giá cũ (free-all): "{s}"')
     for r in regs:
         m = r.search(t)
         if m: issues.append(f'banned regex: "{m.group(0)[:60]}"')

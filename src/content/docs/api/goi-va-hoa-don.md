@@ -6,6 +6,10 @@ updated: 02/09/2026
 
 MONA Pay miễn phí 500 giao dịch tiền vào mỗi tháng, đủ mọi tính năng. Bán nhiều hơn thì nâng gói trả phí tính theo số giao dịch, không thu phần trăm trên số tiền. Trang này dành cho lập trình viên và AI agent cần đọc gói, đọc mức dùng và nâng gói bằng API thay vì bấm dashboard. Giá niêm yết ở [trang bảng giá](/bang-gia).
 
+## Khách hàng của MONA: miễn phí hoàn toàn
+
+Anh chị đang dùng dịch vụ web, phần mềm hay hosting của The MONA Group thì có gói riêng `mona`: miễn phí hoàn toàn, không giới hạn giao dịch, trong suốt thời gian còn là khách hàng của MONA. Gói này không mua qua API được, đội MONA gán khi bàn giao dự án hoặc anh chị gọi 1900 636 648. Đã được gán thì `GET /api/v1/billing/usage` trả `plan_code: "mona"` và mọi phần dưới đây về hạn mức không còn liên quan tới anh chị.
+
 ## Cách đếm giao dịch
 
 Giao dịch = 1 khoản tiền **vào** (credit) ghi nhận trên mọi tài khoản và tài khoản ảo đã nối, cắt tháng theo **giờ Việt Nam (UTC+7)**. Tiền ra, giao dịch sandbox và webhook gửi lại **không tính**.

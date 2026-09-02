@@ -7,6 +7,7 @@ import CtaBand from '../components/CtaBand.astro';
 import MonaStory from '../components/MonaStory.astro';
 import MonaScale from '../components/MonaScale.astro';
 import MonaVisit from '../components/MonaVisit.astro';
+import MonaFreeBanner from '../components/MonaFreeBanner.astro';
 import Steps from '../components/Steps.astro';
 import Stats from '../components/Stats.astro';
 import CodeTabs from '../components/CodeTabs.astro';
@@ -69,7 +70,7 @@ const industries = [
 const faq = [
   { q: 'Tôi không rành kỹ thuật, tự dùng được không?', a: `Được. Phần nhận báo có qua Telegram không cần viết dòng code nào: tạo tài khoản, nối ngân hàng bằng 2 mã OTP, thêm bot vào nhóm, làm theo hướng dẫn trong dashboard khoảng 10 phút. Phần nối vào website hay phần mềm thì lập trình viên của anh chị làm 1 lần theo code mẫu, web làm tại MONA thì tụi em cài luôn. Kẹt chỗ nào gọi ${SITE.hotline}.` },
   { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên không có chuyện chờ đối soát rồi mới được rút.' },
-  { q: 'Miễn phí thật không, có phí ẩn không?', a: isFree ? `${priceCap}, đủ mọi tính năng: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng. Phí duy nhất anh chị có thể gặp là phí ngân hàng thu cho tài khoản của mình, nếu có, MONA không thu thêm gì. Điều khoản ghi rõ: nếu sau này có gói thu phí, tụi em báo trước ít nhất 30 ngày và tài khoản đang dùng không bị tự chuyển sang trả phí.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền.` },
+  { q: 'Miễn phí thật không, có phí ẩn không?', a: isFree ? `${priceCap}, đủ mọi tính năng: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng. Phí duy nhất anh chị có thể gặp là phí ngân hàng thu cho tài khoản của mình, nếu có, MONA không thu thêm gì. Điều khoản ghi rõ: nếu sau này có gói thu phí, tụi em báo trước ít nhất 30 ngày và tài khoản đang dùng không bị tự chuyển sang trả phí.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền. Riêng anh chị đang là khách hàng của MONA (web, phần mềm, hosting) thì miễn phí hoàn toàn, không giới hạn giao dịch, gọi ${SITE.hotline} để đội MONA gán gói.` },
   { q: 'Cần tài khoản ngân hàng nào?', a: `${BANKS_LINE}. Tài khoản cá nhân hay doanh nghiệp đều nối được. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; Telegram, website, sổ giao dịch dùng chung nên thêm ngân hàng anh chị không phải làm lại gì.` },
   { q: 'Tôi chỉ bán qua Facebook, Zalo, chưa có website, dùng được không?', a: `Được. Anh chị chỉ cần tài khoản ngân hàng và một nhóm Telegram: tiền vào là nhóm có tin, khỏi mở app ngân hàng kiểm. Cần mã QR đúng số tiền cho từng đơn thì tạo trong dashboard, hoặc dùng <a href="/tao-ma-qr-ngan-hang">tool tạo mã QR ngân hàng</a> miễn phí trên monapay.vn, không cần đăng nhập. Sau này làm website thì nối thêm, tài khoản vẫn giữ nguyên.` },
   { q: 'Đăng ký xong dùng ngay được không?', a: 'Được. Tài khoản tự kích hoạt ngay khi tạo, không cần ai duyệt. Anh chị đăng nhập, nối ngân hàng bằng 2 mã OTP, thêm bot Telegram hoặc nối website, tất cả tự làm trong vài phút.' },
@@ -216,6 +217,7 @@ const jsonld = [{
     <div class="wrap">
       <span class="eyebrow">Giá</span>
       <h2>Miễn phí {fmt(FREE_TX_PER_MONTH)} giao dịch mỗi tháng,<br class="br-d" /> không thu phần trăm trên số tiền</h2>
+      <MonaFreeBanner />
       <div class="grid grid-2 why">
         <div>
           <p>Gói Miễn phí có đủ mọi thứ: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch, API, và {fmt(FREE_TX_PER_MONTH)} giao dịch tiền vào mỗi tháng, {FREE_MULTIPLE_LINE}. Không phí mở tài khoản, không thu phần trăm trên số tiền. Shop bán đều 15 đơn mỗi ngày dùng cả năm không mất đồng nào.</p>
