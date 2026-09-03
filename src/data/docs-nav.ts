@@ -1,5 +1,12 @@
 // Sidebar docs — thứ tự hiển thị + nhóm. slug khớp tên file trong src/content/docs (không đuôi .md)
 export const DOCS_NAV: { group: string; items: { slug: string; label: string }[] }[] = [
+  { group: 'Dùng ngay', items: [
+    { slug: 'dung-ngay', label: 'Dùng ngay, không cần lập trình' },
+    { slug: 'dung-ngay/quan-an-tra-sua', label: 'Quán ăn, quán trà sữa' },
+    { slug: 'dung-ngay/tiem-toc-spa', label: 'Tiệm tóc, spa' },
+    { slug: 'dung-ngay/ban-hang-online', label: 'Bán hàng online' },
+    { slug: 'dung-ngay/lop-hoc', label: 'Lớp học, trung tâm' },
+  ]},
   { group: 'Bắt đầu', items: [
     { slug: 'index', label: 'Tổng quan' },
     { slug: 'bat-dau-nhanh', label: 'Bắt đầu nhanh (5 phút)' },
@@ -38,6 +45,13 @@ export const DOCS_FLAT = DOCS_NAV.flatMap((g) => g.items);
 
 // English sidebar — cùng slug, nhãn tiếng Anh (trang /en/docs/*)
 export const DOCS_NAV_EN: { group: string; items: { slug: string; label: string }[] }[] = [
+  { group: 'Get started today', items: [
+    { slug: 'dung-ngay', label: 'Get started today, no coding needed' },
+    { slug: 'dung-ngay/quan-an-tra-sua', label: 'Restaurants and drink shops' },
+    { slug: 'dung-ngay/tiem-toc-spa', label: 'Salons and spas' },
+    { slug: 'dung-ngay/ban-hang-online', label: 'Selling online' },
+    { slug: 'dung-ngay/lop-hoc', label: 'Classes and training centres' },
+  ]},
   { group: 'Getting started', items: [
     { slug: 'index', label: 'Overview' },
     { slug: 'bat-dau-nhanh', label: 'Quick start (5 minutes)' },

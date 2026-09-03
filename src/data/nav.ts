@@ -3,9 +3,10 @@ export type NavItem = { href: string; label: string; desc?: string; badge?: stri
 export type NavGroup = { label: string; href?: string; cols?: { title: string; items: NavItem[] }[]; match?: string[] };
 export const MEGA: NavGroup[] = [
   {
-    label: 'Sản phẩm', match: ['/trang-thanh-toan', '/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/ai-agent', '/tao-ma-qr-ngan-hang', '/loa-thong-bao-chuyen-khoan'],
+    label: 'Sản phẩm', match: ['/trang-thanh-toan', '/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/ai-agent', '/tao-ma-qr-ngan-hang', '/loa-thong-bao-chuyen-khoan', '/docs/dung-ngay'],
     cols: [
       { title: 'Nhận tiền', items: [
+        { href: '/docs/dung-ngay', label: 'Dùng ngay, không cần lập trình', desc: 'Hướng dẫn cho quán ăn, tiệm tóc, shop online, lớp học: nối ngân hàng, báo có, in QR trong 10 phút', badge: 'Cho chủ quán' },
         { href: '/trang-thanh-toan', label: 'Trang thanh toán', desc: 'Tạo link có VietQR, gửi khách hoặc chuyển hướng từ website', badge: 'Mới' },
         { href: '/ngan-hang', label: 'Ngân hàng hỗ trợ', desc: 'ACB đang chạy, các ngân hàng khác đang kết nối, bảng trạng thái', badge: 'Mở rộng' },
         { href: '/acb', label: 'Nhận tiền ACB theo thời gian thực', desc: 'Tài khoản ảo (VA) riêng từng đơn, ACB báo là biết ngay' },
@@ -59,9 +60,10 @@ export const MEGA: NavGroup[] = [
 // Menu tiếng Anh cho /en (Mon 03/09/2026: trang EN mà menu VI). Trang chưa có bản EN thì trỏ về trang VI, ghi rõ trong desc.
 export const MEGA_EN: NavGroup[] = [
   {
-    label: 'Products', match: ['/trang-thanh-toan', '/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/en/ai-agent', '/tao-ma-qr-ngan-hang', '/loa-thong-bao-chuyen-khoan'],
+    label: 'Products', match: ['/trang-thanh-toan', '/acb', '/ngan-hang', '/chia-se-bien-dong-so-du-telegram', '/en/ai-agent', '/tao-ma-qr-ngan-hang', '/loa-thong-bao-chuyen-khoan', '/en/docs/dung-ngay'],
     cols: [
       { title: 'Collect payments', items: [
+        { href: '/en/docs/dung-ngay', label: 'Get started today, no coding needed', desc: 'For restaurants, salons, online shops and classes: connect a bank, get paid alerts, print a QR in 10 minutes', badge: 'For owners' },
         { href: '/trang-thanh-toan', label: 'Hosted checkout', desc: 'Create a VietQR payment link or redirect from a website (Vietnamese page)', badge: 'New' },
         { href: '/ngan-hang', label: 'Supported banks', desc: 'ACB live, other banks connecting, status table (Vietnamese page)', badge: 'Growing' },
         { href: '/acb', label: 'ACB transfers in real time', desc: 'A virtual account (VA) per order, ACB notifies instantly (Vietnamese page)' },

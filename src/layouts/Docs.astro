@@ -2,8 +2,12 @@
 import Base from './Base.astro';
 import { DOCS_NAV, DOCS_NAV_EN } from '../data/docs-nav';
 import { SITE } from '../data/site';
-interface Props { title: string; description: string; slug: string; updated?: string; lang?: 'vi' | 'en' }
-const { title, description, slug, updated, lang = 'vi' } = Astro.props;
+interface Props {
+  title: string; description: string; slug: string; updated?: string; lang?: 'vi' | 'en';
+  howto?: { name: string; text: string }[];
+  faq?: { q: string; a: string }[];
+}
+const { title, description, slug, updated, lang = 'vi', howto, faq } = Astro.props;
 const isEn = lang === 'en';
 const root = isEn ? '/en/docs' : '/docs';
 const path = slug === 'index' ? root : root + '/' + slug;
@@ -25,7 +29,13 @@ const jsonld = [{
     { '@type': 'ListItem', position: 2, name: T.crumbDocs, item: SITE.url + root },
     ...(slug !== 'index' ? [{ '@type': 'ListItem', position: 3, name: title, item: SITE.url + path }] : []),
   ],
-}];
+}, ...(howto && howto.length ? [{
+  '@context': 'https://schema.org', '@type': 'HowTo', name: title, description,
+  step: howto.map((s, i) => ({ '@type': 'HowToStep', position: i + 1, name: s.name, text: s.text })),
+}] : []), ...(faq && faq.length ? [{
+  '@context': 'https://schema.org', '@type': 'FAQPage',
+  mainEntity: faq.map((f) => ({ '@type': 'Question', name: f.q, acceptedAnswer: { '@type': 'Answer', text: f.a } })),
+}] : [])];
 ---
 <Base title={title.length > 52 ? title : title + T.suffix} description={description} path={path} jsonld={jsonld} lang={lang} alternate={alternate}>
   <div class="wrap docs-shell">
