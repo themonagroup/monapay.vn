@@ -50,13 +50,13 @@ Vào [my.monapay.vn](https://my.monapay.vn), tạo tài khoản, sau đó vào m
 
 Tạo nhóm gồm giáo vụ và kế toán nếu có, thêm bot MONA Pay vào nhóm theo hướng dẫn trong dashboard. Từ lúc này, mỗi khoản học phí vào tài khoản đã nối đều thành một tin nhắn trong nhóm.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/lop-hoc-buoc-2-them-nhom.png (Màn hình dashboard mục thêm nhóm Zalo cho giáo vụ, ô dán mã nhóm và nút gửi thử) -->*Thêm bot vào nhóm giáo vụ, bấm gửi thử trước khi áp dụng cho học phí thật.*
+![Màn hình dashboard mục thêm nhóm Zalo cho giáo vụ, ô dán mã nhóm và nút gửi thử](/img/docs/dung-ngay/lop-hoc-buoc-2-them-nhom.png)*Thêm bot vào nhóm giáo vụ, bấm gửi thử trước khi áp dụng cho học phí thật.*
 
 ### 3. Gửi link thu học phí hoặc mã QR theo từng học viên
 
 Trong dashboard, mục Trang thanh toán cho phép tạo link thu tiền theo đúng mức học phí, đặt tên link theo tên học viên để dễ theo dõi. Gửi link qua nhóm Zalo phụ huynh mỗi đầu tháng, hoặc in mã QR dán tại lớp cho phụ huynh đóng trực tiếp khi đưa đón con.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/lop-hoc-buoc-3-link-hoc-phi.png (Màn hình tạo link thu học phí với ô nhập số tiền và tên học viên) -->*Tạo link thu học phí đúng số tiền, đặt tên theo học viên để giáo vụ khớp đúng người ngay khi có tin báo.*
+![Màn hình tạo link thu học phí với ô nhập số tiền và tên học viên](/img/docs/dung-ngay/lop-hoc-buoc-3-link-hoc-phi.png)*Tạo link thu học phí đúng số tiền, đặt tên theo học viên để giáo vụ khớp đúng người ngay khi có tin báo.*
 
 ## Mẹo dùng cho lớp học, trung tâm
 

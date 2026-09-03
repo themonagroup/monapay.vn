@@ -38,7 +38,7 @@ Khách nhắn tin chốt một đơn 350.000 đồng qua Messenger. Người ch�
 
 Tiền vừa vào tài khoản shop, nhóm Zalo hoặc Telegram của người chốt đơn, người đóng gói, kế toán nhận ngay một dòng tin báo. Người đóng gói nhìn tin là biết đơn nào đã có tiền để bắt đầu đóng hàng, không cần chờ người chốt đơn báo lại bằng lời, cũng không phải tin vào ảnh chụp màn hình khách gửi, vì ảnh có thể chỉnh sửa còn tin báo của MONA Pay chỉ hiện khi tiền thật sự đã vào tài khoản.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/ban-hang-online-link-thu-tien.png (Màn hình gửi link thu tiền qua Messenger, khách bấm vào ra trang chuyển khoản điền sẵn số tiền) -->*Gửi link thu tiền ngay trong khung chat, khách bấm vào là chuyển đúng số tiền, không cần gõ tay.*
+![Màn hình gửi link thu tiền qua Messenger, khách bấm vào ra trang chuyển khoản điền sẵn số tiền](/img/docs/dung-ngay/ban-hang-online-link-thu-tien.png)*Gửi link thu tiền ngay trong khung chat, khách bấm vào là chuyển đúng số tiền, không cần gõ tay.*
 
 ## Làm theo 3 bước
 
@@ -50,13 +50,13 @@ Vào [my.monapay.vn](https://my.monapay.vn), tạo tài khoản, sau đó vào m
 
 Tạo nhóm gồm người chốt đơn, người đóng gói, kế toán nếu có, thêm bot MONA Pay vào nhóm theo hướng dẫn trong dashboard. Từ lúc này, mỗi khoản tiền vào tài khoản đã nối đều thành một tin nhắn trong nhóm.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/ban-hang-online-nhom-zalo.png (Màn hình dashboard mục thêm nhóm Zalo cho shop, ô dán mã nhóm và nút gửi thử) -->*Thêm bot vào nhóm chốt đơn, bấm gửi thử trước khi áp dụng cho đơn hàng thật.*
+![Màn hình dashboard mục thêm nhóm Zalo cho shop, ô dán mã nhóm và nút gửi thử](/img/docs/dung-ngay/ban-hang-online-nhom-zalo.png)*Thêm bot vào nhóm chốt đơn, bấm gửi thử trước khi áp dụng cho đơn hàng thật.*
 
 ### 3. Tạo link thu tiền gửi cho từng đơn
 
 Trong dashboard, mục Trang thanh toán cho phép tạo link thu tiền theo đúng số tiền từng đơn, đặt tên link theo mã đơn để dễ theo dõi khi có nhiều đơn cùng lúc. Gửi link trực tiếp trong khung chat Facebook, Zalo ngay khi chốt đơn, khách bấm vào là ra màn hình chuyển khoản điền sẵn số tiền, không cần shop có website.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/ban-hang-online-tao-link.png (Màn hình tạo link thu tiền với ô nhập số tiền đơn hàng và mã đơn) -->*Tạo link thu tiền đúng số tiền từng đơn, đặt tên theo mã đơn để không nhầm khi có nhiều đơn cùng lúc.*
+![Màn hình tạo link thu tiền với ô nhập số tiền đơn hàng và mã đơn](/img/docs/dung-ngay/ban-hang-online-tao-link.png)*Tạo link thu tiền đúng số tiền từng đơn, đặt tên theo mã đơn để không nhầm khi có nhiều đơn cùng lúc.*
 
 ## Mẹo chống "em chuyển rồi mà"
 

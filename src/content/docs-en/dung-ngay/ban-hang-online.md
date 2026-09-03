@@ -38,7 +38,7 @@ A customer confirms a 350,000đ order over Messenger. The order handler creates 
 
 The moment the money lands, the Zalo or Telegram group for order handling, packing and accounting all get an alert at once. The packer sees which order is paid and starts packing, without waiting on a message or trusting a screenshot, since MONA Pay only alerts once the money has actually arrived.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/ban-hang-online-link-thu-tien.png (Sending a payment link over Messenger, pre-filled with the order amount) -->*Send a payment link right in the chat, the customer taps to pay the exact amount, no typing required.*
+![Sending a payment link over Messenger, pre-filled with the order amount](/img/docs/dung-ngay/ban-hang-online-link-thu-tien.png)*Send a payment link right in the chat, the customer taps to pay the exact amount, no typing required.*
 
 ## Set it up in 3 steps
 

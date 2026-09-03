@@ -54,13 +54,13 @@ Không ai trong quán phải chìa điện thoại chủ ra xem sao kê, không 
 
 Vào [my.monapay.vn](https://my.monapay.vn), tạo tài khoản, sau đó vào mục Ngân hàng nhập số tài khoản và số điện thoại đã đăng ký với ngân hàng. Ngân hàng gửi hai mã OTP về điện thoại chủ quán, nhập đủ hai mã là nối xong. Tài khoản dùng để nối nên là tài khoản đứng tên chủ quán, không mượn tài khoản người khác vì OTP gửi đúng số điện thoại đã đăng ký với ngân hàng đó.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/quan-an-buoc-1-noi-ngan-hang.png (Màn hình dashboard mục nối ngân hàng với ô nhập số tài khoản và số điện thoại) -->*Nhập số tài khoản và số điện thoại đã đăng ký với ngân hàng, xác nhận bằng hai mã OTP.*
+![Màn hình dashboard mục nối ngân hàng với ô nhập số tài khoản và số điện thoại](/img/docs/dung-ngay/quan-an-buoc-1-noi-ngan-hang.png)*Nhập số tài khoản và số điện thoại đã đăng ký với ngân hàng, xác nhận bằng hai mã OTP.*
 
 ### 2. Thêm nhóm Zalo hoặc Telegram của quán
 
 Tạo một nhóm gồm chủ quán và khoảng 5 đến 7 nhân viên đang làm ca, thêm bot MONA Pay vào nhóm theo hướng dẫn trong dashboard. Từ lúc này, mỗi giao dịch tiền vào tài khoản đã nối đều thành một tin nhắn trong nhóm, không phải người nào đứng ra báo lại cho người khác.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/quan-an-buoc-2-them-nhom.png (Màn hình dashboard mục thêm nhóm Zalo, ô dán mã nhóm và nút gửi thử) -->*Thêm bot vào nhóm quán, bấm gửi thử để chắc tin nhắn hiện đúng trong nhóm trước khi bán hàng thật.*
+![Màn hình dashboard mục thêm nhóm Zalo, ô dán mã nhóm và nút gửi thử](/img/docs/dung-ngay/quan-an-buoc-2-them-nhom.png)*Thêm bot vào nhóm quán, bấm gửi thử để chắc tin nhắn hiện đúng trong nhóm trước khi bán hàng thật.*
 
 ### 3. Bật màn hình đọc to ở quầy
 

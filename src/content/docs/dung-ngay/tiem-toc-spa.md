@@ -50,13 +50,13 @@ Vào [my.monapay.vn](https://my.monapay.vn), tạo tài khoản, sau đó vào m
 
 Tạo nhóm gồm lễ tân và chủ tiệm, thêm bot MONA Pay vào nhóm theo hướng dẫn trong dashboard. Từ lúc này, mỗi khoản tiền vào tài khoản đã nối đều thành một tin nhắn trong nhóm, lễ tân xem điện thoại đang cầm là biết, không cần đăng nhập app ngân hàng của chủ.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/tiem-toc-buoc-2-them-nhom.png (Màn hình dashboard mục thêm nhóm Zalo cho tiệm, ô dán mã nhóm) -->*Thêm bot vào nhóm lễ tân, bấm gửi thử trước khi áp dụng cho lịch hẹn thật.*
+![Màn hình dashboard mục thêm nhóm Zalo cho tiệm, ô dán mã nhóm](/img/docs/dung-ngay/tiem-toc-buoc-2-them-nhom.png)*Thêm bot vào nhóm lễ tân, bấm gửi thử trước khi áp dụng cho lịch hẹn thật.*
 
 ### 3. Tạo link thu cọc gửi khách qua Zalo, Messenger
 
 Trong dashboard, mục Trang thanh toán cho phép tạo một link thu tiền theo đúng số cọc muốn thu, đặt tên link theo tên khách hoặc mã lịch hẹn để dễ theo dõi. Gửi link đó cho khách ngay khi chốt lịch qua Zalo hay Messenger, khách bấm vào là ra màn hình chuyển khoản điền sẵn số tiền, không cần biết số tài khoản tiệm.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/tiem-toc-buoc-3-link-thu-coc.png (Màn hình tạo link thu cọc với ô nhập số tiền và tên khách) -->*Tạo link thu cọc đúng số tiền cần thu rồi gửi khách qua tin nhắn, không cần khách tự gõ số tài khoản.*
+![Màn hình tạo link thu cọc với ô nhập số tiền và tên khách](/img/docs/dung-ngay/tiem-toc-buoc-3-link-thu-coc.png)*Tạo link thu cọc đúng số tiền cần thu rồi gửi khách qua tin nhắn, không cần khách tự gõ số tài khoản.*
 
 ## Mẹo dùng cho tiệm tóc, spa
 
