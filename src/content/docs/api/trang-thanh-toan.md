@@ -16,7 +16,7 @@ Muốn thu một khoản tiền, anh chị gọi `POST /api/v1/checkouts`, lấy
 4. **Chỉ xác nhận đơn khi nhận `CHECKOUT_PAID`.** Kiểm chữ ký HMAC webhook trên raw body, chống trùng bằng `transaction_code`, so lại mã đơn và số tiền. Có thể gọi `GET /checkouts/{id}` để đối soát server-side.
 5. **Xác minh redirect khi khách quay lại.** Kiểm `sig` bằng `return_signature_secret`, kiểm thời gian `ts`, rồi gọi lại `GET /checkouts/{id}`. Không giao hàng chỉ dựa vào query string `status=paid`.
 
-Phiên mặc định hết hạn sau 900 giây. MONA Pay chỉ đánh dấu `paid` khi tổng tiền khớp lớn hơn hoặc bằng số tiền của checkout. Khoản chuyển thiếu được ghi vào `partial_amount` nhưng phiên vẫn `pending`.
+Phiên mặc định hết hạn sau 900 giây. MONA Pay chỉ đánh dấu `paid` khi tổng tiền khớp lớn hơn hoặc bằng số tiền của checkout. `partial_amount` là tổng tiền đã nhận được cho phiên, không chỉ là phần tiền thiếu. Ví dụ, checkout 250.000đ nhận 200.000đ vẫn có `status: "pending"`, `paid_amount: null`, `partial_amount: 200000`; checkout 680.000đ nhận đủ có `status: "paid"`, `paid_amount: 680000` và `partial_amount: 680000`. Muốn phát hiện thiếu tiền, hãy kiểm tra `status == "pending" && partial_amount > 0`, không chỉ kiểm tra `partial_amount > 0`.
 
 ## Endpoint
 
@@ -101,7 +101,7 @@ if (!verified.ok) throw new Error(verified.reason);
 const event = verified.payload.event || verified.payload.event_type;
 if (event === 'CHECKOUT_PAID') {
   await saveOnce(verified.payload.transaction_code, verified.payload);
-  const current = await mona.checkouts.get(verified.payload.id);
+  const current = await mona.checkouts.get(verified.payload.checkout_id);
   if (current.status === 'paid') await markOrderPaid(current.order_code);
 }
 
@@ -143,7 +143,7 @@ if not verified.ok:
 event = verified.payload.get("event") or verified.payload.get("event_type")
 if event == "CHECKOUT_PAID":
     save_once(verified.payload["transaction_code"], verified.payload)
-    current = mona.checkouts.get(verified.payload["id"])
+    current = mona.checkouts.get(verified.payload["checkout_id"])
     if current["status"] == "paid":
         mark_order_paid(current["order_code"])
 
@@ -160,6 +160,10 @@ if current["status"] != "paid":
 ## Payload `CHECKOUT_PAID`
 
 Event dùng cùng chữ ký `X-Mona-Signature` và `X-Mona-Timestamp` như webhook giao dịch hiện có. Payload chứa dữ liệu checkout rút gọn, `order_code`, `amount`, `paid_amount`, `paid_at` và `transaction_code`. Lưu `transaction_code` bằng unique constraint để việc gửi lại webhook không xử lý đơn hai lần.
+
+```json
+{"event":"CHECKOUT_PAID","checkout_id":"01f1a785-050e-7294-8f44-e37b23e629bb","order_code":"DH1001","status":"paid","amount":680000,"currency":"VND","paid_amount":680000,"paid_at":"2026-09-03T10:48:53.834012+00:00","transaction_code":"SBX-DH1001-01","metadata":null}
+```
 
 ## Redirect về website
 
@@ -183,7 +187,7 @@ Phiên mặc định hết hạn sau 15 phút và không tạo QR mới. Nếu k
 
 ### Khách chuyển thiếu tiền thì sao?
 
-Checkout vẫn ở trạng thái `pending`. MONA Pay ghi `partial_amount` và cảnh báo để anh chị xử lý. Chỉ khi tổng tiền khớp lớn hơn hoặc bằng `amount`, phiên mới chuyển sang `paid`.
+`partial_amount` là tổng tiền đã nhận được cho phiên. Khi checkout 250.000đ mới nhận 200.000đ, phiên có `status: "pending"`, `paid_amount: null` và `partial_amount: 200000`; khi checkout 680.000đ nhận đủ, cả `paid_amount` và `partial_amount` đều là `680000`. Vì vậy, hãy phát hiện thiếu tiền bằng `status == "pending" && partial_amount > 0`, không chỉ bằng `partial_amount > 0`.
 
 ### Không có website vẫn tạo link thu tiền được không?
 

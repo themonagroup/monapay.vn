@@ -16,7 +16,7 @@ To collect a payment, call `POST /api/v1/checkouts`, take the returned `checkout
 4. **Confirm only after `CHECKOUT_PAID`.** Verify the webhook HMAC against the raw body, deduplicate by `transaction_code`, and compare the order code and amount. You can call `GET /checkouts/{id}` for server-side reconciliation.
 5. **Verify the return redirect.** Check `sig` with `return_signature_secret`, validate `ts`, then call `GET /checkouts/{id}` again. Never fulfil from the `status=paid` query string alone.
 
-A checkout expires after 900 seconds by default. MONA Pay marks it `paid` only when the matched total is at least the checkout amount. An underpayment is recorded as `partial_amount` while the checkout remains `pending`.
+A checkout expires after 900 seconds by default. MONA Pay marks it `paid` only when the matched total is at least the checkout amount. `partial_amount` is the total received for the checkout, not only an underpayment. For example, a 250,000 VND checkout that receives 200,000 VND has `status: "pending"`, `paid_amount: null` and `partial_amount: 200000`; a 680,000 VND checkout paid in full has `status: "paid"`, `paid_amount: 680000` and `partial_amount: 680000`. Detect an underpayment with `status == "pending" && partial_amount > 0`, not with `partial_amount > 0` alone.
 
 ## Endpoints
 
@@ -100,7 +100,7 @@ if (!verified.ok) throw new Error(verified.reason);
 const event = verified.payload.event || verified.payload.event_type;
 if (event === 'CHECKOUT_PAID') {
   await saveOnce(verified.payload.transaction_code, verified.payload);
-  const current = await mona.checkouts.get(verified.payload.id);
+  const current = await mona.checkouts.get(verified.payload.checkout_id);
   if (current.status === 'paid') await markOrderPaid(current.order_code);
 }
 
@@ -140,7 +140,7 @@ if not verified.ok:
 event = verified.payload.get("event") or verified.payload.get("event_type")
 if event == "CHECKOUT_PAID":
     save_once(verified.payload["transaction_code"], verified.payload)
-    current = mona.checkouts.get(verified.payload["id"])
+    current = mona.checkouts.get(verified.payload["checkout_id"])
     if current["status"] == "paid":
         mark_order_paid(current["order_code"])
 
@@ -156,6 +156,10 @@ if current["status"] != "paid":
 ## `CHECKOUT_PAID` payload
 
 The event uses the existing `X-Mona-Signature` and `X-Mona-Timestamp` webhook signature. Its payload contains a compact checkout, including `order_code`, `amount`, `paid_amount`, `paid_at` and `transaction_code`. Store `transaction_code` with a unique constraint so webhook retries cannot fulfil twice.
+
+```json
+{"event":"CHECKOUT_PAID","checkout_id":"01f1a785-050e-7294-8f44-e37b23e629bb","order_code":"DH1001","status":"paid","amount":680000,"currency":"VND","paid_amount":680000,"paid_at":"2026-09-03T10:48:53.834012+00:00","transaction_code":"SBX-DH1001-01","metadata":null}
+```
 
 ## Return redirect
 
@@ -179,7 +183,7 @@ It expires after 15 minutes by default and no replacement QR is created. If the 
 
 ### What if the payer underpays?
 
-The checkout remains `pending`. MONA Pay records `partial_amount` and raises a warning. It becomes `paid` only when the matched total is at least `amount`.
+`partial_amount` is the total received for the checkout. A 250,000 VND checkout that has received 200,000 VND has `status: "pending"`, `paid_amount: null` and `partial_amount: 200000`; once a 680,000 VND checkout is paid in full, both `paid_amount` and `partial_amount` are `680000`. Detect an underpayment with `status == "pending" && partial_amount > 0`, not with `partial_amount > 0` alone.
 
 ### Can I create a payment link without a website?
 

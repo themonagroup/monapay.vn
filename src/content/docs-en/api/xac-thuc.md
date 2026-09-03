@@ -1,10 +1,10 @@
 ---
 title: "MONA Pay API authentication: Bearer token and X-Client-Secret"
-description: "Log in for a Bearer token (valid 24 hours), add X-Client-Secret on POST/PUT/DELETE. The success/message/data envelope, 401/422 errors, and cURL, PHP, Node samples."
+description: "Get a Bearer token through client credentials or password login, then apply X-Client-Secret according to the token source. The success/message/data envelope, 401/422 errors, and cURL, PHP, Node samples."
 updated: 03/09/2026
 ---
 
-Every MONA Pay API call needs the header `Authorization: Bearer <access_token>`. The token comes from `POST /api/v1/client/login` using the username and password of your my.monapay.vn account and is valid for 86,400 seconds (24 hours). Write calls (POST, PUT, DELETE) add the header `X-Client-Secret` with a secret generated under [API keys](/en/docs/api/api-keys). Every response is wrapped in the same envelope `{"success": true, "message": "...", "data": ...}`.
+Every MONA Pay API call needs the header `Authorization: Bearer <access_token>`. Servers and AI agents get a token from `POST /api/v1/oauth/token`; dashboard sessions get one from `POST /api/v1/client/login`. With a password-login token, every POST, PUT, PATCH and DELETE write must also carry `X-Client-Secret`. A client-credentials token does not require that header again, but MONA Pay still recommends always sending it. Every response is wrapped in the same envelope `{"success": true, "message": "...", "data": ...}`.
 
 ## Base URL
 
@@ -28,7 +28,7 @@ curl -X POST https://api.monapay.vn/api/v1/oauth/token \
 { "success": true, "message": "Cấp access token thành công", "data": { "access_token": "…", "token_type": "Bearer", "expires_in": 3600, "scope": "*" } }
 ```
 
-The token lasts 3,600 seconds; request a new one when it expires, there is no refresh token. Write requests still carry `X-Client-Secret: <client_secret>`. Accounts with two-factor authentication work normally here, because the OTP only guards password login. The MONA Pay SDKs and MCP server read `MONAPAY_CLIENT_ID` and `MONAPAY_CLIENT_SECRET` from the environment and do this step for you.
+The token lasts 3,600 seconds; request a new one when it expires, there is no refresh token. The server already checked `client_secret` when issuing the token, so individual write requests do not require `X-Client-Secret` again. The official SDKs and MCP server still send it, and MONA Pay recommends doing the same so a token exposed through logs or a proxy cannot change configuration by itself. Accounts with two-factor authentication work normally here, because the OTP only guards password login. The MONA Pay SDKs and MCP server read `MONAPAY_CLIENT_ID` and `MONAPAY_CLIENT_SECRET` from the environment and obtain the token for you.
 
 ## Common response envelope
 
@@ -54,12 +54,15 @@ Validation errors (missing field, wrong type) return HTTP 422 in the FastAPI sty
 
 | Layer | Header | Used for | Where to get it |
 |---|---|---|---|
-| Bearer token | `Authorization: Bearer <access_token>` | Every request (except sign-up and login) | `POST /api/v1/client/login` |
-| Client secret | `X-Client-Secret: <client_secret>` | POST, PUT, DELETE | `POST /api/v1/client-keys/generate` |
+| Bearer token | `Authorization: Bearer <access_token>` | Every request (except sign-up and login) | `POST /api/v1/oauth/token` (servers, AI agents) or `POST /api/v1/client/login` (dashboard) |
+| Client secret | `X-Client-Secret: <client_secret>` | Required for POST, PUT, PATCH and DELETE with a `client/login` token; recommended with an `oauth/token` token | `POST /api/v1/client-keys/generate` |
 
 Keep the token and the secret in environment variables, never hard-coded, never committed to git.
 
-Send `X-Client-Secret` on every POST, PUT and DELETE request. A write request without it is rejected.
+- **Token from `POST /api/v1/client/login`:** every POST, PUT, PATCH and DELETE write must include `X-Client-Secret`; without it, MONA Pay returns 401 `Thiếu X-Client-Secret`.
+- **Token from `POST /api/v1/oauth/token`:** MONA Pay already checked `client_secret` when issuing the token, so it does not require the header again on each write. The official SDKs and MCP server still send it.
+
+MONA Pay recommends always sending `X-Client-Secret` so a token exposed through logs or a proxy cannot change configuration by itself.
 
 ## POST /api/v1/client/register-client
 

@@ -1,10 +1,10 @@
 ---
 title: "Xác thực API ngân hàng MONA Pay: Bearer token và X-Client-Secret"
-description: "Hai cách lấy Bearer token: client_id + client_secret cho máy chủ và AI agent (hạn 1 giờ), hoặc đăng nhập bằng mật khẩu cho người (hạn 24 giờ); kèm X-Client-Secret cho POST/PUT/DELETE. Envelope success/message/data, mã lỗi 401/422 và code mẫu cURL, PHP, Node."
+description: "Hai cách lấy Bearer token: client_id + client_secret cho máy chủ và AI agent (hạn 1 giờ), hoặc đăng nhập bằng mật khẩu cho người (hạn 24 giờ); quy tắc X-Client-Secret theo nguồn token. Envelope success/message/data, mã lỗi 401/422 và code mẫu cURL, PHP, Node."
 updated: 03/09/2026
 ---
 
-Mọi lệnh gọi API MONA Pay cần header `Authorization: Bearer <access_token>`. Token lấy từ `POST /api/v1/client/login` bằng username và mật khẩu của tài khoản my.monapay.vn, hạn dùng 86.400 giây (24 giờ). Các lệnh ghi dữ liệu (POST, PUT, DELETE) gửi thêm header `X-Client-Secret` với secret sinh ở mục [API keys](/docs/api/api-keys). Mọi response đều bọc trong một khung chung `{"success": true, "message": "...", "data": ...}`.
+Mọi lệnh gọi API MONA Pay cần header `Authorization: Bearer <access_token>`. Máy chủ và AI agent lấy token từ `POST /api/v1/oauth/token`; phiên dashboard lấy token từ `POST /api/v1/client/login`. Với token đăng nhập bằng mật khẩu, mọi lệnh ghi POST, PUT, PATCH và DELETE bắt buộc gửi thêm `X-Client-Secret`. Token client credentials không bắt buộc gửi lại header này, nhưng MONA Pay vẫn khuyến nghị luôn gửi. Mọi response đều bọc trong một khung chung `{"success": true, "message": "...", "data": ...}`.
 
 ## Base URL
 
@@ -28,7 +28,7 @@ curl -X POST https://api.monapay.vn/api/v1/oauth/token \
 { "success": true, "message": "Cấp access token thành công", "data": { "access_token": "…", "token_type": "Bearer", "expires_in": 3600, "scope": "*" } }
 ```
 
-Token hạn 3.600 giây; hết hạn thì gọi lại, không cần refresh token. Lệnh ghi vẫn kèm `X-Client-Secret: <client_secret>`. Tài khoản bật xác thực 2 lớp vẫn dùng cách này bình thường, vì OTP chỉ áp cho đăng nhập bằng mật khẩu. SDK và MCP của MONA Pay đọc `MONAPAY_CLIENT_ID` và `MONAPAY_CLIENT_SECRET` từ biến môi trường và tự làm bước này.
+Token hạn 3.600 giây; hết hạn thì gọi lại, không cần refresh token. Máy chủ đã kiểm `client_secret` khi cấp token nên không bắt buộc gửi lại `X-Client-Secret` ở từng lệnh ghi. SDK và MCP chính thức vẫn gửi kèm, và MONA Pay khuyến nghị làm vậy để một token lộ qua log hoặc proxy cũng không thể tự ý đổi cấu hình. Tài khoản bật xác thực 2 lớp vẫn dùng cách này bình thường, vì OTP chỉ áp cho đăng nhập bằng mật khẩu. SDK và MCP của MONA Pay đọc `MONAPAY_CLIENT_ID` và `MONAPAY_CLIENT_SECRET` từ biến môi trường và tự làm bước cấp token.
 
 ## Khung response chung
 
@@ -54,12 +54,15 @@ Lỗi validate (thiếu trường, sai kiểu) trả HTTP 422 theo chuẩn FastA
 
 | Lớp | Header | Dùng khi | Lấy ở đâu |
 |---|---|---|---|
-| Bearer token | `Authorization: Bearer <access_token>` | Mọi request (trừ đăng ký, đăng nhập) | `POST /api/v1/client/login` |
-| Client secret | `X-Client-Secret: <client_secret>` | POST, PUT, DELETE | `POST /api/v1/client-keys/generate` |
+| Bearer token | `Authorization: Bearer <access_token>` | Mọi request (trừ đăng ký, đăng nhập) | `POST /api/v1/oauth/token` (máy chủ, AI agent) hoặc `POST /api/v1/client/login` (dashboard) |
+| Client secret | `X-Client-Secret: <client_secret>` | Bắt buộc cho POST, PUT, PATCH, DELETE với token từ `client/login`; khuyến nghị với token từ `oauth/token` | `POST /api/v1/client-keys/generate` |
 
 Giữ token và secret ở biến môi trường, không ghi cứng trong code, không commit lên git.
 
-Gửi `X-Client-Secret` ở mọi lệnh ghi POST, PUT và DELETE. Thiếu header này, request sẽ bị từ chối.
+- **Token từ `POST /api/v1/client/login`:** mọi lệnh ghi POST, PUT, PATCH và DELETE bắt buộc kèm `X-Client-Secret`; thiếu header này, MONA Pay trả 401 `Thiếu X-Client-Secret`.
+- **Token từ `POST /api/v1/oauth/token`:** MONA Pay đã kiểm `client_secret` khi cấp token nên không đòi lại header ở từng lệnh ghi. SDK và MCP chính thức vẫn gửi kèm.
+
+MONA Pay khuyến nghị luôn gửi `X-Client-Secret` để token lộ qua log hoặc proxy cũng không thể tự ý đổi cấu hình.
 
 ## POST /api/v1/client/register-client
 

@@ -1,10 +1,10 @@
 ---
 title: "API keys: tạo, liệt kê, thu hồi X-Client-Secret"
-description: "Sinh client_secret (hiện 1 lần duy nhất), liệt kê và thu hồi key. Secret gửi qua header X-Client-Secret cho mọi POST/PUT/DELETE."
+description: "Sinh client_secret (hiện 1 lần duy nhất), liệt kê và thu hồi key. Quy tắc gửi X-Client-Secret cho lệnh ghi phụ thuộc vào nguồn Bearer token."
 updated: 28/08/2026
 ---
 
-API key của MONA Pay là chuỗi `client_secret` sinh bằng `POST /api/v1/client-keys/generate`. Hệ thống chỉ hiện secret đúng 1 lần lúc tạo, sau đó lưu dạng băm nên không xem lại được. Anh chị gửi secret qua header `X-Client-Secret` ở mọi request POST, PUT, DELETE (kèm Bearer token). Mất secret thì tạo key mới rồi thu hồi key cũ, mỗi tài khoản tạo được nhiều key.
+API key của MONA Pay là chuỗi `client_secret` sinh bằng `POST /api/v1/client-keys/generate`. Hệ thống chỉ hiện secret đúng 1 lần lúc tạo, sau đó lưu dạng băm nên không xem lại được. Với Bearer token từ `client/login`, mọi request POST, PUT, PATCH và DELETE bắt buộc kèm `X-Client-Secret`; với token từ `oauth/token`, header này không bắt buộc nhưng MONA Pay vẫn khuyến nghị gửi. Mất secret thì tạo key mới rồi thu hồi key cũ, mỗi tài khoản tạo được nhiều key.
 
 ## Khi nào cần key
 
@@ -12,7 +12,7 @@ API key của MONA Pay là chuỗi `client_secret` sinh bằng `POST /api/v1/cli
 |---|---|---|
 | Đăng ký, đăng nhập | không | không |
 | Đọc dữ liệu (GET): giao dịch, VA, log webhook | có | không |
-| Ghi dữ liệu (POST, PUT, DELETE): tạo VA, tạo QR, cấu hình webhook/Telegram, đổi mật khẩu | có | có |
+| Ghi dữ liệu (POST, PUT, PATCH, DELETE): tạo VA, tạo QR, cấu hình webhook/Telegram, đổi mật khẩu | có | Bắt buộc với token `client/login`; khuyến nghị với token `oauth/token` |
 
 Cách làm sạch: mỗi hệ thống tích hợp (web bán hàng, phần mềm kế toán, bot) dùng 1 key riêng, đặt tên theo hệ thống đó. Hệ thống nào bị lộ thì thu hồi đúng key đó, hệ thống khác không ảnh hưởng.
 
@@ -124,7 +124,10 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 
 Lưu ý phân biệt 2 loại secret: `client_secret` (X-Client-Secret) là để anh chị gọi API MONA Pay; `secret_key` trong cấu hình webhook là để MONA Pay ký payload gửi sang server anh chị (xem [Bảo mật webhook](/docs/webhooks/bao-mat)). Hai chuỗi này nên khác nhau.
 
-Gửi `X-Client-Secret` ở mọi lệnh ghi POST, PUT và DELETE. Thiếu header này, request sẽ bị từ chối.
+- **Token từ `POST /api/v1/client/login`:** mọi lệnh ghi POST, PUT, PATCH và DELETE bắt buộc kèm `X-Client-Secret`; thiếu header này, MONA Pay trả 401 `Thiếu X-Client-Secret`.
+- **Token từ `POST /api/v1/oauth/token`:** máy chủ đã kiểm `client_secret` khi cấp token nên không đòi lại header ở từng lệnh ghi. SDK và MCP chính thức vẫn gửi kèm.
+
+MONA Pay khuyến nghị luôn gửi `X-Client-Secret` để token lộ qua log hoặc proxy cũng không thể tự ý đổi cấu hình.
 
 ## Lỗi thường gặp
 

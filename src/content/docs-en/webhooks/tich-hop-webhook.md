@@ -48,6 +48,15 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 
 Related calls: `GET /api/v1/client-webhooks` lists configurations, `PUT /api/v1/client-webhooks/{config_id}` updates, `DELETE /api/v1/client-webhooks/{config_id}` removes, `POST /api/v1/client-webhooks/test` sends a sample payload. Parameters are documented in [Webhook configuration API](/en/docs/api/webhook-configs).
 
+### Running webhooks from localhost
+Webhooks need a public HTTPS URL; MONA Pay cannot call `localhost` directly.
+```bash
+cloudflared tunnel --url http://localhost:4400
+```
+Paste the HTTPS URL issued by the tunnel into `webhook_url`; ngrok works too.
+If no public URL is available yet, poll `GET /api/v1/checkouts/{checkout_id}` every few seconds while testing.
+The [IP addresses](/en/docs/dia-chi-ip) page applies when the system goes to production.
+
 ## The payload MONA Pay sends
 
 ```json

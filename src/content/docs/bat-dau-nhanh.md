@@ -48,7 +48,7 @@ Từ đây mọi lệnh gọi API đều gửi kèm `Authorization: Bearer <acce
 
 ## Bước 3. Tạo API key
 
-Các request POST, PUT, DELETE cần thêm header `X-Client-Secret`. Tạo khoá trong dashboard mục API Keys, hoặc:
+Với Bearer token đăng nhập bằng mật khẩu ở bước 2, các request POST, PUT, PATCH và DELETE bắt buộc thêm `X-Client-Secret`. Token từ `oauth/token` không bắt buộc gửi lại header này, nhưng SDK, MCP chính thức vẫn gửi và MONA Pay khuyến nghị luôn gửi. Tạo khoá trong dashboard mục API Keys, hoặc:
 
 ```bash
 curl -X POST https://api.monapay.vn/api/v1/client-keys/generate \
@@ -91,6 +91,15 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 ```
 
 Không truyền `virtual_account_id` thì webhook nhận mọi giao dịch của mọi tài khoản. Truyền id của một VA thì chỉ nhận giao dịch của VA đó.
+
+### Chạy webhook trên localhost
+Webhook cần một URL HTTPS công khai, MONA Pay không thể gọi trực tiếp vào `localhost`.
+```bash
+cloudflared tunnel --url http://localhost:4400
+```
+Dán URL HTTPS do tunnel cấp vào `webhook_url`; anh chị cũng có thể dùng ngrok.
+Nếu chưa có URL công khai, hãy hỏi lại `GET /api/v1/checkouts/{checkout_id}` mỗi vài giây trong lúc thử.
+Trang [Địa chỉ IP](/docs/dia-chi-ip) chỉ áp dụng khi đưa hệ thống lên production.
 
 Phía máy chủ của anh chị, endpoint chỉ cần làm 3 việc: kiểm chữ ký, trả HTTP 200 ngay, rồi xử lý đơn sau. Code mẫu dán vào dùng được:
 
@@ -202,7 +211,7 @@ Cuối cùng chuyển một khoản nhỏ vào số VA vừa tạo, ví dụ 10.
 
 **Đăng nhập báo sai tài khoản dù mật khẩu đúng.** Kiểm tra lại username (phân biệt hoa thường) và mật khẩu. Tài khoản mới đăng ký là đăng nhập được ngay, không có bước chờ kích hoạt; vẫn kẹt thì gọi 1900 636 648.
 
-**Gọi POST bị từ chối dù đã có Bearer token.** Thiếu header `X-Client-Secret`. Mọi POST, PUT, DELETE nên gửi kèm khoá này (GET thì không); bản máy chủ ép buộc đang chờ đưa lên, gửi sẵn từ giờ thì không phải sửa sau.
+**Gọi POST bị từ chối dù đã có Bearer token.** Nếu token lấy từ `client/login`, request đang thiếu `X-Client-Secret`; mọi POST, PUT, PATCH và DELETE bắt buộc gửi header này. Token từ `oauth/token` không bị bắt buộc, nhưng MONA Pay vẫn khuyến nghị gửi kèm.
 
 **Gửi thử báo TIMEOUT.** Máy chủ của anh chị không trả lời trong 10 giây. Trả HTTP 200 trước, xử lý đơn sau như code mẫu ở trên.
 

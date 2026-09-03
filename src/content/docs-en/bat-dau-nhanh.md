@@ -48,7 +48,7 @@ From here every call carries `Authorization: Bearer <access_token>`. Details in 
 
 ## Step 3. Create an API key
 
-POST, PUT and DELETE requests need an extra `X-Client-Secret` header. Create a key in the dashboard under API Keys, or:
+With the password-login Bearer token from step 2, POST, PUT, PATCH and DELETE requests must include `X-Client-Secret`. A token from `oauth/token` does not require the header again, but the official SDKs and MCP server still send it and MONA Pay recommends always sending it. Create a key in the dashboard under API Keys, or:
 
 ```bash
 curl -X POST https://api.monapay.vn/api/v1/client-keys/generate \
@@ -91,6 +91,15 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 ```
 
 Without `virtual_account_id` the webhook receives every transaction on every account. Pass the id of one VA to receive only that VA's transactions.
+
+### Running webhooks from localhost
+Webhooks need a public HTTPS URL; MONA Pay cannot call `localhost` directly.
+```bash
+cloudflared tunnel --url http://localhost:4400
+```
+Paste the HTTPS URL issued by the tunnel into `webhook_url`; ngrok works too.
+If no public URL is available yet, poll `GET /api/v1/checkouts/{checkout_id}` every few seconds while testing.
+The [IP addresses](/en/docs/dia-chi-ip) page applies when the system goes to production.
 
 On your side the endpoint does 3 things: verify the signature, answer HTTP 200 immediately, then process the order. Paste-ready samples:
 
@@ -202,7 +211,7 @@ Finally transfer a small amount, say 10,000 VND, into the VA you just created fr
 
 **Login says wrong credentials although the password is right.** Check the username (case-sensitive) and the password. New accounts can log in immediately; there is no activation queue. Still stuck: call 1900 636 648.
 
-**POST is rejected even with a valid Bearer token.** The `X-Client-Secret` header is missing. Send it on every POST, PUT and DELETE (GET does not need it); server-side enforcement is being rolled out, so sending it now means nothing to change later.
+**POST is rejected even with a valid Bearer token.** If the token came from `client/login`, the request is missing `X-Client-Secret`; every POST, PUT, PATCH and DELETE write must carry it. A token from `oauth/token` does not require the header, but MONA Pay still recommends sending it.
 
 **Test delivery shows TIMEOUT.** Your server did not answer within 10 seconds. Return HTTP 200 first and process the order afterwards, as in the samples above.
 

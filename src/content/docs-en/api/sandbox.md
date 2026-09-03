@@ -57,6 +57,15 @@ Response 200:
 
 The event goes through the same processing and notification channels as a real transfer. Use `transaction_code` as the deduplication key and `is_sandbox` to identify test data during reconciliation.
 
+## Running webhooks from localhost
+Webhooks need a public HTTPS URL; MONA Pay cannot call `localhost` directly.
+```bash
+cloudflared tunnel --url http://localhost:4400
+```
+Paste the HTTPS URL issued by the tunnel into `webhook_url`; ngrok works too.
+If no public URL is available yet, poll `GET /api/v1/checkouts/{checkout_id}` every few seconds while testing.
+The [IP addresses](/en/docs/dia-chi-ip) page applies when the system goes to production.
+
 ## Test hosted checkout
 
 Add `"sandbox": true` when creating a checkout. The test session uses an `SBX…` VA and returns a `checkout_url`, displayable QR data and `sandbox: true`; the hosted page shows a **TEST SESSION — do not transfer real money** banner.
@@ -76,7 +85,7 @@ Take `data.bank.account_number`, or the VA number in the checkout response, and 
 
 1. **Exact amount:** create a 250,000 VND checkout and send one 250,000 VND sandbox transaction. Wait for `CHECKOUT_PAID`, verify the signature, confirm `paid`, and ensure fulfilment runs once.
 2. **Underpayment:** create a 250,000 VND checkout and send 200,000 VND. It must stay `pending` with `partial_amount`; do not fulfil it.
-3. **Redelivery:** repeat the same `transaction_code` or retry the webhook. Your system must ignore the duplicate through a UNIQUE constraint on `transaction_code`.
+3. **Repeat the same transaction code:** send the exact same `transaction_code` again. MONA Pay returns the same 200 response as the first request and does not add the amount again, so `paid_amount` stays unchanged. To automate this check, call `GET /api/v1/checkouts/{checkout_id}` before and after, then compare `paid_amount` and `partial_amount`.
 
 ## Sandbox limits
 

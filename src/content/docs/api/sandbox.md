@@ -57,6 +57,15 @@ Response 200:
 
 Giao dịch đi qua cùng bộ xử lý và kênh thông báo như giao dịch thật. Khi đối soát, dùng `transaction_code` làm khoá chống trùng và nhận biết môi trường thử bằng `is_sandbox`.
 
+## Chạy webhook trên localhost
+Webhook cần một URL HTTPS công khai, MONA Pay không thể gọi trực tiếp vào `localhost`.
+```bash
+cloudflared tunnel --url http://localhost:4400
+```
+Dán URL HTTPS do tunnel cấp vào `webhook_url`; anh chị cũng có thể dùng ngrok.
+Nếu chưa có URL công khai, hãy hỏi lại `GET /api/v1/checkouts/{checkout_id}` mỗi vài giây trong lúc thử.
+Trang [Địa chỉ IP](/docs/dia-chi-ip) chỉ áp dụng khi đưa hệ thống lên production.
+
 ## Thử hosted checkout
 
 Khi tạo checkout, thêm `"sandbox": true` vào body. Phiên thử dùng VA `SBX…`, trả `checkout_url`, dữ liệu QR hợp lệ để hiển thị và trường `sandbox: true`; trang thanh toán có dải **PHIÊN THỬ, không chuyển tiền thật**.
@@ -76,7 +85,7 @@ Lấy `data.bank.account_number` hoặc số VA trong response checkout, rồi g
 
 1. **Đủ tiền:** tạo checkout 250.000đ, bắn một giao dịch sandbox 250.000đ. Chờ `CHECKOUT_PAID`, kiểm chữ ký, trạng thái `paid` và việc xử lý đơn chỉ chạy một lần.
 2. **Thiếu tiền:** tạo checkout 250.000đ, bắn 200.000đ. Phiên phải giữ `pending` và ghi `partial_amount`; chưa được giao hàng.
-3. **Gửi lại:** gửi lại cùng `transaction_code` hoặc retry webhook. Hệ thống của anh chị phải bỏ qua lần trùng nhờ ràng buộc UNIQUE trên `transaction_code`.
+3. **Gửi lại cùng mã giao dịch:** gửi lại đúng `transaction_code`. MONA Pay trả 200 giống lần đầu và không cộng dồn, vì vậy `paid_amount` giữ nguyên. Muốn tự động kiểm ca này, gọi `GET /api/v1/checkouts/{checkout_id}` trước và sau, rồi so `paid_amount` và `partial_amount`.
 
 ## Giới hạn của sandbox
 
