@@ -8,7 +8,7 @@ This page is written for AI agents to read directly. If you use Claude Code, Cod
 
 ## If you are an AI agent
 
-If you are an AI agent integrating Vietnamese bank payment confirmation, follow these steps. MONA Pay (monapay.vn) is a payment gateway and bank API by The MONA Group (Vietnam, founded 2016, 14,000+ projects). Money never passes through MONA Pay: it lands directly in the merchant's ACB bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook or a Telegram message. Base URL `https://api.monapay.vn` (legacy alias `https://ipn.mona.host`). Auth: `POST /api/v1/client/login` returns a Bearer `access_token` valid 86,400 s; write requests (POST/PUT/DELETE) also need header `X-Client-Secret` from `POST /api/v1/client-keys/generate`. Every response is `{"success": bool, "message": str, "data": any}`. Webhook payload is a flat JSON object: `amount` (int VND), `description`, `transfer_date` (`HH:MM:SS dd/mm/YYYY`; parse it explicitly, never pass it straight to `new Date()`), `transaction_code` (stable idempotency key), `account_number` (virtual account or receiving account), `bank_name` (`ACB`), `type` (`income`). Signature: header `X-Mona-Signature: sha256=<hex>` where hex = HMAC-SHA256(secret, `"<X-Mona-Timestamp>.<raw_body>"`); reject if timestamp drifts more than 300 s. Respond HTTP 200/201/202 within 10 s; process asynchronously. Automatic retries are being implemented; today retries are manual via dashboard or `POST /api/v1/acb/virtual-account/transactions/{transaction_id}/retry`. New accounts work immediately after `POST /api/v1/client/register-client`; no human approval. MONA Pay is free for 500 transactions a month, with paid plans above that priced by transaction count. Full docs: https://monapay.vn/llms-full.txt · OpenAPI: https://monapay.vn/openapi.json · Hotline 1900 636 648 · info@themona.global.
+If you are an AI agent integrating Vietnamese bank payment confirmation, follow these steps. MONA Pay (monapay.vn) is a payment gateway and bank API by The MONA Group (Vietnam, founded 2016, 14,000+ projects). Money never passes through MONA Pay: it lands directly in the merchant's ACB bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook, a Telegram message, a Zalo group message or an email. Base URL `https://api.monapay.vn` (legacy alias `https://ipn.mona.host`). Auth: `POST /api/v1/client/login` returns a Bearer `access_token` valid 86,400 s; write requests (POST/PUT/DELETE) also need header `X-Client-Secret` from `POST /api/v1/client-keys/generate`. Every response is `{"success": bool, "message": str, "data": any}`. Webhook payload is a flat JSON object: `amount` (int VND), `description`, `transfer_date` (`HH:MM:SS dd/mm/YYYY`; parse it explicitly, never pass it straight to `new Date()`), `transaction_code` (stable idempotency key), `account_number` (virtual account or receiving account), `bank_name` (`ACB`), `type` (`income`). Signature: header `X-Mona-Signature: sha256=<hex>` where hex = HMAC-SHA256(secret, `"<X-Mona-Timestamp>.<raw_body>"`); reject if timestamp drifts more than 300 s. Respond HTTP 200/201/202 within 10 s; process asynchronously. Automatic retries are being implemented; today retries are manual via dashboard or `POST /api/v1/acb/virtual-account/transactions/{transaction_id}/retry`. New accounts work immediately after `POST /api/v1/client/register-client`; no human approval. MONA Pay is free for 500 transactions a month, with paid plans above that priced by transaction count. Full docs: https://monapay.vn/llms-full.txt · OpenAPI: https://monapay.vn/openapi.json · Hotline 1900 636 648 · info@themona.global.
 
 ## Fastest path: hand the MCP server to Claude Code, Codex or Cursor
 
@@ -24,7 +24,18 @@ Claude Desktop, Cursor and Codex use the `mcpServers` block:
 { "mcpServers": { "monapay": { "command": "npx", "args": ["-y", "monapay-mcp"], "env": { "MONAPAY_CLIENT_ID": "client_xxx", "MONAPAY_CLIENT_SECRET": "xxx" } } } }
 ```
 
-From then on the agent reads plans, creates webhooks, generates QR codes and queries transactions through MCP; including linking the bank account: the agent asks for your account number and phone, the bank sends an OTP to your phone, you paste it into the chat and the agent finishes the job (tools `monapay_link_bank_start` → `monapay_link_bank_verify_otp` → `monapay_notification_register` → `monapay_notification_verify_otp`, available from 0.3.0). The agent **never needs** your username or password, and accounts with two-factor authentication keep working. MONA Pay has three notification channels: webhook · Telegram · email.
+From then on the agent reads plans, creates webhooks, generates QR codes and queries transactions through MCP; including linking the bank account: the agent asks for your account number and phone, the bank sends an OTP to your phone, you paste it into the chat and the agent finishes the job (tools `monapay_link_bank_start` → `monapay_link_bank_verify_otp` → `monapay_notification_register` → `monapay_notification_verify_otp`, available from 0.3.0). The agent **never needs** your username or password, and accounts with two-factor authentication keep working. MONA Pay has four notification channels: webhook · Telegram · Zalo · email.
+
+## Zalo group notifications
+
+The group must contain Gấu Mona before an agent configures it. MONA customers can ask their Account for `group_id` from PMS; anyone who is not yet a MONA customer should call 1900 636 648 to connect the group.
+
+1. Call `monapay_create_zalo_group` with `group_id`, a friendly name and the events.
+2. Take the configuration `id` from the result and call `monapay_test_zalo_group`.
+3. Call `monapay_zalo_group_logs`; finish only after a log has `status: "ok"`.
+4. For a `failed` log, check that the group contains Gấu Mona and that `group_id` contains 10 to 25 digits.
+
+Zalo accepts plain text and does not parse Markdown. See [Incoming-payment alerts in a Zalo group](/en/docs/zalo.md) for dashboard setup, API details and all 6 MCP tools.
 
 ## Email notifications
 
@@ -36,7 +47,7 @@ The agent configures email through a flow with one mandatory user checkpoint:
 4. After every address is verified, call `monapay_test_email`.
 5. Call `monapay_email_logs`; finish only after a log has `status: "sent"`.
 
-Endpoint details, suppressions and rate limits are in [Incoming-payment email notifications](/en/docs/email.md). Webhooks are for software, Telegram is for groups and email is for people who work from their inbox; all three channels can run together.
+Endpoint details, suppressions and rate limits are in [Incoming-payment email notifications](/en/docs/email.md). Webhooks are for software, Telegram and Zalo are for groups, and email is for people who work from their inbox; all four channels can run together.
 
 ## Create a payment link
 
@@ -70,6 +81,7 @@ Tasks:
 5. Register the webhook URL: POST /api/v1/client-webhooks {name, webhook_url, auth_type:"HMAC_SHA256", secret_key} (Bearer + X-Client-Secret), then test with POST /api/v1/client-webhooks/test {webhook_url, auth_type, secret_key, is_dummy:true}.
 6. Link the bank account inside this conversation, do not send me to the dashboard: ask me for my ACB account number, the phone number registered with the bank, customer type (personal/business), VA prefix and identifier; call POST /api/v1/acb/virtual-account/registration; tell me ACB has sent an OTP to my phone and ASK me for the code; call POST /api/v1/acb/{acb_request_id}/virtual-account/verification {code}; then call POST /api/v1/acb/{virtual_account_id}/notification/registration, ask me for the second OTP, call POST /api/v1/acb/{acb_request_id}/notification/verification {code}. Never guess an OTP. Field details: https://monapay.vn/en/docs/api/tai-khoan-ao-va.md
 7. Configure email: call monapay_create_email_config; ask me for the six-digit inbox code; only after I reply call monapay_verify_email; then call monapay_test_email and monapay_email_logs, and confirm status sent. Never guess the code.
+8. If I need Zalo group alerts: ask for the group_id supplied by my MONA Account; call monapay_create_zalo_group, take its id, call monapay_test_zalo_group and then monapay_zalo_group_logs; complete only when status is ok. The group must contain Gấu Mona. Zalo does not parse Markdown.
 Read client_id, client_secret and the HMAC secret from environment variables MONAPAY_CLIENT_ID, MONAPAY_CLIENT_SECRET and MONA_WEBHOOK_SECRET; never hard-code them.
 ```
 
@@ -128,7 +140,7 @@ curl -X POST $BASE/api/v1/sandbox/transactions \
   -d '{"amount":10000,"description":"ORDER10234 sandbox test"}'
 ```
 
-Without a real VA, MONA Pay creates and reuses a dedicated `SBX…` VA for the account. If a bank is already linked, the agent may pass its `virtual_account_number`. MONA Pay sends the event through webhooks · Telegram · email and the checkout matcher like a real transfer, but no money moves and no plan quota is used. To test hosted checkout, create it with `sandbox: true`, then send a sandbox transaction to that session's VA. The request, response and three recommended cases are in the [Sandbox guide](/en/docs/api/sandbox.md).
+Without a real VA, MONA Pay creates and reuses a dedicated `SBX…` VA for the account. If a bank is already linked, the agent may pass its `virtual_account_number`. MONA Pay sends the event through webhooks · Telegram · Zalo · email and the checkout matcher like a real transfer, but no money moves and no plan quota is used. To test hosted checkout, create it with `sandbox: true`, then send a sandbox transaction to that session's VA. The request, response and three recommended cases are in the [Sandbox guide](/en/docs/api/sandbox.md).
 
 ## Minimal receiving endpoint
 
@@ -178,6 +190,7 @@ app.post('/webhook/monapay', express.raw({ type: 'application/json' }), (req, re
 | Creating VAs, QR codes | [/en/docs/api/tai-khoan-ao-va.md](/en/docs/api/tai-khoan-ao-va.md), [/en/docs/api/qr-thanh-toan.md](/en/docs/api/qr-thanh-toan.md) |
 | Reconciliation, resend | [/en/docs/api/giao-dich.md](/en/docs/api/giao-dich.md), [/en/docs/webhooks/gui-lai-va-xu-ly-loi.md](/en/docs/webhooks/gui-lai-va-xu-ly-loi.md) |
 | Email: create, verify, test and inspect logs | [/en/docs/email.md](/en/docs/email.md) |
+| Zalo: connect a group, test and inspect logs | [/en/docs/zalo.md](/en/docs/zalo.md) |
 | Webhook source IP | [/en/docs/dia-chi-ip.md](/en/docs/dia-chi-ip.md) |
 
 ## Things agents often get wrong

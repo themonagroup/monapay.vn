@@ -25,6 +25,7 @@ export const DOCS_NAV: { group: string; items: { slug: string; label: string }[]
   ]},
   { group: 'Kênh thông báo', items: [
     { slug: 'telegram', label: 'Telegram' },
+    { slug: 'zalo', label: 'Zalo' },
     { slug: 'email', label: 'Email' },
   ]},
   { group: 'Tham chiếu', items: [
@@ -62,6 +63,7 @@ export const DOCS_NAV_EN: { group: string; items: { slug: string; label: string 
   ]},
   { group: 'Notification channels', items: [
     { slug: 'telegram', label: 'Telegram' },
+    { slug: 'zalo', label: 'Zalo' },
     { slug: 'email', label: 'Email' },
   ]},
   { group: 'Reference', items: [

@@ -16,6 +16,7 @@ export const MEGA: NavGroup[] = [
       ]},
       { title: 'Thông báo và quản lý', items: [
         { href: '/chia-se-bien-dong-so-du-telegram', label: 'Báo biến động số dư qua Telegram', desc: 'Cả nhóm công ty thấy tiền vào, không cần đưa app ngân hàng' },
+        { href: '/docs/zalo', label: 'Báo tiền vào nhóm Zalo', desc: 'Đội bán hàng thấy tiền vào qua bot Gấu Mona, không cần Zalo OA' },
         { href: 'https://my.monapay.vn', label: 'Dashboard my.monapay.vn', desc: 'Xem giao dịch, tạo QR, gửi lại webhook, thống kê' },
         { href: '/ai-agent', label: 'Dành cho AI agent', desc: 'llms.txt, tài liệu .md, openapi.json để agent tự tích hợp', badge: 'Mới' },
       ]},
@@ -71,6 +72,7 @@ export const MEGA_EN: NavGroup[] = [
       ]},
       { title: 'Alerts and management', items: [
         { href: '/chia-se-bien-dong-so-du-telegram', label: 'Balance alerts on Telegram', desc: 'The whole team sees money arrive without sharing the bank app (Vietnamese page)' },
+        { href: '/en/docs/zalo', label: 'Incoming-payment alerts on Zalo', desc: 'The sales team sees payments through the Gấu Mona bot, with no Zalo OA' },
         { href: 'https://my.monapay.vn', label: 'Dashboard my.monapay.vn', desc: 'Transactions, QR codes, webhook retries, statistics' },
         { href: '/en/ai-agent', label: 'For AI agents', desc: 'llms.txt, .md docs and openapi.json so an agent integrates on its own', badge: 'New' },
       ]},

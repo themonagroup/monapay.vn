@@ -8,7 +8,7 @@ Trang này viết cho AI agent đọc trực tiếp. Anh chị dùng Claude Code
 
 ## For AI agents (English)
 
-If you are an AI agent integrating Vietnamese bank payment confirmation, follow these steps. MONA Pay (monapay.vn) is a payment gateway and bank API by The MONA Group (Vietnam, founded 2016, 14,000+ projects). Money never passes through MONA Pay: it lands directly in the merchant's ACB bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook or a Telegram message. Base URL `https://api.monapay.vn` (legacy alias `https://ipn.mona.host`). Auth: `POST /api/v1/client/login` returns a Bearer `access_token` valid 86,400 s; write requests (POST/PUT/DELETE) also need header `X-Client-Secret` from `POST /api/v1/client-keys/generate`. Every response is `{"success": bool, "message": str, "data": any}`. Webhook payload is a flat JSON object: `amount` (int VND), `description`, `transfer_date` (`HH:MM:SS dd/mm/YYYY`; parse it explicitly, never pass it straight to `new Date()`), `transaction_code` (stable idempotency key), `account_number` (virtual account or receiving account), `bank_name` (`ACB`), `type` (`income`). Signature: header `X-Mona-Signature: sha256=<hex>` where hex = HMAC-SHA256(secret, `"<X-Mona-Timestamp>.<raw_body>"`); reject if timestamp drifts more than 300 s. Respond HTTP 200/201/202 within 10 s; process asynchronously. Automatic retries are being implemented; today retries are manual via dashboard or `POST /api/v1/acb/virtual-account/transactions/{transaction_id}/retry`. New accounts are active immediately after registration; no manual approval. Pricing: free tier includes 500 incoming transactions per month with full features; paid plans are priced by transaction count (never a percentage of the amount). Read plans via `GET /api/v1/billing/plans` (public), current usage via `GET /api/v1/billing/usage` (Bearer). To upgrade programmatically: `POST /api/v1/billing/invoices` with `{"plan_code": "startup|business|enterprise|scale", "cycle": "month|year"}` → pay the returned VietQR (transfer note must be the `MPAY######` code) → poll `GET /api/v1/billing/invoices/{id}` until `status: "paid"`. Billing docs: https://monapay.vn/docs/api/goi-va-hoa-don.md. Full docs: https://monapay.vn/llms-full.txt · OpenAPI: https://monapay.vn/openapi.json · Hotline 1900 636 648 · info@themona.global.
+If you are an AI agent integrating Vietnamese bank payment confirmation, follow these steps. MONA Pay (monapay.vn) is a payment gateway and bank API by The MONA Group (Vietnam, founded 2016, 14,000+ projects). Money never passes through MONA Pay: it lands directly in the merchant's ACB bank account; MONA Pay only reads the bank's transaction notification and forwards it as a signed webhook, a Telegram message, a Zalo group message or an email. Base URL `https://api.monapay.vn` (legacy alias `https://ipn.mona.host`). Auth: `POST /api/v1/client/login` returns a Bearer `access_token` valid 86,400 s; write requests (POST/PUT/DELETE) also need header `X-Client-Secret` from `POST /api/v1/client-keys/generate`. Every response is `{"success": bool, "message": str, "data": any}`. Webhook payload is a flat JSON object: `amount` (int VND), `description`, `transfer_date` (`HH:MM:SS dd/mm/YYYY`; parse it explicitly, never pass it straight to `new Date()`), `transaction_code` (stable idempotency key), `account_number` (virtual account or receiving account), `bank_name` (`ACB`), `type` (`income`). Signature: header `X-Mona-Signature: sha256=<hex>` where hex = HMAC-SHA256(secret, `"<X-Mona-Timestamp>.<raw_body>"`); reject if timestamp drifts more than 300 s. Respond HTTP 200/201/202 within 10 s; process asynchronously. Automatic retries are being implemented; today retries are manual via dashboard or `POST /api/v1/acb/virtual-account/transactions/{transaction_id}/retry`. New accounts are active immediately after registration; no manual approval. Pricing: free tier includes 500 incoming transactions per month with full features; paid plans are priced by transaction count (never a percentage of the amount). Read plans via `GET /api/v1/billing/plans` (public), current usage via `GET /api/v1/billing/usage` (Bearer). To upgrade programmatically: `POST /api/v1/billing/invoices` with `{"plan_code": "startup|business|enterprise|scale", "cycle": "month|year"}` → pay the returned VietQR (transfer note must be the `MPAY######` code) → poll `GET /api/v1/billing/invoices/{id}` until `status: "paid"`. Billing docs: https://monapay.vn/docs/api/goi-va-hoa-don.md. Full docs: https://monapay.vn/llms-full.txt · OpenAPI: https://monapay.vn/openapi.json · Hotline 1900 636 648 · info@themona.global.
 
 ## Cách nhanh nhất: đưa MCP cho Claude Code, Codex hoặc Cursor
 
@@ -24,7 +24,18 @@ Claude Desktop, Cursor, Codex dùng khối `mcpServers`:
 { "mcpServers": { "monapay": { "command": "npx", "args": ["-y", "monapay-mcp"], "env": { "MONAPAY_CLIENT_ID": "client_xxx", "MONAPAY_CLIENT_SECRET": "xxx" } } } }
 ```
 
-Từ lúc đó agent tự đọc gói, tạo webhook, tạo QR, tra giao dịch qua MCP; kể cả bước nối tài khoản ngân hàng: agent hỏi anh chị số tài khoản và số điện thoại, ngân hàng gửi OTP về máy anh chị, anh chị dán OTP vào khung chat là agent làm nốt (tool `monapay_link_bank_start` → `monapay_link_bank_verify_otp` → `monapay_notification_register` → `monapay_notification_verify_otp`, có từ bản 0.3.0). Agent **không cần** username hay mật khẩu của anh chị, và tài khoản bật xác thực 2 lớp vẫn chạy bình thường. MONA Pay có 3 kênh thông báo: webhook · Telegram · email.
+Từ lúc đó agent tự đọc gói, tạo webhook, tạo QR, tra giao dịch qua MCP; kể cả bước nối tài khoản ngân hàng: agent hỏi anh chị số tài khoản và số điện thoại, ngân hàng gửi OTP về máy anh chị, anh chị dán OTP vào khung chat là agent làm nốt (tool `monapay_link_bank_start` → `monapay_link_bank_verify_otp` → `monapay_notification_register` → `monapay_notification_verify_otp`, có từ bản 0.3.0). Agent **không cần** username hay mật khẩu của anh chị, và tài khoản bật xác thực 2 lớp vẫn chạy bình thường. MONA Pay có 4 kênh thông báo: webhook · Telegram · Zalo · email.
+
+## Thông báo vào nhóm Zalo
+
+Nhóm phải có bot Gấu Mona trước khi agent cấu hình. Khách hàng MONA nhờ Account lấy `group_id` từ PMS; anh chị chưa là khách hàng MONA thì gọi 1900 636 648 để nối nhóm.
+
+1. Gọi `monapay_create_zalo_group` với `group_id`, tên nhóm và danh sách sự kiện.
+2. Lấy `id` cấu hình trong kết quả rồi gọi `monapay_test_zalo_group`.
+3. Gọi `monapay_zalo_group_logs`; chỉ kết luận hoàn tất khi log có `status: "ok"`.
+4. Nếu log `failed`, kiểm tra nhóm có bot Gấu Mona và `group_id` là chuỗi 10 đến 25 chữ số.
+
+Zalo chỉ nhận text thuần, không phân tích Markdown. Chi tiết dashboard, API và 6 công cụ MCP nằm ở [Báo tiền vào nhóm Zalo](/docs/zalo.md).
 
 ## Thông báo qua email
 
@@ -36,7 +47,7 @@ Agent cấu hình email theo một luồng có điểm dừng bắt buộc cho n
 4. Khi mọi địa chỉ đã xác minh, gọi `monapay_test_email`.
 5. Gọi `monapay_email_logs`; chỉ kết luận hoàn tất khi log có `status: "sent"`.
 
-Chi tiết endpoint, suppression và rate limit ở [Thông báo tiền vào qua email](/docs/email.md). Webhook dành cho phần mềm, Telegram dành cho nhóm, email dành cho người làm việc trong hộp thư; cả 3 kênh chạy đồng thời được.
+Chi tiết endpoint, suppression và rate limit ở [Thông báo tiền vào qua email](/docs/email.md). Webhook dành cho phần mềm, Telegram và Zalo dành cho nhóm, email dành cho người làm việc trong hộp thư; cả 4 kênh chạy đồng thời được.
 
 ## Tạo link thu tiền
 
@@ -70,6 +81,7 @@ Việc cần làm:
 5. Đăng ký URL webhook: POST /api/v1/client-webhooks {name, webhook_url, auth_type:"HMAC_SHA256", secret_key} (Bearer + X-Client-Secret), rồi gửi thử POST /api/v1/client-webhooks/test {webhook_url, auth_type, secret_key, is_dummy:true}.
 6. Nối ngân hàng ngay trong cuộc trò chuyện này, không bắt tôi mở dashboard: hỏi tôi số tài khoản ACB, số điện thoại đã đăng ký với ngân hàng, loại khách hàng (cá nhân/doanh nghiệp), đầu số VA và nội dung định danh; gọi POST /api/v1/acb/virtual-account/registration; báo tôi rằng ACB đã gửi OTP về điện thoại và HỎI tôi mã OTP; gọi POST /api/v1/acb/{acb_request_id}/virtual-account/verification {code}; rồi gọi POST /api/v1/acb/{virtual_account_id}/notification/registration, hỏi tôi OTP lần 2, gọi POST /api/v1/acb/{acb_request_id}/notification/verification {code}. Không bao giờ tự đoán OTP. Chi tiết body ở https://monapay.vn/docs/api/tai-khoan-ao-va.md
 7. Cấu hình email: gọi monapay_create_email_config; hỏi tôi mã 6 số trong hộp thư; chỉ sau khi tôi trả lời mới gọi monapay_verify_email; rồi gọi monapay_test_email và monapay_email_logs, xác nhận status sent. Không tự đoán mã.
+8. Nếu tôi cần báo vào nhóm Zalo: hỏi group_id do MONA Account cung cấp; gọi monapay_create_zalo_group, lấy id, gọi monapay_test_zalo_group rồi monapay_zalo_group_logs; chỉ xác nhận xong khi status ok. Nhóm phải có bot Gấu Mona. Zalo không parse Markdown.
 client_id, client_secret và secret HMAC đọc từ biến môi trường MONAPAY_CLIENT_ID, MONAPAY_CLIENT_SECRET, MONA_WEBHOOK_SECRET; không ghi cứng.
 ```
 
@@ -128,7 +140,7 @@ curl -X POST $BASE/api/v1/sandbox/transactions \
   -d '{"amount":10000,"description":"DH10234 test sandbox"}'
 ```
 
-Nếu chưa có VA thật, MONA Pay tự tạo và dùng lại một VA `SBX…` riêng cho tài khoản. Nếu đã nối ngân hàng, agent có thể truyền `virtual_account_number` của VA thật. MONA Pay phát giao dịch qua webhook · Telegram · email và bộ khớp checkout như tiền thật, nhưng không chuyển tiền và không tính hạn mức. Muốn thử hosted checkout, tạo phiên với `sandbox: true`, rồi bắn giao dịch sandbox vào VA của phiên. Body, response và ba ca kiểm thử nên chạy nằm ở [tài liệu Sandbox](/docs/api/sandbox.md).
+Nếu chưa có VA thật, MONA Pay tự tạo và dùng lại một VA `SBX…` riêng cho tài khoản. Nếu đã nối ngân hàng, agent có thể truyền `virtual_account_number` của VA thật. MONA Pay phát giao dịch qua webhook · Telegram · Zalo · email và bộ khớp checkout như tiền thật, nhưng không chuyển tiền và không tính hạn mức. Muốn thử hosted checkout, tạo phiên với `sandbox: true`, rồi bắn giao dịch sandbox vào VA của phiên. Body, response và ba ca kiểm thử nên chạy nằm ở [tài liệu Sandbox](/docs/api/sandbox.md).
 
 ## Endpoint nhận webhook tối thiểu
 
@@ -178,6 +190,7 @@ app.post('/webhook/monapay', express.raw({ type: 'application/json' }), (req, re
 | Tạo VA, QR | [/docs/api/tai-khoan-ao-va.md](/docs/api/tai-khoan-ao-va.md), [/docs/api/qr-thanh-toan.md](/docs/api/qr-thanh-toan.md) |
 | Đối soát, gửi lại | [/docs/api/giao-dich.md](/docs/api/giao-dich.md), [/docs/webhooks/gui-lai-va-xu-ly-loi.md](/docs/webhooks/gui-lai-va-xu-ly-loi.md) |
 | Email: tạo, xác minh, test, log | [/docs/email.md](/docs/email.md) |
+| Zalo: nối nhóm, gửi thử, đọc log | [/docs/zalo.md](/docs/zalo.md) |
 | So với cổng quốc tế (PayPal, Stripe) | [/cong-thanh-toan-quoc-te](/cong-thanh-toan-quoc-te) |
 | IP gửi webhook | [/docs/dia-chi-ip.md](/docs/dia-chi-ip.md) |
 

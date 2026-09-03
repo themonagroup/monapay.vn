@@ -8,13 +8,14 @@ const PUBLIC = [
   '/api/v1/acb/{virtual_account_id}/virtual-account/delete', '/api/v1/acb/{bank_account_id}/virtual-account/retrieve',
   '/api/v1/acb/{virtual_account_id}/notification/registration', '/api/v1/acb/{acb_request_id}/notification/verification',
   '/api/v1/acb/{acb_notification_id}/notification/modification', '/api/v1/acb/{acb_notification_id}/notification/delete',
-  '/api/v1/acb/qr-payment/generate', '/api/v1/acb/qr-payment/{qr_code_id}/cancellation', '/health',
+  '/api/v1/acb/qr-payment/generate', '/api/v1/acb/qr-payment/{qr_code_id}/cancellation',
+  '/api/v1/zalo-groups', '/api/v1/zalo-groups/{id}', '/api/v1/zalo-groups/{id}/test', '/api/v1/zalo-groups/logs', '/health',
 ];
 const out = {
   openapi: src.openapi || '3.1.0',
   info: {
     title: 'MONA Pay API v1', version: '1.0',
-    description: 'MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group, giúp doanh nghiệp Việt Nam nhận và xác nhận tiền chuyển khoản theo thời gian thực qua tài khoản ảo (VA), VietQR, webhook và Telegram. Tiền không đi qua MONA Pay. Tài liệu: https://monapay.vn/docs · llms.txt: https://monapay.vn/llms.txt',
+    description: 'MONA Pay là cổng thanh toán và API ngân hàng của The MONA Group, giúp doanh nghiệp Việt Nam nhận và xác nhận tiền chuyển khoản theo thời gian thực qua tài khoản ảo (VA), VietQR, webhook, Telegram, nhóm Zalo và email. Tiền không đi qua MONA Pay. Tài liệu: https://monapay.vn/docs · llms.txt: https://monapay.vn/llms.txt',
     contact: { name: 'MONA Pay', url: 'https://monapay.vn', email: 'info@themona.global' },
   },
   servers: [{ url: 'https://api.monapay.vn', description: 'Production' }, { url: 'https://ipn.mona.host', description: 'Alias cũ (vẫn chạy)' }],
@@ -39,6 +40,7 @@ const emailEvents = ['TRANSACTION_IN', 'WEBHOOK_FAILED', 'VA_CREATED'];
 const emailEventTypes = [...emailEvents, 'VERIFICATION', 'TEST', 'RECEIPT'];
 const emailStatuses = ['sent', 'failed', 'suppressed', 'skipped'];
 const emailErrorLabels = ['OK', 'SMTP_4XX', 'SMTP_5XX', 'TIMEOUT', 'CONNECTION', 'SUPPRESSED', 'RATE_LIMITED', 'TEMPLATE', 'UNVERIFIED'];
+const zaloGroupEvents = ['TRANSACTION_IN', 'CHECKOUT_PAID', 'WEBHOOK_FAILED', 'VA_CREATED'];
 const bearerSecurity = [{ bearerAuth: [] }];
 const writeSecurity = [{ bearerAuth: [], clientSecret: [] }];
 const configId = { name: 'id', in: 'path', required: true, schema: { type: 'string', format: 'uuid' } };
@@ -87,6 +89,68 @@ Object.assign(out.components.schemas, {
       message_id: { anyOf: [{ type: 'string' }, { type: 'null' }] }, status: { type: 'string', enum: emailStatuses },
       smtp_code: { anyOf: [{ type: 'string' }, { type: 'null' }] }, duration_ms: { anyOf: [{ type: 'integer', minimum: 0 }, { type: 'null' }] },
       error_label: { type: 'string', enum: emailErrorLabels }, attempt: { type: 'integer', minimum: 1 }, created_at: { type: 'string', format: 'date-time' },
+    },
+  },
+  ZaloGroup: {
+    type: 'object', title: 'ZaloGroup',
+    description: 'Cấu hình gửi thông báo text thuần vào nhóm Zalo đã có bot Gấu Mona. target là group_id.',
+    required: ['id', 'type', 'target', 'friendly_name', 'virtual_account_id', 'message_template', 'is_active', 'events', 'created_at', 'updated_at'],
+    properties: {
+      id: { type: 'string', description: 'ID cấu hình nhóm Zalo.' },
+      type: { type: 'string', const: 'zalo_group' },
+      target: { type: 'string', pattern: '^[0-9]{10,25}$', description: 'group_id của nhóm Zalo.' },
+      friendly_name: { type: 'string', minLength: 1, maxLength: 255 },
+      virtual_account_id: { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'Giới hạn theo VA; null để nhận mọi VA.' },
+      message_template: { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'Mẫu text thuần; hỗ trợ biến một hoặc hai cặp dấu ngoặc nhọn.' },
+      is_active: { type: 'boolean' },
+      events: { type: 'array', minItems: 1, uniqueItems: true, items: { type: 'string', enum: zaloGroupEvents } },
+      created_at: { type: 'string', format: 'date-time' },
+      updated_at: { type: 'string', format: 'date-time' },
+    },
+  },
+  ZaloGroupCreate: {
+    type: 'object', title: 'ZaloGroupCreate', additionalProperties: false, required: ['group_id', 'friendly_name'],
+    properties: {
+      group_id: { type: 'string', pattern: '^[0-9]{10,25}$', description: 'ID nhóm Zalo gồm 10 đến 25 chữ số; nhóm phải có bot Gấu Mona.' },
+      friendly_name: { type: 'string', minLength: 1, maxLength: 255 },
+      virtual_account_id: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      message_template: { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'Text thuần vì Zalo không phân tích Markdown.' },
+      is_active: { type: 'boolean', default: true },
+      events: { type: 'array', minItems: 1, uniqueItems: true, default: ['TRANSACTION_IN'], items: { type: 'string', enum: zaloGroupEvents } },
+    },
+    example: { group_id: '7119000000000000000', friendly_name: 'Nhom ban hang', events: ['TRANSACTION_IN'], is_active: true },
+  },
+  ZaloGroupUpdate: {
+    type: 'object', title: 'ZaloGroupUpdate', additionalProperties: false, minProperties: 1,
+    properties: {
+      group_id: { type: 'string', pattern: '^[0-9]{10,25}$' },
+      friendly_name: { type: 'string', minLength: 1, maxLength: 255 },
+      virtual_account_id: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      message_template: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      is_active: { type: 'boolean' },
+      events: { type: 'array', minItems: 1, uniqueItems: true, items: { type: 'string', enum: zaloGroupEvents } },
+    },
+  },
+  ZaloGroupTestResult: {
+    type: 'object', title: 'ZaloGroupTestResult', required: ['ok'],
+    properties: {
+      ok: { type: 'boolean' },
+      zalo_message_id: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      error: { anyOf: [{ type: 'string' }, { type: 'null' }], description: 'Lý do relay thất bại và nhắc kiểm tra bot Gấu Mona.' },
+    },
+  },
+  ZaloGroupLog: {
+    type: 'object', title: 'ZaloGroupLog',
+    required: ['id', 'event', 'transaction_code', 'group_id', 'status', 'error', 'zalo_message_id', 'created_at'],
+    properties: {
+      id: { type: 'string' },
+      event: { type: 'string' },
+      transaction_code: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      group_id: { type: 'string', pattern: '^[0-9]{10,25}$' },
+      status: { type: 'string', enum: ['ok', 'failed'] },
+      error: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      zalo_message_id: { anyOf: [{ type: 'string' }, { type: 'null' }] },
+      created_at: { type: 'string', format: 'date-time' },
     },
   },
   SandboxTransactionCreate: {
@@ -279,6 +343,56 @@ Object.assign(out.paths, {
       description: 'Client tự chịu trách nhiệm gỡ chặn sau khi sửa nguyên nhân; percent-encode địa chỉ trong URL khi cần.',
       parameters: [{ name: 'email', in: 'path', required: true, schema: { type: 'string', format: 'email' } }],
       responses: { 200: R('Đã gỡ chặn địa chỉ.'), 404: { description: 'Địa chỉ không bị chặn hoặc không thuộc client.' } },
+    },
+  },
+});
+
+// Zalo group notifications — 6 operations on 4 URL paths.
+const zaloConfigId = { name: 'id', in: 'path', required: true, description: 'ID cấu hình nhóm Zalo, không phải group_id.', schema: { type: 'string' } };
+const zaloGroupEnvelope = envelope({ $ref: '#/components/schemas/ZaloGroup' }, 'Envelope với data là cấu hình nhóm Zalo.');
+Object.assign(out.paths, {
+  '/api/v1/zalo-groups': {
+    get: {
+      tags: ['Zalo Groups'], summary: 'Danh sách nhóm Zalo', operationId: 'list_zalo_groups', security: bearerSecurity,
+      responses: { 200: envelope({ type: 'array', items: { $ref: '#/components/schemas/ZaloGroup' } }, 'Envelope với data là danh sách cấu hình.') },
+    },
+    post: {
+      tags: ['Zalo Groups'], summary: 'Nối nhóm Zalo', operationId: 'create_zalo_group', security: writeSecurity,
+      description: 'Nhóm phải có bot Gấu Mona. Zalo chỉ nhận text thuần và không phân tích Markdown.',
+      requestBody: jsonBody({ $ref: '#/components/schemas/ZaloGroupCreate' }),
+      responses: {
+        201: zaloGroupEnvelope,
+        422: { description: 'group_id không phải chuỗi 10 đến 25 chữ số hoặc body không hợp lệ.' },
+        503: { description: 'Kênh Zalo chưa mở trên máy chủ.' },
+      },
+    },
+  },
+  '/api/v1/zalo-groups/{id}': {
+    put: {
+      tags: ['Zalo Groups'], summary: 'Cập nhật nhóm Zalo', operationId: 'update_zalo_group', security: writeSecurity, parameters: [zaloConfigId],
+      requestBody: jsonBody({ $ref: '#/components/schemas/ZaloGroupUpdate' }),
+      responses: { 200: zaloGroupEnvelope, 404: { description: 'Không tìm thấy cấu hình thuộc client.' }, 422: { description: 'Dữ liệu không hợp lệ.' } },
+    },
+    delete: {
+      tags: ['Zalo Groups'], summary: 'Xoá nhóm Zalo', operationId: 'delete_zalo_group', security: writeSecurity, parameters: [zaloConfigId],
+      responses: { 200: R('Đã xoá cấu hình nhóm Zalo.'), 404: { description: 'Không tìm thấy cấu hình thuộc client.' } },
+    },
+  },
+  '/api/v1/zalo-groups/{id}/test': {
+    post: {
+      tags: ['Zalo Groups'], summary: 'Gửi thử vào nhóm Zalo', operationId: 'test_zalo_group', security: writeSecurity, parameters: [zaloConfigId],
+      description: 'Gửi tin “🐼 MONA Pay đã nối nhóm này…”; nhóm phải có bot Gấu Mona.',
+      responses: { 200: envelope({ $ref: '#/components/schemas/ZaloGroupTestResult' }, 'Kết quả relay trong data.'), 404: { description: 'Không tìm thấy cấu hình thuộc client.' } },
+    },
+  },
+  '/api/v1/zalo-groups/logs': {
+    get: {
+      tags: ['Zalo Groups'], summary: 'Log gửi nhóm Zalo', operationId: 'zalo_group_logs', security: bearerSecurity,
+      parameters: [
+        { name: 'limit', in: 'query', schema: { type: 'integer', minimum: 1, default: 20 } },
+        { name: 'status', in: 'query', schema: { type: 'string', enum: ['ok', 'failed'] } },
+      ],
+      responses: { 200: envelope({ type: 'array', items: { $ref: '#/components/schemas/ZaloGroupLog' } }, 'Envelope với data là danh sách log gửi Zalo.') },
     },
   },
 });

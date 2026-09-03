@@ -2,7 +2,7 @@
 import Base from '../../layouts/Base.astro';
 import CodeTabs from '../../components/CodeTabs.astro';
 import { SITE } from '../../data/site';
-const ENTITY_EN = 'MONA Pay is the payment gateway and bank API of The MONA Group that lets Vietnamese businesses receive and confirm bank transfers in real time via virtual accounts (VA), VietQR, webhooks and Telegram — built so both developers and AI agents can integrate in minutes.';
+const ENTITY_EN = 'MONA Pay is the payment gateway and bank API of The MONA Group that lets Vietnamese businesses receive and confirm bank transfers in real time via virtual accounts (VA), VietQR, webhooks, Telegram, Zalo group alerts and email, built so both developers and AI agents can integrate in minutes.';
 const title = 'Bank API for AI agents: integrate MONA Pay in minutes';
 const description = 'MONA Pay is built for AI coding agents: llms.txt, a .md version of every docs page and openapi.json on the main domain, a copy-ready prompt, signed webhooks and self-serve accounts. Free tier: 500 transactions a month.';
 const PROMPT = `Integrate MONA Pay (a Vietnamese domestic payment gateway that receives and confirms bank transfers in real time) into my project.
@@ -22,6 +22,7 @@ Tasks:
 4. Return HTTP 200 within 10 seconds, process asynchronously. Match the order by account_number (VA) or the order code in description; compare amount with the order total.
 5. Register the webhook: POST /api/v1/client-webhooks {name, webhook_url, auth_type:"HMAC_SHA256", secret_key} (Bearer + X-Client-Secret), then POST /api/v1/client-webhooks/test {webhook_url, auth_type, secret_key, is_dummy:true}.
 6. Configure email with monapay_create_email_config; ask me for the six-digit inbox code, then call monapay_verify_email, monapay_test_email and monapay_email_logs. Never guess the code.
+7. If I need Zalo group alerts, ask for the group_id supplied by my MONA Account; call monapay_create_zalo_group, take its id, call monapay_test_zalo_group and monapay_zalo_group_logs. Complete only when status is ok. The group must contain Gấu Mona and templates must be plain text.
 Read MONA_WEBHOOK_SECRET and MONA_SECRET from environment variables; never hard-code them.`;
 const CURL = `# Simulate MONA Pay firing a webhook at your endpoint
 SECRET='your_hmac_secret'
@@ -54,7 +55,7 @@ const NODE = `app.post('/webhook/monapay', express.raw({ type: 'application/json
   if (d.transaction_code === 'DUMMY123') return;
   queue.add('monapay', d); // upsert by transaction_code, match the order, compare amount
 });`;
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url + '/en/ai-agent', description: ENTITY_EN, featureList: ['Signed incoming-payment webhooks', 'Telegram notifications', 'Recipient-verified email notifications', 'Virtual accounts and VietQR', 'API v1, OpenAPI and llms.txt'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url + '/en/ai-agent', description: ENTITY_EN, featureList: ['Signed incoming-payment webhooks', 'Telegram notifications', 'Zalo group notifications', 'Recipient-verified email notifications', 'Virtual accounts and VietQR', 'API v1, OpenAPI and llms.txt'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' }];
 ---
 <Base title={title} description={description} path="/en/ai-agent" jsonld={jsonld} lang="en" alternate={{ vi: '/ai-agent', en: '/en/ai-agent' }}>
   <section class="hero"><div class="wrap">
@@ -89,10 +90,11 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplicatio
       <li>Sign up (<code>POST /api/v1/client/register-client</code>) and log in immediately; no approval queue.</li>
       <li>Generate an API key and register webhook configurations through the API.</li>
       <li>Fire a simulated payload (<code>POST /api/v1/client-webhooks/test</code>) to verify the endpoint and signature code.</li>
+      <li>Connect a Zalo group that contains Gấu Mona, send a test message and inspect its delivery log.</li>
       <li>Create a recipient-verified email configuration, ask the user for the inbox code, then test it and inspect its logs.</li>
       <li>Read delivery logs and statistics to debug.</li>
     </ul>
-    <p>MONA Pay has three notification channels: webhook · Telegram · email. A person must provide codes sent by ACB when linking the bank and the six-digit inbox code when verifying an email recipient. Full guide: <a href="/en/docs/ai-agent">For AI agents (docs)</a> · <a href="/en/docs/bat-dau-nhanh">Quick start</a>.</p>
+    <p>MONA Pay has four notification channels: webhook · Telegram · Zalo · email. A person must provide codes sent by ACB when linking the bank and the six-digit inbox code when verifying an email recipient. Full guide: <a href="/en/docs/ai-agent">For AI agents (docs)</a> · <a href="/en/docs/zalo">Zalo group alerts</a> · <a href="/en/docs/bat-dau-nhanh">Quick start</a>.</p>
     <div class="btn-row"><a class="btn btn-primary" href={SITE.appRegister}>Create a free account</a><a class="btn btn-outline" href="/en/docs">Read the docs</a></div>
   </div></section>
 </Base>
