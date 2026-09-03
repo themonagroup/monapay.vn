@@ -1,7 +1,7 @@
 ---
 title: Bắt đầu nhanh với MONA Pay trong 5 phút
 description: Từ đăng ký tài khoản tới nhận webhook đầu tiên bằng tiền thật. 6 bước, có code cURL, PHP, Node để dán vào dùng ngay.
-updated: 28/08/2026
+updated: 03/09/2026
 ---
 
 Để nhận thông báo tiền vào tài khoản ACB theo thời gian thực, anh chị cần 6 bước: đăng ký tài khoản (dùng ngay, không cần duyệt), đăng nhập lấy token, tạo API key, nối tài khoản ACB bằng OTP, khai báo URL webhook, rồi chuyển một khoản nhỏ để kiểm tra. Nếu đã có tài khoản ACB và một máy chủ nhận webhook, phần thao tác mất khoảng 5 phút.
@@ -25,6 +25,8 @@ curl -X POST https://api.monapay.vn/api/v1/client/register-client \
 Tài khoản tạo xong dùng được ngay: đăng nhập liền ở bước 2, không cần ai duyệt. MONA Pay miễn phí 500 giao dịch mỗi tháng, gói trả phí tính theo số giao dịch (xem [bảng giá](/bang-gia)).
 
 ## Bước 2. Đăng nhập lấy token
+
+Nếu anh chị giao cho AI agent hoặc máy chủ làm, bỏ qua bước đăng nhập bằng mật khẩu: tạo API key ở dashboard rồi đổi `client_id` + `client_secret` ra token qua `POST /api/v1/oauth/token`, xem [Xác thực](/docs/api/xac-thuc).
 
 ```bash
 curl -X POST https://api.monapay.vn/api/v1/client/login \
@@ -61,12 +63,14 @@ curl -X POST https://api.monapay.vn/api/v1/client-keys/generate \
 
 Làm trong dashboard, mục Ngân hàng & VA, nút Thêm tài khoản:
 
-1. Nhập số tài khoản ACB, số điện thoại đăng ký với ACB, loại khách hàng (cá nhân hoặc doanh nghiệp).
+1. Nhập số tài khoản ACB, số điện thoại đăng ký với ACB, loại khách hàng (cá nhân hoặc doanh nghiệp) và tự đặt đầu số VA ngắn bằng chữ in hoa/số, ví dụ `HOA` hoặc `SHOP`. Không cần ra quầy hay đăng ký đầu số trước; nếu MONA Pay báo lỗi đầu số thì đổi đầu số khác.
 2. ACB gửi OTP về điện thoại. Nhập OTP để xác thực và tạo tài khoản ảo (VA) đầu tiên.
 3. Đăng ký nhận thông báo giao dịch. ACB gửi OTP lần 2, nhập tiếp.
 4. Xong. Từ lúc này tiền vào VA hoặc tài khoản là MONA Pay nhận được thông báo.
 
 Nếu muốn làm bằng API thay vì dashboard, xem [Tài khoản ảo (VA)](/docs/api/tai-khoan-ao-va), luồng cũng đúng 4 lệnh gọi này.
+
+ACB sẽ ghép mã đối tác phía trước đầu số anh chị chọn. Chẳng hạn đầu số `HOA` có thể cho số VA hoàn chỉnh `LOCHOA000123456`; hãy dùng nguyên số MONA Pay trả về, không tự ghép.
 
 ## Bước 5. Khai báo URL webhook
 

@@ -15,14 +15,17 @@ export const DOCS_NAV: { group: string; items: { slug: string; label: string }[]
   { group: 'API v1', items: [
     { slug: 'api/xac-thuc', label: 'Xác thực' },
     { slug: 'api/api-keys', label: 'API keys' },
+    { slug: 'api/sandbox', label: 'Sandbox: thử không tốn tiền' },
     { slug: 'api/tai-khoan-ao-va', label: 'Tài khoản ảo (VA)' },
     { slug: 'api/qr-thanh-toan', label: 'QR thanh toán' },
+    { slug: 'api/trang-thanh-toan', label: 'Trang thanh toán' },
     { slug: 'api/giao-dich', label: 'Giao dịch' },
     { slug: 'api/webhook-configs', label: 'Cấu hình webhook qua API' },
     { slug: 'api/goi-va-hoa-don', label: 'Gói và hoá đơn (billing)' },
   ]},
   { group: 'Kênh thông báo', items: [
     { slug: 'telegram', label: 'Telegram' },
+    { slug: 'email', label: 'Email' },
   ]},
   { group: 'Tham chiếu', items: [
     { slug: 'api-reference', label: 'API reference tương tác' },
@@ -49,13 +52,17 @@ export const DOCS_NAV_EN: { group: string; items: { slug: string; label: string 
   { group: 'API v1', items: [
     { slug: 'api/xac-thuc', label: 'Authentication' },
     { slug: 'api/api-keys', label: 'API keys' },
+    { slug: 'api/sandbox', label: 'Sandbox testing' },
     { slug: 'api/tai-khoan-ao-va', label: 'Virtual accounts (VA)' },
     { slug: 'api/qr-thanh-toan', label: 'QR payments' },
+    { slug: 'api/trang-thanh-toan', label: 'Hosted checkout' },
     { slug: 'api/giao-dich', label: 'Transactions' },
     { slug: 'api/webhook-configs', label: 'Webhook configuration API' },
+    { slug: 'api/goi-va-hoa-don', label: 'Plans and billing' },
   ]},
   { group: 'Notification channels', items: [
     { slug: 'telegram', label: 'Telegram' },
+    { slug: 'email', label: 'Email' },
   ]},
   { group: 'Reference', items: [
     { slug: 'dia-chi-ip', label: 'IP addresses' },

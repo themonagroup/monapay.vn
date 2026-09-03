@@ -1,7 +1,7 @@
 ---
 title: "Xác thực API ngân hàng MONA Pay: Bearer token và X-Client-Secret"
-description: "Đăng nhập lấy Bearer token (hạn 24 giờ), kèm X-Client-Secret cho POST/PUT/DELETE. Envelope success/message/data, mã lỗi 401/422 và code mẫu cURL, PHP, Node."
-updated: 28/08/2026
+description: "Hai cách lấy Bearer token: client_id + client_secret cho máy chủ và AI agent (hạn 1 giờ), hoặc đăng nhập bằng mật khẩu cho người (hạn 24 giờ); kèm X-Client-Secret cho POST/PUT/DELETE. Envelope success/message/data, mã lỗi 401/422 và code mẫu cURL, PHP, Node."
+updated: 03/09/2026
 ---
 
 Mọi lệnh gọi API MONA Pay cần header `Authorization: Bearer <access_token>`. Token lấy từ `POST /api/v1/client/login` bằng username và mật khẩu của tài khoản my.monapay.vn, hạn dùng 86.400 giây (24 giờ). Các lệnh ghi dữ liệu (POST, PUT, DELETE) gửi thêm header `X-Client-Secret` với secret sinh ở mục [API keys](/docs/api/api-keys). Mọi response đều bọc trong một khung chung `{"success": true, "message": "...", "data": ...}`.
@@ -13,7 +13,22 @@ Mọi lệnh gọi API MONA Pay cần header `Authorization: Bearer <access_toke
 | Production | `https://api.monapay.vn` |
 | Alias cũ (vẫn chạy, cho tích hợp trước 2026) | `https://ipn.mona.host` |
 
-Tài khoản đăng ký xong dùng được ngay: đăng nhập, tạo API key, không cần ai duyệt. Sandbox tách riêng (dữ liệu giả lập, không đụng ngân hàng thật) đang triển khai.
+Tài khoản đăng ký xong dùng được ngay: đăng nhập, tạo API key, không cần ai duyệt. Muốn thử không tốn tiền: `POST /api/v1/sandbox/transactions` (Bearer + X-Client-Secret) với `amount`, `description` và tuỳ chọn số tài khoản, `transaction_code` → hệ tạo một giao dịch giả, bắn các kênh thông báo như tiền thật, không tính hạn mức. Chưa nối ngân hàng vẫn chạy được vì MONA Pay tự cấp VA `SBX…`; xem [Sandbox](/docs/api/sandbox).
+
+## Cách dành cho máy chủ và AI agent: client credentials
+
+Không đưa username hay mật khẩu cho máy. Tạo API key ở dashboard (API Keys → Tạo key) để có `client_id` và `client_secret`, rồi đổi ra Bearer token:
+
+```bash
+curl -X POST https://api.monapay.vn/api/v1/oauth/token \
+  -d "grant_type=client_credentials&client_id=client_xxx&client_secret=xxx"
+```
+
+```json
+{ "success": true, "message": "Cấp access token thành công", "data": { "access_token": "…", "token_type": "Bearer", "expires_in": 3600, "scope": "*" } }
+```
+
+Token hạn 3.600 giây; hết hạn thì gọi lại, không cần refresh token. Lệnh ghi vẫn kèm `X-Client-Secret: <client_secret>`. Tài khoản bật xác thực 2 lớp vẫn dùng cách này bình thường, vì OTP chỉ áp cho đăng nhập bằng mật khẩu. SDK và MCP của MONA Pay đọc `MONAPAY_CLIENT_ID` và `MONAPAY_CLIENT_SECRET` từ biến môi trường và tự làm bước này.
 
 ## Khung response chung
 
@@ -43,6 +58,8 @@ Lỗi validate (thiếu trường, sai kiểu) trả HTTP 422 theo chuẩn FastA
 | Client secret | `X-Client-Secret: <client_secret>` | POST, PUT, DELETE | `POST /api/v1/client-keys/generate` |
 
 Giữ token và secret ở biến môi trường, không ghi cứng trong code, không commit lên git.
+
+Gửi `X-Client-Secret` ở mọi lệnh ghi POST, PUT và DELETE. Thiếu header này, request sẽ bị từ chối.
 
 ## POST /api/v1/client/register-client
 
@@ -157,12 +174,6 @@ curl -X PUT https://api.monapay.vn/api/v1/client/change-password \
   -H 'Content-Type: application/json' \
   -d '{"old_password":"MatKhauManh#2026","new_password":"MatKhauMoi#2026"}'
 ```
-
-<div class="callout warn">
-
-**Trạng thái ép buộc (kiểm 28/08/2026):** máy chủ production hiện chưa từ chối lệnh ghi thiếu `X-Client-Secret`; bản cập nhật ép buộc đã viết xong, đang chờ đưa lên. Anh chị gửi header này ngay từ bây giờ để khi bật lên không phải sửa gì.
-
-</div>
 
 Đổi mật khẩu xong thì token cũ vẫn dùng được tới khi hết hạn; muốn cắt ngay thì đăng nhập lại và thu hồi key ở mục API keys.
 

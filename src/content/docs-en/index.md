@@ -1,7 +1,7 @@
 ---
 title: "MONA Pay webhook and bank API documentation"
-description: MONA Pay reports incoming ACB transfers in real time through webhooks, Telegram and an API. How it works, what each feature does, and where to read next.
-updated: 29/08/2026
+description: MONA Pay reports incoming ACB transfers in real time through webhooks, Telegram, email and an API. How it works, what each feature does, and where to read next.
+updated: 03/09/2026
 ---
 
 MONA Pay reads the transaction notification ACB sends the moment money lands in your account, then POSTs a webhook to your server or sends a message to your Telegram group. Money never passes through MONA Pay; it goes straight into your bank account as usual. A basic integration takes about 5 minutes if you already have an ACB account and a URL that can receive webhooks.
@@ -31,11 +31,14 @@ Your server only has to answer HTTP 200, 201 or 202 within 10 seconds for MONA P
 |---|---|---|
 | Virtual accounts (VA) | Give each order or customer its own account number so payments match automatically | [Virtual accounts (VA)](/en/docs/api/tai-khoan-ao-va) |
 | Dynamic VietQR | Generate a QR code with the amount and reference pre-filled; the customer scans and pays exactly | [QR payments](/en/docs/api/qr-thanh-toan) |
+| Hosted checkout | Create a payment link for a web redirect or send it over Zalo and Facebook | [Hosted checkout](/en/docs/api/trang-thanh-toan) |
+| Sandbox | Test transactions, webhooks and checkout before linking a bank, without moving real money | [Sandbox](/en/docs/api/sandbox) |
 | Webhooks | Your server receives incoming payments in real time | [Webhook integration](/en/docs/webhooks/tich-hop-webhook) |
 | HMAC signature | Verify a webhook really came from MONA Pay, block forgeries and replays | [Webhook security](/en/docs/webhooks/bao-mat) |
 | Retries and logs | See every delivery attempt, error labels, resend by hand | [Retries and error handling](/en/docs/webhooks/gui-lai-va-xu-ly-loi) |
 | Reconciliation | Pull the transaction list page by page to compare with your books | [Reconciliation](/en/docs/webhooks/doi-soat) |
 | Telegram | Accountants and shop owners get an instant message on their phone | [Telegram](/en/docs/telegram) |
+| Email | Verified recipients get incoming-payment, webhook-failure or new-VA messages | [Email](/en/docs/email) |
 | API keys | Create and revoke keys for server-to-server calls | [API keys](/en/docs/api/api-keys) |
 | API authentication | Log in for a Bearer token, send X-Client-Secret | [Authentication](/en/docs/api/xac-thuc) |
 | IP addresses | Open your firewall for the MONA Pay webhook server | [IP addresses](/en/docs/dia-chi-ip) |
@@ -44,6 +47,7 @@ Your server only has to answer HTTP 200, 201 or 202 within 10 seconds for MONA P
 ## Where to start
 
 - No account yet: read [Quick start (5 minutes)](/en/docs/bat-dau-nhanh). It walks from sign-up to your first webhook.
+- Want to verify the integration before linking a bank: use the [Sandbox](/en/docs/api/sandbox). MONA Pay provides an `SBX…` VA, moves no money and uses no plan quota.
 - New to VA, VietQR, webhooks or HMAC: read [Concepts](/en/docs/khai-niem) first; it is written for non-technical readers too.
 - You are an AI agent, or you want to hand the job to one: open [For AI agents](/en/docs/ai-agent), or load `https://monapay.vn/llms-full.txt` directly.
 

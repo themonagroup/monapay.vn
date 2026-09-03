@@ -21,6 +21,7 @@ Tasks:
 3. Deduplicate by transaction_code (UNIQUE). Ignore transaction_code = "DUMMY123" (test payload).
 4. Return HTTP 200 within 10 seconds, process asynchronously. Match the order by account_number (VA) or the order code in description; compare amount with the order total.
 5. Register the webhook: POST /api/v1/client-webhooks {name, webhook_url, auth_type:"HMAC_SHA256", secret_key} (Bearer + X-Client-Secret), then POST /api/v1/client-webhooks/test {webhook_url, auth_type, secret_key, is_dummy:true}.
+6. Configure email with monapay_create_email_config; ask me for the six-digit inbox code, then call monapay_verify_email, monapay_test_email and monapay_email_logs. Never guess the code.
 Read MONA_WEBHOOK_SECRET and MONA_SECRET from environment variables; never hard-code them.`;
 const CURL = `# Simulate MONA Pay firing a webhook at your endpoint
 SECRET='your_hmac_secret'
@@ -53,13 +54,13 @@ const NODE = `app.post('/webhook/monapay', express.raw({ type: 'application/json
   if (d.transaction_code === 'DUMMY123') return;
   queue.add('monapay', d); // upsert by transaction_code, match the order, compare amount
 });`;
-const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url + '/en/ai-agent', description: ENTITY_EN, offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' }];
+const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url + '/en/ai-agent', description: ENTITY_EN, featureList: ['Signed incoming-payment webhooks', 'Telegram notifications', 'Recipient-verified email notifications', 'Virtual accounts and VietQR', 'API v1, OpenAPI and llms.txt'], offers: { '@type': 'Offer', price: 0, priceCurrency: 'VND' }, publisher: { '@id': SITE.url + '/#organization' }, inLanguage: 'en' }];
 ---
 <Base title={title} description={description} path="/en/ai-agent" jsonld={jsonld} lang="en" alternate={{ vi: '/ai-agent', en: '/en/ai-agent' }}>
   <section class="hero"><div class="wrap">
     <span class="eyebrow">For AI agents</span>
     <h1>A Vietnamese bank API<br class="br-d" /> <span class="accent">that an AI agent can integrate alone</span></h1>
-    <div class="answer-first"><p>{ENTITY_EN} Everything an agent needs sits on the main domain: <a href="/llms.txt">llms.txt</a>, a raw <code>.md</code> version of every docs page, <a href="/openapi.json">openapi.json</a>, and a prompt you paste into Claude Code, Codex or Cursor. Accounts work immediately after sign-up; the only human step is the bank's OTP.</p></div>
+    <div class="answer-first"><p>{ENTITY_EN} Everything an agent needs sits on the main domain: <a href="/llms.txt">llms.txt</a>, a raw <code>.md</code> version of every docs page, <a href="/openapi.json">openapi.json</a>, and a prompt you paste into Claude Code, Codex or Cursor. Accounts work immediately after sign-up; the only human checkpoints are codes sent by the bank or to a verified email recipient.</p></div>
   </div></section>
 
   <section class="section-dark"><div class="wrap">
@@ -88,9 +89,10 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'SoftwareApplicatio
       <li>Sign up (<code>POST /api/v1/client/register-client</code>) and log in immediately; no approval queue.</li>
       <li>Generate an API key and register webhook configurations through the API.</li>
       <li>Fire a simulated payload (<code>POST /api/v1/client-webhooks/test</code>) to verify the endpoint and signature code.</li>
+      <li>Create a recipient-verified email configuration, ask the user for the inbox code, then test it and inspect its logs.</li>
       <li>Read delivery logs and statistics to debug.</li>
     </ul>
-    <p>The one step that needs a person: linking the ACB account, because ACB sends two OTPs to the phone number registered with the bank. Full guide: <a href="/en/docs/ai-agent">For AI agents (docs)</a> · <a href="/en/docs/bat-dau-nhanh">Quick start</a>.</p>
+    <p>MONA Pay has three notification channels: webhook · Telegram · email. A person must provide codes sent by ACB when linking the bank and the six-digit inbox code when verifying an email recipient. Full guide: <a href="/en/docs/ai-agent">For AI agents (docs)</a> · <a href="/en/docs/bat-dau-nhanh">Quick start</a>.</p>
     <div class="btn-row"><a class="btn btn-primary" href={SITE.appRegister}>Create a free account</a><a class="btn btn-outline" href="/en/docs">Read the docs</a></div>
   </div></section>
 </Base>

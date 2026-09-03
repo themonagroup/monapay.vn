@@ -124,11 +124,7 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 
 Note the two different secrets: `client_secret` (X-Client-Secret) is for you to call the MONA Pay API; `secret_key` in a webhook configuration is for MONA Pay to sign payloads sent to your server (see [Webhook security](/en/docs/webhooks/bao-mat)). They should be different strings.
 
-<div class="callout warn">
-
-**Enforcement status (checked 28/08/2026):** the production server does not yet reject write calls that lack `X-Client-Secret`; the enforcing update is written and waiting to be deployed. Send the header now so nothing changes for you when it is switched on.
-
-</div>
+Send `X-Client-Secret` on every POST, PUT and DELETE request. A write request without it is rejected.
 
 ## Common errors
 

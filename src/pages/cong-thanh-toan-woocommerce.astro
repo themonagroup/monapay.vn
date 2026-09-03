@@ -123,7 +123,7 @@ const steps = [
 
 const faq = [
   { q: 'Tiền của shop có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB của anh chị. MONA Pay chỉ nhận thông báo từ ngân hàng rằng có giao dịch vào, rồi báo lại cho web. Không có ví trung gian, không có chuyện rút tiền về sau, không có phí trên từng giao dịch kiểu cổng thẻ.' },
-  { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Plugin MONA Pay cho WooCommerce đang được đội MONA xây, chưa đưa lên kho wordpress.org. Hiện có 2 cách làm ngay: khách làm web tại MONA thì đội kỹ thuật tụi em nối sẵn khi bàn giao; web làm ở nơi khác thì dev của anh chị dán đoạn PHP mẫu trên trang này vào, mất khoảng 30 phút.' },
+  { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Có. Plugin "MONA Pay for WooCommerce" đang ở bản 0.1.0, tải file zip tại https://github.com/themonagroup/woocommerce-monapay/releases rồi cài trong WordPress (Plugins → Thêm mới → Tải plugin lên); bản nộp kho wordpress.org đang chờ duyệt. Khách làm web tại MONA thì đội kỹ thuật tụi em cài sẵn khi bàn giao; dev của anh chị cũng có thể dán đoạn PHP mẫu trên trang này nếu không muốn cài plugin.' },
   { q: 'Khách chuyển thiếu tiền hoặc gõ sai nội dung thì sao?', a: 'Đoạn code mẫu chỉ xác nhận khi số tiền nhận được lớn hơn hoặc bằng tổng đơn và nội dung có đúng mã đơn. Trường hợp còn lại, giao dịch vẫn nằm trong dashboard MONA Pay với đầy đủ số tiền, nội dung, thời gian để nhân viên đối chiếu tay, không mất dấu.' },
   { q: 'Web bị sập đúng lúc khách chuyển thì có mất giao dịch không?', a: 'Không mất. MONA Pay ghi lại từng lần gửi webhook kèm kết quả (mã HTTP, thời gian phản hồi, nhãn lỗi). Web trả về 200/201/202 trong 10 giây mới tính thành công; lỗi thì anh chị vào Webhooks, mục Lịch sử, bấm gửi lại. Lịch gửi lại tự động tối đa 7 lần đang được triển khai và sẽ công bố tại trang tài liệu khi lên.' },
   { q: 'Nhiều khách chuyển cùng số tiền cùng lúc, web có xác nhận nhầm đơn không?', a: 'Không, vì web khớp đơn theo mã đơn trong nội dung chuyển khoản (DH1234), không khớp theo số tiền. Muốn chắc hơn nữa, anh chị cấp mỗi đơn 1 tài khoản ảo (VA) riêng: tiền vào VA nào là biết đơn nào, kể cả khi khách quên gõ nội dung.' },
@@ -150,7 +150,8 @@ const jsonld = [
         <p>MONA Pay nối tài khoản ACB của anh chị với website WooCommerce. Khách quét mã VietQR đúng số tiền, tiền vào thẳng tài khoản ACB, ACB báo cho MONA Pay, MONA Pay bắn webhook về web và đơn tự đổi trạng thái trong vài giây. Không ai phải canh app ngân hàng, không chụp màn hình, {PRICE_LINE}.</p>
       </div>
       <div class="btn-row">
-        <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
+        <a class="btn btn-primary" href="https://github.com/themonagroup/woocommerce-monapay/releases/latest" rel="noopener">Tải plugin WooCommerce (GitHub)</a>
+        <a class="btn btn-outline" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
         <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Xem tài liệu webhook</a>
       </div>
     </div>
@@ -182,19 +183,29 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Làm ngay hôm nay</span>
-      <h2>Hai cách nối MONA Pay vào WooCommerce</h2>
+      <h2>Ba cách nối MONA Pay vào WooCommerce</h2>
+      <div class="card" style="margin-bottom:1.5rem">
+        <span class="badge badge-cta">Cài 1 nút</span>
+        <h3>Cài plugin "MONA Pay for WooCommerce", 3 bước, không cần code</h3>
+        <ol>
+          <li>Tải file zip bản mới nhất tại <a href="https://github.com/themonagroup/woocommerce-monapay/releases/latest" rel="noopener">github.com/themonagroup/woocommerce-monapay</a> (bản trên kho wordpress.org đang chờ duyệt).</li>
+          <li>Trong WordPress vào <strong>Plugins → Thêm mới → Tải plugin lên</strong>, chọn file zip, kích hoạt. Vào <strong>WooCommerce → Thanh toán → MONA Pay VietQR</strong>.</li>
+          <li>Dán <strong>Client ID</strong>, <strong>Client Secret</strong> (lấy ở my.monapay.vn → API Keys → Tạo key) và đầu số VA, bấm "Bắn webhook thử" hoặc "Tạo giao dịch thử (sandbox)" để thấy đơn tự đổi trạng thái.</li>
+        </ol>
+        <p><a class="btn btn-primary" href="https://github.com/themonagroup/woocommerce-monapay/releases/latest" rel="noopener">Tải plugin (zip)</a></p>
+      </div>
       <div class="grid grid-2">
         <div class="card">
-          <span class="badge badge-cta">Cách 1</span>
+          <span class="badge">Cách 2</span>
           <h3>Web làm tại MONA: đội kỹ thuật tụi em nối sẵn</h3>
           <p>Anh chị làm web bán hàng tại MONA thì phần nhận tiền này đi kèm lúc bàn giao. Tụi em tạo tài khoản MONA Pay, nối ACB cùng anh chị (cần OTP từ số điện thoại đăng ký với ngân hàng), gắn webhook vào web, chạy thử 1 đơn thật rồi mới giao. Anh chị chỉ cần có tài khoản ACB và 15 phút ngồi cùng để nhận 2 lần OTP.</p>
           <p><a href={SITE.hotlineTel}>Gọi {SITE.hotline}</a> hoặc <a href="https://mona.media">xem dịch vụ thiết kế web tại mona.media</a>.</p>
         </div>
         <div class="card">
-          <span class="badge">Cách 2</span>
+          <span class="badge">Cách 3</span>
           <h3>Web làm nơi khác: dev dán đoạn PHP mẫu, khoảng 30 phút</h3>
           <p>Đoạn code bên dưới tạo 1 địa chỉ nhận webhook ngay trong WordPress, kiểm chữ ký HMAC, chống gửi trùng, tìm đơn theo mã trong nội dung chuyển khoản rồi gọi <code>payment_complete()</code> của WooCommerce. Dán vào thư mục <code>mu-plugins</code>, khai báo secret trong <code>wp-config.php</code>, vào dashboard MONA Pay dán địa chỉ webhook là chạy.</p>
-          <p>Plugin cài 1 nút đang được xây. Khi lên kho wordpress.org tụi em công bố tại trang này và trong dashboard.</p>
+          <p>Plugin cài 1 nút đã có: <a href="https://github.com/themonagroup/woocommerce-monapay/releases" rel="noopener">tải zip bản mới nhất trên GitHub</a>, cài trong WordPress rồi dán Client ID, Client Secret và đầu số VA. Bản trên kho wordpress.org đang chờ duyệt, lên là tụi em công bố tại đây và trong dashboard.</p>
         </div>
       </div>
 

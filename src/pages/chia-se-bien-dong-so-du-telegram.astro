@@ -20,7 +20,7 @@ const faq = [
   { q: 'Có phải đưa điện thoại hay mật khẩu ngân hàng cho ai không?', a: 'Không. Anh chị nối tài khoản ACB với MONA Pay bằng 2 lần OTP gửi về số điện thoại đăng ký với ngân hàng, xong là ACB tự báo giao dịch cho MONA Pay. Nhân viên chỉ thấy tin nhắn trong nhóm Telegram: số tiền vào, nội dung, thời gian. Không ai thấy số dư, không ai đăng nhập app ngân hàng.' },
   { q: 'Tin nhắn Telegram có những gì?', a: 'Mẫu mặc định gồm tên ngân hàng, số tài khoản nhận, số tiền (định dạng 2.500.000 VNĐ), thời gian giao dịch và nội dung chuyển khoản. Anh chị sửa mẫu trong dashboard, ví dụ thêm tên chi nhánh hay bỏ bớt trường.' },
   { q: 'Công ty có 5 chi nhánh, mỗi chi nhánh muốn nhóm riêng thì làm sao?', a: 'Cấp mỗi chi nhánh 1 tài khoản ảo (VA) từ đầu số ACB của công ty, rồi lập 5 cấu hình Telegram, mỗi cấu hình gắn 1 VA và 1 nhóm. Tiền vào VA chi nhánh nào thì chỉ nhóm chi nhánh đó nhận tin, còn nhóm của chủ nhận tất cả.' },
-  { q: 'Ngoài Telegram có báo qua đâu nữa?', a: 'Có webhook về website hoặc phần mềm của anh chị để tự xác nhận đơn, và dashboard my.monapay.vn để xem, lọc, xuất CSV mọi giao dịch. Telegram là kênh cho người đọc, webhook là kênh cho máy đọc; dùng cả hai cùng lúc được.' },
+  { q: 'Ngoài Telegram có báo qua đâu nữa?', a: 'Có webhook về website hoặc phần mềm để tự xác nhận đơn, email tới người nhận đã xác minh, và dashboard my.monapay.vn để xem, lọc, xuất CSV mọi giao dịch. Telegram là kênh cho nhóm, webhook là kênh cho máy, email là kênh cho hộp thư; dùng cả 3 cùng lúc được.' },
   { q: 'Tiền ra (chi) có báo không?', a: 'Hiện MONA Pay báo giao dịch tiền vào (type income). Chi tiền chưa báo, khi có tụi em ghi rõ tại trang tài liệu.' },
   { q: 'Tin không tới nhóm thì kiểm ở đâu?', a: 'Kiểm 3 chỗ: bot còn trong nhóm không, group_id và topic_id đúng chưa, cấu hình còn bật không. Dashboard có nút gửi thử để kiểm ngay. Vẫn kẹt thì gọi 1900 636 648, tụi em xem cùng.' },
   { q: 'Chi phí bao nhiêu?', a: `Phía MONA Pay ${PRICE_LINE}, gồm cả Telegram, webhook, tài khoản ảo, VietQR, dashboard. Không thu phần trăm trên số tiền, chi tiết tại trang bảng giá.` },
@@ -98,7 +98,7 @@ const jsonld = [
         <div class="card"><h3>Chủ đề trong 1 nhóm lớn</h3><p>Công ty đã có nhóm chung nhiều chủ đề thì không cần lập nhóm mới: nhập thêm mã chủ đề, tin tiền vào rơi đúng chủ đề "Thu tiền", không lẫn với chuyện khác.</p></div>
       </div>
       <div class="callout" style="margin-top:1.5rem">
-        <p><strong>Muốn phần mềm tự xử lý thay vì người đọc tin?</strong> Bật thêm webhook: cùng một giao dịch, MONA Pay vừa gửi tin Telegram cho người, vừa gửi gói JSON có chữ ký cho phần mềm để tự xác nhận đơn. Xem <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a> và trang <a href="/cong-thanh-toan-woocommerce">WooCommerce</a>.</p>
+        <p><strong>Muốn phần mềm tự xử lý thay vì người đọc tin?</strong> Bật thêm webhook: cùng một giao dịch, MONA Pay gửi tin Telegram cho nhóm, email cho người nhận đã xác minh và gói JSON có chữ ký cho phần mềm tự xác nhận đơn. Xem <a href="/docs/webhooks/tich-hop-webhook">tài liệu webhook</a>, <a href="/docs/email">tài liệu email</a> và trang <a href="/cong-thanh-toan-woocommerce">WooCommerce</a>.</p>
       </div>
     </div>
   </section>

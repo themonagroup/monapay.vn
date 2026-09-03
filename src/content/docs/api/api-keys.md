@@ -124,11 +124,7 @@ curl -X POST https://api.monapay.vn/api/v1/client-webhooks \
 
 Lưu ý phân biệt 2 loại secret: `client_secret` (X-Client-Secret) là để anh chị gọi API MONA Pay; `secret_key` trong cấu hình webhook là để MONA Pay ký payload gửi sang server anh chị (xem [Bảo mật webhook](/docs/webhooks/bao-mat)). Hai chuỗi này nên khác nhau.
 
-<div class="callout warn">
-
-**Trạng thái ép buộc (kiểm 28/08/2026):** máy chủ production hiện chưa từ chối lệnh ghi thiếu `X-Client-Secret`; bản cập nhật ép buộc đã viết xong, đang chờ đưa lên. Anh chị gửi header này ngay từ bây giờ để khi bật lên không phải sửa gì.
-
-</div>
+Gửi `X-Client-Secret` ở mọi lệnh ghi POST, PUT và DELETE. Thiếu header này, request sẽ bị từ chối.
 
 ## Lỗi thường gặp
 

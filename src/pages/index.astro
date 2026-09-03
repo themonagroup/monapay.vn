@@ -20,7 +20,7 @@ const priceCap = PRICE_LINE.charAt(0).toUpperCase() + PRICE_LINE.slice(1);
 const liveBank = LIVE_BANKS[0]?.name ?? 'ACB';
 
 const title = 'Cổng thanh toán tự động báo có chuyển khoản, miễn phí | MONA Pay';
-const description = `Cổng thanh toán tự động báo có MONA Pay: khách chuyển khoản là website, phần mềm, nhóm Telegram biết ngay, đơn tự xác nhận. ${isFree ? 'Miễn phí, không giới hạn giao dịch.' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng.`}`;
+const description = `Cổng thanh toán tự động báo có MONA Pay: khách chuyển khoản là website, phần mềm, Telegram và email biết ngay, đơn tự xác nhận. ${isFree ? 'Miễn phí, không giới hạn giao dịch.' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng.`}`;
 
 const stats = [
   { value: String(SITE.founded), label: 'năm The MONA Group thành lập, hơn 10 năm làm web và phần mềm' },
@@ -48,7 +48,7 @@ const uses = [
 const steps = [
   { title: 'Khách chuyển khoản như bình thường', body: 'Khách quét mã QR hoặc chuyển vào số tài khoản anh chị đưa. Tiền vào thẳng tài khoản ngân hàng đứng tên anh chị, không qua ví, không qua trung gian nào.' },
   { title: 'Ngân hàng báo cho MONA Pay ngay khi tiền vào', body: 'Anh chị cho phép MONA Pay nhận thông báo giao dịch từ ngân hàng, làm 1 lần trong dashboard, xác nhận bằng 2 mã OTP ngân hàng gửi về điện thoại. Từ đó tiền vừa chạm tài khoản là ngân hàng đẩy thông tin sang: số tiền, nội dung, mã giao dịch.' },
-  { title: 'MONA Pay báo về đúng chỗ anh chị chọn', body: 'Nhóm Telegram của cửa hàng nhận tin nhắn. Website, phần mềm bán hàng nhận một gói tin có chữ ký bảo mật, để phần mềm biết chắc tin đó do MONA Pay gửi, không ai giả được. Cả hai cùng lúc, trong vài giây.' },
+  { title: 'MONA Pay báo về đúng chỗ anh chị chọn', body: 'Nhóm Telegram nhận tin nhắn, người nhận đã xác minh nhận email. Website, phần mềm bán hàng nhận một gói tin có chữ ký bảo mật để biết chắc tin do MONA Pay gửi. Cả 3 kênh chạy cùng lúc, trong vài giây.' },
   { title: 'Phần mềm tự khớp đơn, người chỉ việc giao hàng', body: 'Phần mềm so mã đơn hoặc số tài khoản nhận để biết tiền này của đơn nào rồi tự xác nhận. Người bán chỉ còn việc đóng gói và giao. Cuối tháng kế toán mở sổ giao dịch đối chiếu, khỏi ghép sao kê bằng tay.' },
 ];
 
@@ -69,7 +69,7 @@ const industries = [
 
 const faq = [
   { q: 'Tôi không rành kỹ thuật, tự dùng được không?', a: `Được. Phần nhận báo có qua Telegram không cần viết dòng code nào: tạo tài khoản, nối ngân hàng bằng 2 mã OTP, thêm bot vào nhóm, làm theo hướng dẫn trong dashboard khoảng 10 phút. Phần nối vào website hay phần mềm thì lập trình viên của anh chị làm 1 lần theo code mẫu, web làm tại MONA thì tụi em cài luôn. Kẹt chỗ nào gọi ${SITE.hotline}.` },
-  { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên không có chuyện chờ đối soát rồi mới được rút.' },
+  { q: 'Tiền của khách có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay chỉ nhận thông báo giao dịch từ ngân hàng rồi báo lại cho phần mềm, nhóm Telegram, email và dashboard. Tụi em không giữ tiền, không chạm vào tiền, nên không có chuyện chờ đối soát rồi mới được rút.' },
   { q: 'Miễn phí thật không, có phí ẩn không?', a: isFree ? `${priceCap}, đủ mọi tính năng: tài khoản ảo, mã QR, báo Telegram, nối website, sổ giao dịch. Không thu phần trăm trên số tiền, không phí mở tài khoản, không phí theo tháng. Phí duy nhất anh chị có thể gặp là phí ngân hàng thu cho tài khoản của mình, nếu có, MONA không thu thêm gì. Điều khoản ghi rõ: nếu sau này có gói thu phí, tụi em báo trước ít nhất 30 ngày và tài khoản đang dùng không bị tự chuyển sang trả phí.` : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch mỗi tháng, đủ mọi tính năng. Vượt mức đó có gói trả phí tính theo số giao dịch, niêm yết công khai ở trang bảng giá. Không thu phí theo phần trăm số tiền. Riêng anh chị đang là khách hàng của MONA (web, phần mềm, hosting) thì miễn phí hoàn toàn, không giới hạn giao dịch, gọi ${SITE.hotline} để đội MONA gán gói.` },
   { q: 'Cần tài khoản ngân hàng nào?', a: `${BANKS_LINE}. Tài khoản cá nhân hay doanh nghiệp đều nối được. Bảng trạng thái từng ngân hàng cập nhật tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>; Telegram, website, sổ giao dịch dùng chung nên thêm ngân hàng anh chị không phải làm lại gì.` },
   { q: 'Tôi chỉ bán qua Facebook, Zalo, chưa có website, dùng được không?', a: `Được. Anh chị chỉ cần tài khoản ngân hàng và một nhóm Telegram: tiền vào là nhóm có tin, khỏi mở app ngân hàng kiểm. Cần mã QR đúng số tiền cho từng đơn thì tạo trong dashboard, hoặc dùng <a href="/tao-ma-qr-ngan-hang">tool tạo mã QR ngân hàng</a> miễn phí trên monapay.vn, không cần đăng nhập. Sau này làm website thì nối thêm, tài khoản vẫn giữ nguyên.` },
@@ -83,19 +83,19 @@ const jsonld = [{
   name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
   url: SITE.url, description: SITE.entity, inLanguage: 'vi',
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND', description: isFree ? 'Miễn phí, không giới hạn giao dịch, đủ tính năng' : `Miễn phí ${FREE_TX_PER_MONTH} giao dịch/tháng, đủ tính năng` },
-  featureList: ['Báo có tự động khi khách chuyển khoản', 'Thông báo Telegram', 'Đơn hàng tự xác nhận qua webhook ký HMAC-SHA256', 'VietQR động theo đơn', 'Tài khoản ảo (VA) theo khách', 'Dashboard sổ giao dịch, xuất CSV', 'API v1 + OpenAPI + llms.txt'],
+  featureList: ['Báo có tự động khi khách chuyển khoản', 'Thông báo Telegram', 'Thông báo email đã xác minh người nhận', 'Đơn hàng tự xác nhận qua webhook ký HMAC-SHA256', 'VietQR động theo đơn', 'Tài khoản ảo (VA) theo khách', 'Dashboard sổ giao dịch, xuất CSV', 'API v1 + OpenAPI + llms.txt'],
   softwareHelp: { '@type': 'CreativeWork', url: SITE.docs },
   publisher: { '@id': SITE.url + '/#organization' },
 }];
 ---
-<Base title={title} description={description} path="/" jsonld={jsonld}>
+<Base title={title} description={description} path="/" jsonld={jsonld} alternate={{ vi: '/', en: '/en' }}>
   <section class="hero">
     <div class="wrap hero-grid">
       <div>
         <span class="eyebrow">Cho doanh nghiệp kinh doanh online · The MONA Group</span>
         <h1>Cổng thanh toán tự động báo có<br class="br-d" /> <span class="accent">miễn phí cho doanh nghiệp online</span></h1>
         <div class="answer-first">
-          <p>MONA Pay là cổng thanh toán tự động báo có bằng chuyển khoản ngân hàng: khách chuyển tiền vào tài khoản ngân hàng của anh chị, tiền vừa vào là MONA Pay báo ngay về website, phần mềm bán hàng và nhóm Telegram của cửa hàng, đơn tự chuyển sang đã thanh toán.</p>
+          <p>MONA Pay là cổng thanh toán tự động báo có bằng chuyển khoản ngân hàng: khách chuyển tiền vào tài khoản ngân hàng của anh chị, tiền vừa vào là MONA Pay báo ngay về website, phần mềm bán hàng, nhóm Telegram và email đã xác minh, đơn tự chuyển sang đã thanh toán.</p>
           <p>{priceCap}, không thu phần trăm trên số tiền. Tiền vẫn nằm trong tài khoản ngân hàng đứng tên anh chị, MONA Pay không giữ tiền.</p>
         </div>
         <div class="btn-row">

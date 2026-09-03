@@ -41,3 +41,8 @@ Việc treo (Ahrefs credit): verify KD `sepay alternative`, `casso vs sepay`; co
 | `/nganh/*` còn lại | long-tail GEO "tự động xác nhận thanh toán cho <ngành>" | — |
 | `/blog/*` 9 bài | xem frontmatter `keyword` từng bài (xác nhận thanh toán tự động · báo có tự động · tích hợp cổng thanh toán vào website 50 · nhận thanh toán từ nước ngoài · cổng thanh toán miễn phí · cổng thanh toán cho website bán hàng · MONA Pay brand) | Ahrefs + Suggest |
 ⛔️ Cụm `sepay` 7.5K: KHÔNG khai thác trên site (lệnh Mon 28/08). Việc treo Ahrefs: cần phiên có MCP Chrome để lấy volume/KD các từ Suggest.
+
+## Bài trên mona.media (03/09/2026)
+| Trang | Keyword chính | Keyword phụ | Ghi chú |
+|---|---|---|---|
+| `mona.media/mona-pay-cong-thanh-toan-tu-dong/` (post 140738) | `cổng thanh toán` 300 · KD1 | `api ngân hàng` 200, `cổng thanh toán miễn phí`, `tích hợp cổng thanh toán vào website` 50, `tài khoản ngân hàng ảo` 300, brand `MONA Pay` | Bài giới thiệu từ góc nhìn MONA; đã link từ stripe/webhook-la-gi/webhook-sepay. ⛔️ Không target "tự động báo có" (keyword ma). |

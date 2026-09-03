@@ -1,7 +1,7 @@
 ---
 title: "Tài liệu webhook và API ngân hàng MONA Pay"
-description: MONA Pay báo tiền vào tài khoản ACB theo thời gian thực qua webhook, Telegram và API. Cách hoạt động, tính năng và trang tài liệu tương ứng.
-updated: 28/08/2026
+description: MONA Pay báo tiền vào tài khoản ACB theo thời gian thực qua webhook, Telegram, email và API. Cách hoạt động, tính năng và trang tài liệu tương ứng.
+updated: 03/09/2026
 ---
 
 MONA Pay đọc thông báo giao dịch từ ngân hàng ACB ngay khi tiền vào tài khoản của anh chị, rồi bắn webhook về máy chủ của anh chị hoặc nhắn vào nhóm Telegram. Tiền không đi qua MONA Pay, vẫn vào thẳng tài khoản ngân hàng như bình thường. Tích hợp cơ bản mất khoảng 5 phút nếu anh chị đã có tài khoản ACB và một URL nhận webhook.
@@ -31,11 +31,14 @@ Máy chủ của anh chị chỉ cần trả HTTP 200, 201 hoặc 202 trong vòn
 |---|---|---|
 | Tài khoản ảo (VA) | Mỗi đơn hàng hoặc mỗi khách có một số tài khoản riêng để khớp tiền tự động | [Tài khoản ảo (VA)](/docs/api/tai-khoan-ao-va) |
 | VietQR động | Tạo mã QR đã có sẵn số tiền và nội dung, khách quét là chuyển đúng | [QR thanh toán](/docs/api/qr-thanh-toan) |
+| Trang thanh toán | Tạo link thu tiền để chuyển hướng từ web hoặc gửi thẳng qua Zalo, Facebook | [Trang thanh toán](/docs/api/trang-thanh-toan) |
+| Sandbox | Thử giao dịch, webhook và checkout trước khi nối ngân hàng, không chuyển tiền thật | [Sandbox](/docs/api/sandbox) |
 | Webhook | Máy chủ của anh chị nhận thông báo tiền vào theo thời gian thực | [Tích hợp webhook](/docs/webhooks/tich-hop-webhook) |
 | Chữ ký HMAC | Xác minh webhook đúng là do MONA Pay gửi, chặn giả mạo và gửi lại gói cũ | [Bảo mật webhook](/docs/webhooks/bao-mat) |
 | Gửi lại và log | Xem từng lần gửi, lý do lỗi, gửi lại thủ công | [Gửi lại và xử lý lỗi](/docs/webhooks/gui-lai-va-xu-ly-loi) |
 | Đối soát | Kéo danh sách giao dịch theo trang để so với sổ của anh chị | [Đối soát giao dịch](/docs/webhooks/doi-soat) |
 | Telegram | Nhóm kế toán, chủ shop nhận tin nhắn tiền vào ngay trên điện thoại | [Telegram](/docs/telegram) |
+| Email | Người nhận đã xác minh nhận mail tiền vào, cảnh báo webhook lỗi hoặc VA mới | [Email](/docs/email) |
 | API keys | Tạo và thu hồi khoá để gọi API từ máy chủ | [API keys](/docs/api/api-keys) |
 | Xác thực API | Đăng nhập lấy Bearer token, cách gửi X-Client-Secret | [Xác thực](/docs/api/xac-thuc) |
 | Địa chỉ IP | Mở tường lửa cho máy chủ gửi webhook của MONA Pay | [Địa chỉ IP](/docs/dia-chi-ip) |
@@ -45,6 +48,7 @@ Máy chủ của anh chị chỉ cần trả HTTP 200, 201 hoặc 202 trong vòn
 ## Bắt đầu từ đâu
 
 - Chưa có tài khoản: đọc [Bắt đầu nhanh (5 phút)](/docs/bat-dau-nhanh). Trang này dẫn từ lúc đăng ký tới lúc nhận được webhook đầu tiên bằng tiền thật.
+- Muốn kiểm tra code trước khi nối ngân hàng: dùng [Sandbox](/docs/api/sandbox). MONA Pay tự cấp VA `SBX…`, không cần chuyển tiền và không tính hạn mức.
 - Chưa quen các khái niệm VA, VietQR, webhook, HMAC: đọc [Khái niệm](/docs/khai-niem) trước, viết cho cả người không làm kỹ thuật.
 - Đang cân nhắc PayPal, Stripe: đọc [So với cổng thanh toán quốc tế](/cong-thanh-toan-quoc-te) trước khi chọn.
 - Là AI agent hoặc muốn giao cho AI agent làm: mở [Dành cho AI agent](/docs/ai-agent), hoặc nạp thẳng `https://monapay.vn/llms-full.txt`.

@@ -7,7 +7,7 @@ export const ROADMAP: RGroup[] = [
   { title: 'Nền tảng', why: 'Những thứ một cổng thanh toán phải có để doanh nghiệp tin dùng hàng ngày.', items: [
     { name: 'Đăng ký tự kích hoạt, tự tạo API key', status: 'da-co' },
     { name: 'Nhiều ngân hàng', status: 'dang-lam', note: 'ACB đang hoạt động; các ngân hàng khác đang đăng ký kết nối, xem /ngan-hang.' },
-    { name: 'Sandbox tạo giao dịch giả để thử', status: 'dang-lam', note: 'mã đã xong, chờ lên máy chủ' },
+    { name: 'Sandbox tạo giao dịch giả để thử', status: 'da-co', note: 'POST /api/v1/sandbox/transactions, không tính hạn mức' },
     { name: 'Đối soát theo con trỏ since_id, xuất CSV', status: 'dang-lam', note: 'dashboard đã xuất CSV; since_id chờ lên' },
     { name: 'Nhiều người dùng một doanh nghiệp, phân quyền', status: 'ke-hoach' },
     { name: 'Gói cước', status: 'da-co', note: 'gói Miễn phí 500 giao dịch/tháng + 4 gói trả phí theo số giao dịch, thanh toán gói bằng chuyển khoản, tự kích hoạt' },

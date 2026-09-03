@@ -1,7 +1,7 @@
 ---
 import '../styles/global.css';
-import { SITE, FOOTER_LINKS } from '../data/site';
-import { MEGA } from '../data/nav';
+import { SITE, FOOTER_LINKS, FOOTER_LINKS_EN } from '../data/site';
+import { MEGA, MEGA_EN } from '../data/nav';
 interface Props {
   title: string;
   description: string;
@@ -14,6 +14,7 @@ interface Props {
 }
 const { title, description, path, ogImage = '/og/monapay-og.png', jsonld = [], noindex = false, lang = 'vi', alternate } = Astro.props;
 const isEn = lang === 'en';
+const NAV = isEn ? MEGA_EN : MEGA;
 const langHref = isEn ? (alternate?.vi ?? '/') : (alternate?.en ?? '/en');
 const canonical = SITE.url + (path === '/' ? '/' : path);
 const org = {
@@ -62,8 +63,8 @@ const schemas = [org, website, ...jsonld];
     <div class="wrap">
       <a class="logo" href={isEn ? '/en' : '/'} aria-label="MONA Pay"><img src="/brand/monapay-logo-light.svg" alt="MONA Pay" width="157" height="34" /></a>
       <button class="nav-toggle" aria-expanded="false" aria-controls="site-nav" data-nav-toggle>Menu</button>
-      <nav class="nav" id="site-nav" aria-label="Điều hướng chính">
-        {MEGA.map((g) => {
+      <nav class="nav" id="site-nav" aria-label={isEn ? 'Main navigation' : 'Điều hướng chính'}>
+        {NAV.map((g) => {
           const active = (g.match || []).some((m) => path === m || path.startsWith(/[-/]$/.test(m) ? m : m + '/')) || (g.href && path === g.href);
           return g.cols ? (
             <div class="nav-group" data-group>
@@ -106,7 +107,7 @@ const schemas = [org, website, ...jsonld];
           <p class="hotline-big"><a href={SITE.hotlineTel}>{SITE.hotline}</a></p>
           <p style="margin:0"><a href={'mailto:' + SITE.email}>{SITE.email}</a></p>
         </div>
-        {Object.entries(FOOTER_LINKS).map(([h, links]) => (
+        {Object.entries(isEn ? FOOTER_LINKS_EN : FOOTER_LINKS).map(([h, links]) => (
           <div>
             <h4>{h}</h4>
             <ul>{links.map((l) => <li><a href={l.href}>{l.label}</a></li>)}</ul>
@@ -116,10 +117,12 @@ const schemas = [org, website, ...jsonld];
       <div class="footer-bottom">
         <div style="display:flex;align-items:center;gap:1rem;flex-wrap:wrap">
           <a href={SITE.companyUrl} aria-label="The MONA Group"><img src="/brand/mona-logo-the-mona-white.svg" alt="THE MONA" width="160" height="26" /></a>
-          <span>© {new Date().getFullYear()} {SITE.company} · từ {SITE.founded} · {SITE.projects} dự án</span>
+          <span>© {new Date().getFullYear()} {SITE.company} · {isEn ? `since ${SITE.founded} · ${SITE.projects} projects` : `từ ${SITE.founded} · ${SITE.projects} dự án`}</span>
         </div>
+        <p class="footer-group" style="flex-basis:100%;margin:0 0 .6rem;font-size:.85rem;opacity:.85">{isEn ? 'MONA Pay is part of the monacloud group (MONA Cloud) by The MONA Group, alongside' : 'MONA Pay thuộc nhóm monacloud (MONA Cloud) của The MONA Group, đi cùng'} <a href="https://vibecloud.vn">VibeCloud</a> (deploy) · MONA Base (database) · MONA AI ({isEn ? 'models billed in VND' : 'gọi model trả VND'}) · <a href="https://monahddt.vn">monahddt</a> ({isEn ? 'e-invoices' : 'hoá đơn điện tử'}).</p>
         <div style="display:flex;gap:1.2rem;flex-wrap:wrap">
           <a href="/llms.txt">llms.txt</a>
+          <a href="/.well-known/mcp-manifest.json">MCP manifest</a>
           <a href="/sitemap-index.xml">Sitemap</a>
           <a href="https://mona.media">mona.media</a>
           <a href="https://mona.host">mona.host</a>

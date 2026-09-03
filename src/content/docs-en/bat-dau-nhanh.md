@@ -1,7 +1,7 @@
 ---
 title: Quick start with MONA Pay in 5 minutes
 description: From sign-up to your first webhook. 6 steps with cURL, PHP and Node samples you can paste and run.
-updated: 29/08/2026
+updated: 03/09/2026
 ---
 
 To receive real-time notifications for money arriving in an ACB account you need 6 steps: sign up (usable immediately, no approval), log in for a token, create an API key, link your ACB account with an OTP, register a webhook URL, then send a small transfer to check. If you already have an ACB account and a server that can receive webhooks, the hands-on part takes about 5 minutes.
@@ -25,6 +25,8 @@ curl -X POST https://api.monapay.vn/api/v1/client/register-client \
 The account is usable immediately: log in at step 2, nobody has to approve it. MONA Pay is free for 500 transactions a month, with paid plans above that priced by transaction count (see [pricing](/bang-gia)).
 
 ## Step 2. Log in for a token
+
+If an AI agent or a server does this for you, skip password login: create an API key on the dashboard and exchange `client_id` + `client_secret` for a token via `POST /api/v1/oauth/token`, see [Authentication](/en/docs/api/xac-thuc).
 
 ```bash
 curl -X POST https://api.monapay.vn/api/v1/client/login \
@@ -61,12 +63,14 @@ curl -X POST https://api.monapay.vn/api/v1/client-keys/generate \
 
 In the dashboard, open Banks & VA and click Add account:
 
-1. Enter the ACB account number, the phone number registered with ACB, and the customer type (personal or business).
+1. Enter the ACB account number, the phone number registered with ACB, the customer type (personal or business), and choose a short VA prefix made of uppercase letters or digits, such as `HOA` or `SHOP`. No branch visit or prefix pre-registration is needed; if MONA Pay rejects it, choose another prefix.
 2. ACB sends an OTP to the phone. Enter it to verify and create your first virtual account (VA).
 3. Register for transaction notifications. ACB sends a second OTP; enter it too.
 4. Done. From now on, money arriving in the VA or the account reaches MONA Pay as a notification.
 
 To do this through the API instead of the dashboard, see [Virtual accounts (VA)](/en/docs/api/tai-khoan-ao-va); the flow is the same 4 calls.
+
+ACB prepends its partner code to your chosen prefix. For example, `HOA` may produce a complete VA number such as `LOCHOA000123456`; use the complete value MONA Pay returns rather than building it yourself.
 
 ## Step 5. Register your webhook URL
 

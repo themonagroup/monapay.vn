@@ -1,7 +1,7 @@
 ---
 title: "MONA Pay API authentication: Bearer token and X-Client-Secret"
 description: "Log in for a Bearer token (valid 24 hours), add X-Client-Secret on POST/PUT/DELETE. The success/message/data envelope, 401/422 errors, and cURL, PHP, Node samples."
-updated: 29/08/2026
+updated: 03/09/2026
 ---
 
 Every MONA Pay API call needs the header `Authorization: Bearer <access_token>`. The token comes from `POST /api/v1/client/login` using the username and password of your my.monapay.vn account and is valid for 86,400 seconds (24 hours). Write calls (POST, PUT, DELETE) add the header `X-Client-Secret` with a secret generated under [API keys](/en/docs/api/api-keys). Every response is wrapped in the same envelope `{"success": true, "message": "...", "data": ...}`.
@@ -13,7 +13,22 @@ Every MONA Pay API call needs the header `Authorization: Bearer <access_token>`.
 | Production | `https://api.monapay.vn` |
 | Legacy alias (still running, for pre-2026 integrations) | `https://ipn.mona.host` |
 
-Accounts are usable immediately after sign-up: log in, create an API key, no approval step. A separate sandbox (simulated data, no real bank) is in progress.
+Accounts are usable immediately after sign-up: log in, create an API key, no approval step. To test without moving money, call `POST /api/v1/sandbox/transactions` (Bearer + X-Client-Secret) with `amount`, `description` and optional account and transaction-code fields. It works before bank linking because MONA Pay provides an `SBX…` VA; notification channels behave like a real transfer and no plan quota is used. See [Sandbox](/en/docs/api/sandbox).
+
+## For servers and AI agents: client credentials
+
+Never hand a username or password to a machine. Create an API key on the dashboard (API Keys → Create key) to get a `client_id` and `client_secret`, then exchange them for a Bearer token:
+
+```bash
+curl -X POST https://api.monapay.vn/api/v1/oauth/token \
+  -d "grant_type=client_credentials&client_id=client_xxx&client_secret=xxx"
+```
+
+```json
+{ "success": true, "message": "Cấp access token thành công", "data": { "access_token": "…", "token_type": "Bearer", "expires_in": 3600, "scope": "*" } }
+```
+
+The token lasts 3,600 seconds; request a new one when it expires, there is no refresh token. Write requests still carry `X-Client-Secret: <client_secret>`. Accounts with two-factor authentication work normally here, because the OTP only guards password login. The MONA Pay SDKs and MCP server read `MONAPAY_CLIENT_ID` and `MONAPAY_CLIENT_SECRET` from the environment and do this step for you.
 
 ## Common response envelope
 
@@ -43,6 +58,8 @@ Validation errors (missing field, wrong type) return HTTP 422 in the FastAPI sty
 | Client secret | `X-Client-Secret: <client_secret>` | POST, PUT, DELETE | `POST /api/v1/client-keys/generate` |
 
 Keep the token and the secret in environment variables, never hard-coded, never committed to git.
+
+Send `X-Client-Secret` on every POST, PUT and DELETE request. A write request without it is rejected.
 
 ## POST /api/v1/client/register-client
 
@@ -157,12 +174,6 @@ curl -X PUT https://api.monapay.vn/api/v1/client/change-password \
   -H 'Content-Type: application/json' \
   -d '{"old_password":"StrongPassword#2026","new_password":"NewPassword#2026"}'
 ```
-
-<div class="callout warn">
-
-**Enforcement status (checked 28/08/2026):** the production server does not yet reject write calls that lack `X-Client-Secret`; the enforcing update is written and waiting to be deployed. Send the header now so nothing changes for you when it is switched on.
-
-</div>
 
 After changing the password the old token keeps working until it expires; to cut it off immediately, log in again and revoke the key under API keys.
 

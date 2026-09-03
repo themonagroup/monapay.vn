@@ -1,6 +1,7 @@
 // Danh mục trang marketing — dùng cho llms.txt + sitemap mô tả. Mỗi trang 1 dòng mô tả cho LLM.
 export const PAGES = [
   { path: '/', title: 'MONA Pay — cổng thanh toán và API ngân hàng cho thời đại AI', desc: 'Nhận và xác nhận tiền chuyển khoản theo thời gian thực qua VA, VietQR, webhook, Telegram.' },
+  { path: '/trang-thanh-toan', title: 'Trang thanh toán MONA Pay: gửi link là thu tiền', desc: 'Tạo checkout có VietQR cho từng đơn, chuyển hướng từ website hoặc gửi link qua Zalo, Facebook và AI agent.' },
   { path: '/ngan-hang', title: 'Ngân hàng hỗ trợ MONA Pay', desc: 'Bảng trạng thái kết nối: ACB đang hoạt động, các ngân hàng khác đang đăng ký; thêm ngân hàng không phải sửa tích hợp.' },
   { path: '/acb', title: 'Nhận thông báo tiền vào tài khoản ACB theo thời gian thực', desc: 'Tài khoản ảo ACB, VietQR, webhook, Telegram; hướng dẫn nối 4 bước.' },
   { path: '/bang-gia', title: 'Bảng giá MONA Pay', desc: 'Gói Miễn phí 500 giao dịch mỗi tháng đủ tính năng, 4 gói trả phí từ 99.000 đ/tháng tính theo số giao dịch, không thu phần trăm trên số tiền.' },

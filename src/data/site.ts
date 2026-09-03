@@ -54,6 +54,7 @@ export const NAV = [
 
 export const FOOTER_LINKS = {
   'Sản phẩm': [
+    { href: '/trang-thanh-toan', label: 'Trang thanh toán MONA Pay' },
     { href: '/acb', label: 'Nhận tiền ACB theo thời gian thực' },
     { href: '/chia-se-bien-dong-so-du-telegram', label: 'Báo biến động số dư qua Telegram' },
     { href: '/cong-thanh-toan-woocommerce', label: 'Cổng thanh toán WooCommerce' },
@@ -78,5 +79,36 @@ export const FOOTER_LINKS = {
     { href: '/status', label: 'Trạng thái hệ thống' },
     { href: '/dieu-khoan', label: 'Điều khoản sử dụng' },
     { href: '/chinh-sach-bao-mat', label: 'Chính sách bảo mật' },
+  ],
+};
+
+// Footer tiếng Anh cho /en (trang chưa có bản EN thì trỏ trang VI)
+export const FOOTER_LINKS_EN = {
+  'Products': [
+    { href: '/trang-thanh-toan', label: 'MONA Pay hosted checkout' },
+    { href: '/acb', label: 'ACB transfers in real time' },
+    { href: '/chia-se-bien-dong-so-du-telegram', label: 'Balance alerts on Telegram' },
+    { href: '/cong-thanh-toan-woocommerce', label: 'WooCommerce payment gateway' },
+    { href: '/cong-thanh-toan-wordpress', label: 'WordPress payment gateway' },
+    { href: '/bang-gia', label: 'Pricing' },
+  ],
+  'Developers': [
+    { href: '/en/docs', label: 'Integration docs' },
+    { href: '/en/docs/webhooks/tich-hop-webhook', label: 'Webhooks' },
+    { href: '/en/docs/api/xac-thuc', label: 'API v1' },
+    { href: '/en/ai-agent', label: 'For AI agents' },
+    { href: '/llms.txt', label: 'llms.txt' },
+  ],
+  'MONA Pay': [
+    { href: '/gioi-thieu', label: 'About' },
+    { href: '/khach-hang', label: 'Customers' },
+    { href: '/cong-thanh-toan-quoc-te', label: 'Compared with international gateways' },
+    { href: '/faq', label: 'FAQ' },
+    { href: 'https://my.monapay.vn', label: 'Log in' },
+    { href: '/changelog', label: 'Changelog' },
+    { href: '/roadmap', label: 'Roadmap' },
+    { href: '/status', label: 'System status' },
+    { href: '/dieu-khoan', label: 'Terms of service' },
+    { href: '/chinh-sach-bao-mat', label: 'Privacy policy' },
   ],
 };

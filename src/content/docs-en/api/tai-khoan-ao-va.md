@@ -1,12 +1,18 @@
 ---
 title: "ACB virtual accounts (VA): creating a VA through the API"
 description: "Register an ACB VA in 4 API steps: submit the request, verify the OTP, register for notifications, verify the second OTP. Plus querying, cancelling, and cURL, PHP, Node samples."
-updated: 29/08/2026
+updated: 03/09/2026
 ---
 
-A virtual account (VA) is a secondary account number ACB issues under your real account, using the prefix you registered. Money sent to a VA still sits in your real ACB account, but each VA can be attached to one order or one customer, so MONA Pay matches payments automatically without parsing the transfer note. Creating a VA through the API takes 4 steps: submit the registration, enter the OTP ACB sends to your phone, register for transaction notifications, enter the second OTP. Requirements: an ACB account in your name and the phone number currently registered with ACB.
+A virtual account (VA) is a secondary account number ACB issues under your real account. Money sent to a VA still sits in your real ACB account, but each VA can be attached to one order or one customer, so MONA Pay matches payments automatically without parsing the transfer note. Creating a VA through the API takes 4 steps: submit the registration, enter the OTP ACB sends to your phone, register for transaction notifications, enter the second OTP. Requirements: an ACB account in your name and the phone number currently registered with ACB.
 
 If you would rather not call the API, the my.monapay.vn dashboard has the same 4-step wizard under Banks & VA.
+
+## You choose the VA prefix
+
+`virtual_account_prefix_code` is not a code that ACB or MONA Pay has to issue in advance. Choose it while creating the VA: use uppercase letters and digits, and keep it short and recognisable, for example `HOA` or `SHOP`. There is no branch visit and no prefix pre-registration.
+
+ACB prepends the partner code to your chosen prefix, then appends the numeric identifier. If you choose `HOA`, a complete VA number returned by ACB may look like `LOCHOA000123456`. Always use the complete `virtual_account_number` from the response for QR creation, transaction matching or customer instructions; do not build it yourself. If MONA Pay rejects a prefix, choose another short prefix and submit the request again.
 
 ## The 4-step flow
 
@@ -29,7 +35,7 @@ Every request below needs `Authorization: Bearer` and `X-Client-Secret` (see [Au
 | `customer_type` | string | no | ACB customer type code, e.g. `PERS` for personal |
 | `account_number` | integer | no | The real ACB current account number |
 | `phone_number` | string | no | The phone number registered with ACB, receives the OTP |
-| `virtual_account_info.virtual_account_prefix_code` | string | yes | The VA prefix registered with ACB |
+| `virtual_account_info.virtual_account_prefix_code` | string | yes | You choose it during VA creation; use a short uppercase-letter/digit value such as `HOA` or `SHOP`; no pre-registration |
 | `virtual_account_info.virtual_account_content` | string | no | Identifier attached to the VA (order code, customer code) |
 | `virtual_account_info.virtual_account_explain` | string | no | Description at registration |
 | `virtual_account_info.beneficiary_name_rule` | integer | no | How the beneficiary name is displayed, per ACB convention |
@@ -196,7 +202,7 @@ await call(`/api/v1/acb/${noti.acb_request.id}/notification/verification`, { cod
 
 | Symptom | Cause | Fix |
 |---|---|---|
-| 400 after step 1 | The account is not an ACB account, the phone number does not match ACB's records, or the VA prefix has not been issued by ACB | Check with ACB; the VA prefix must be registered with ACB first |
+| 400 after step 1 | The account is not an ACB account, the phone number does not match ACB's records, or the VA prefix is rejected | Check the account and phone; if the prefix caused the error, choose another short prefix and retry, with no branch registration |
 | 400 wrong `code` in step 2/4 | OTP mistyped or expired | Repeat the previous step so ACB sends a new OTP |
 | VA created but no transactions show up | Steps 3 and 4 not done | Call `notification/registration` and verify the second OTP |
 | 401 | Token expired or `X-Client-Secret` missing | Log in again, check headers |

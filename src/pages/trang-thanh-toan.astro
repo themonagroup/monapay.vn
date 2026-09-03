@@ -1,0 +1,216 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+
+const title = 'Trang thanh toán MONA Pay: gửi link là thu tiền';
+const description = 'Tạo trang thanh toán có VietQR cho từng đơn, chuyển khách từ web hoặc gửi link qua Zalo, Facebook. Tiền vào thẳng tài khoản ngân hàng của anh chị.';
+
+const useCases = [
+  { number: '01', title: 'Web hoặc plugin chuyển hướng', body: 'Website tạo checkout cho đơn hàng rồi chuyển khách sang trang MONA Pay. Khách thanh toán xong, webhook CHECKOUT_PAID xác nhận đơn và trang tự đưa khách về cửa hàng.' },
+  { number: '02', title: 'Gửi link qua Zalo, Facebook', body: 'Không cần website. Anh chị nhập số tiền và mã đơn trong dashboard, sao chép link rồi gửi khách. Mỗi link có QR, số tiền, nội dung chuyển khoản và đồng hồ hết hạn riêng.' },
+  { number: '03', title: 'Để AI agent tạo link', body: 'Claude Code, Codex hoặc Cursor gọi monapay_create_checkout, nhận checkout_url và đưa link cho khách. Agent có thể kiểm lại trạng thái bằng monapay_get_checkout.' },
+];
+
+const faq = [
+  { q: 'Tiền có đi qua MONA Pay không?', a: 'Không. Tiền đi thẳng từ tài khoản ngân hàng của khách vào tài khoản ngân hàng của anh chị. MONA Pay tạo QR, nhận báo có và xác nhận giao dịch, không giữ tiền.' },
+  { q: 'Link thanh toán hết hạn thì sao?', a: 'Link mặc định có hiệu lực 15 phút. Hết hạn, trang ngừng chờ thanh toán. Nếu khách vẫn chuyển sau hạn, giao dịch được ghi nhận và đánh dấu trả muộn để anh chị quyết định xử lý.' },
+  { q: 'Khách chuyển thiếu tiền thì sao?', a: 'Phiên vẫn ở trạng thái đang chờ. MONA Pay ghi số tiền đã nhận và cảnh báo; chỉ xác nhận đã thanh toán khi tổng tiền nhận đủ hoặc nhiều hơn số tiền của đơn.' },
+  { q: 'Không có website vẫn dùng được không?', a: 'Được. Anh chị tạo link trong dashboard rồi gửi qua Zalo, Facebook hoặc email. Khách chỉ cần mở link và quét QR, không cần tài khoản MONA Pay.' },
+];
+
+const qrSize = 25;
+const inFinder = (row: number, col: number, top: number, left: number) => {
+  const r = row - top;
+  const c = col - left;
+  if (r < 0 || c < 0 || r > 6 || c > 6) return false;
+  return r === 0 || r === 6 || c === 0 || c === 6 || (r >= 2 && r <= 4 && c >= 2 && c <= 4);
+};
+const inFinderArea = (row: number, col: number) =>
+  (row <= 7 && col <= 7) || (row <= 7 && col >= qrSize - 8) || (row >= qrSize - 8 && col <= 7);
+const qrCells = Array.from({ length: qrSize * qrSize }, (_, index) => {
+  const row = Math.floor(index / qrSize);
+  const col = index % qrSize;
+  if (inFinder(row, col, 0, 0) || inFinder(row, col, 0, qrSize - 7) || inFinder(row, col, qrSize - 7, 0)) return true;
+  if (inFinderArea(row, col)) return false;
+  return ((row * 11 + col * 7 + row * col * 3) % 13) < 6;
+});
+
+const jsonld = [{
+  '@context': 'https://schema.org', '@type': 'WebPage', name: title, description,
+  url: SITE.url + '/trang-thanh-toan', inLanguage: 'vi', publisher: { '@id': SITE.url + '/#organization' },
+  about: { '@type': 'SoftwareApplication', name: 'Trang thanh toán MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web' },
+}];
+---
+
+<Base title={title} description={description} path="/trang-thanh-toan" jsonld={jsonld}>
+  <section class="hero checkout-hero">
+    <div class="wrap hero-layout">
+      <div class="hero-copy">
+        <span class="eyebrow">Hosted checkout · không cần khách đăng nhập</span>
+        <h1>Trang thanh toán MONA Pay: <span class="accent">gửi link là thu tiền</span></h1>
+        <div class="answer-first">
+          <p>Website, plugin hoặc AI agent tạo một phiên thanh toán rồi nhận link. Khách mở link, quét VietQR, tiền vào thẳng tài khoản ngân hàng của anh chị. MONA Pay tự xác nhận và báo lại bằng webhook.</p>
+        </div>
+        <div class="btn-row">
+          <a class="btn btn-primary" href={SITE.appRegister}>Tạo link thu tiền</a>
+          <a class="btn btn-outline" href="/docs/api/trang-thanh-toan">Xem tài liệu API</a>
+        </div>
+        <p class="proof">Tụi em xây MONA Pay từ kinh nghiệm triển khai <strong>{SITE.projects} dự án</strong> của The MONA Group từ {SITE.founded}.</p>
+      </div>
+
+      <div class="payment-stage" aria-label="Minh hoạ trang thanh toán MONA Pay">
+        <div class="payment-window">
+          <div class="pay-head">
+            <div class="shop-mark">M</div>
+            <div><strong>MONA Shop</strong><small>Đơn hàng DH10234</small></div>
+            <span class="secure-chip">Xác nhận tự động</span>
+          </div>
+          <div class="pay-amount"><small>Số tiền cần thanh toán</small><strong>250.000 đ</strong></div>
+          <div class="qr-shell">
+            <div class="qr-grid" role="img" aria-label="Mã QR minh hoạ">
+              {qrCells.map((filled) => <span class:list={{ filled }} />)}
+            </div>
+            <span class="scan-label">Quét bằng ứng dụng ngân hàng</span>
+          </div>
+          <div class="bank-lines">
+            <div><span>Ngân hàng</span><b>ACB</b></div>
+            <div><span>Số tài khoản</span><b>LOCMONA000123456</b><i>Sao chép</i></div>
+            <div><span>Nội dung</span><b>DH10234</b><i>Sao chép</i></div>
+          </div>
+          <div class="waiting"><span></span><b>Đang chờ chuyển khoản</b><time>14:32</time></div>
+          <p class="direct-note">Tiền vào thẳng tài khoản ngân hàng của MONA Shop. MONA Pay chỉ xác nhận giao dịch, không giữ tiền.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt uses">
+    <div class="wrap">
+      <div class="section-intro">
+        <span class="eyebrow">Một link, ba cách dùng</span>
+        <h2>Thu tiền ở nơi khách đang có mặt</h2>
+        <p class="lead">Checkout vẫn là một luồng duy nhất, dù đơn bắt đầu từ website, một cuộc trò chuyện hay AI agent.</p>
+      </div>
+      <div class="usage-list">
+        {useCases.map((item) => (
+          <article>
+            <span class="usage-number">{item.number}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </article>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <section class="flow-section">
+    <div class="wrap flow-layout">
+      <div>
+        <span class="eyebrow">Từ link tới đơn đã trả</span>
+        <h2>Khách chỉ quét. Hệ thống tự làm phần còn lại.</h2>
+      </div>
+      <ol class="flow-line">
+        <li><b>Tạo phiên</b><span>API trả checkout_url và QR riêng cho đơn</span></li>
+        <li><b>Khách thanh toán</b><span>VietQR điền sẵn số tiền và nội dung</span></li>
+        <li><b>Ngân hàng báo có</b><span>Tiền đã vào tài khoản của anh chị</span></li>
+        <li><b>MONA Pay xác nhận</b><span>Webhook CHECKOUT_PAID về hệ thống</span></li>
+        <li><b>Khách quay lại</b><span>Redirect có chữ ký, website kiểm trạng thái lần cuối</span></li>
+      </ol>
+    </div>
+  </section>
+
+  <section class="section-dark trust-section">
+    <div class="wrap trust-copy">
+      <p class="trust-kicker">Điểm quan trọng nhất</p>
+      <h2>MONA Pay đứng trong luồng xác nhận, không đứng trong dòng tiền.</h2>
+      <p>Khách chuyển trực tiếp vào tài khoản ngân hàng của anh chị. MONA Pay nhận thông báo giao dịch, khớp checkout và báo cho web, plugin hoặc AI agent. Anh chị không chờ rút tiền từ ví trung gian và không giao mật khẩu ngân hàng cho hệ thống.</p>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Bốn câu trước khi anh chị gửi link đầu tiên" />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Tạo một link, gửi khách, nhận tiền"
+    body="Dùng dashboard nếu chưa có web. Dùng API, SDK hoặc MCP nếu muốn tự động hoá theo từng đơn."
+    primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }}
+    secondary={{ href: '/docs/api/trang-thanh-toan', label: 'Đọc tài liệu checkout' }}
+  />
+</Base>
+
+<style>
+  .checkout-hero { padding: 64px 0 72px; overflow: hidden; }
+  .hero-layout { display: grid; grid-template-columns: minmax(0, 1.05fr) minmax(360px, .95fr); gap: clamp(2rem, 5vw, 5rem); align-items: center; }
+  .hero-copy h1 { font-size: clamp(2.2rem, 5vw, 4.6rem); line-height: 1.04; letter-spacing: -.045em; max-width: 780px; }
+  .hero-copy .answer-first { max-width: 720px; margin-top: 1.6rem; }
+  .proof { margin: 1.4rem 0 0; color: var(--text-soft); font-size: .94rem; }
+  .payment-stage { position: relative; padding: 28px 0 0 28px; }
+  .payment-stage::before { content: "PAY.MONAPAY.VN"; position: absolute; top: 0; right: -1rem; color: var(--primary); font: 700 .72rem/1 var(--mono); letter-spacing: .16em; writing-mode: vertical-rl; }
+  .payment-stage::after { content: ""; position: absolute; inset: 12% -12% -8% 8%; background: var(--primary); border-radius: 44% 56% 62% 38% / 55% 35% 65% 45%; opacity: .1; z-index: 0; transform: rotate(-7deg); }
+  .payment-window { position: relative; z-index: 1; width: min(100%, 440px); margin: 0 auto; background: #fff; border: 1px solid var(--border); border-radius: 28px 28px 16px 16px; padding: 1.2rem; box-shadow: 0 32px 80px rgba(70,11,25,.18); }
+  .pay-head { display: grid; grid-template-columns: 42px 1fr auto; gap: .7rem; align-items: center; padding-bottom: 1rem; border-bottom: 1px solid var(--border); }
+  .shop-mark { width: 42px; height: 42px; display: grid; place-items: center; border-radius: 10px; background: var(--primary); color: #fff; font-weight: 800; }
+  .pay-head strong, .pay-head small { display: block; line-height: 1.35; }
+  .pay-head small { color: var(--text-soft); font-size: .72rem; }
+  .secure-chip { color: var(--cta); background: var(--cta-subtle); border-radius: 999px; padding: .35rem .55rem; font-size: .62rem; font-weight: 700; white-space: nowrap; }
+  .pay-amount { text-align: center; padding: 1rem 0 .7rem; }
+  .pay-amount small, .pay-amount strong { display: block; }
+  .pay-amount small { color: var(--text-soft); font-size: .75rem; }
+  .pay-amount strong { color: var(--ink); font-size: 2rem; letter-spacing: -.04em; }
+  .qr-shell { width: 190px; margin: 0 auto 1rem; padding: .7rem; background: #fff; border: 1px solid var(--border); box-shadow: 0 8px 24px rgba(38,17,24,.08); }
+  .qr-grid { display: grid; grid-template-columns: repeat(25, 1fr); aspect-ratio: 1; }
+  .qr-grid span { background: #fff; }
+  .qr-grid span.filled { background: #1b0c11; }
+  .scan-label { display: block; text-align: center; font-size: .62rem; margin-top: .45rem; color: var(--text-soft); }
+  .bank-lines { border: 1px solid var(--border); border-radius: 12px; overflow: hidden; }
+  .bank-lines div { display: grid; grid-template-columns: 1fr auto auto; align-items: center; gap: .55rem; padding: .55rem .7rem; border-bottom: 1px solid var(--border); font-size: .7rem; }
+  .bank-lines div:last-child { border-bottom: 0; }
+  .bank-lines span { color: var(--text-soft); }
+  .bank-lines b { color: var(--ink); }
+  .bank-lines i { color: var(--primary); font-size: .62rem; font-style: normal; font-weight: 700; }
+  .waiting { display: grid; grid-template-columns: auto 1fr auto; gap: .5rem; align-items: center; margin-top: .8rem; padding: .65rem .75rem; border-radius: 10px; background: var(--cta-subtle); color: var(--cta); font-size: .68rem; }
+  .waiting > span { width: 8px; height: 8px; border-radius: 50%; background: var(--cta); box-shadow: 0 0 0 4px rgba(0,104,95,.12); }
+  .waiting time { font: 700 .72rem/1 var(--mono); }
+  .direct-note { margin: .7rem 0 0; color: var(--text-soft); text-align: center; font-size: .58rem; line-height: 1.5; }
+  .section-intro { display: grid; grid-template-columns: .8fr 1.2fr; column-gap: 3rem; align-items: end; }
+  .section-intro .eyebrow { grid-column: 1; }
+  .section-intro h2 { grid-column: 1; }
+  .section-intro .lead { grid-column: 2; grid-row: 1 / 3; }
+  .usage-list { margin-top: 2.4rem; border-top: 2px solid var(--ink); }
+  .usage-list article { display: grid; grid-template-columns: 110px minmax(220px, .7fr) 1fr; gap: 2rem; align-items: start; padding: 1.7rem 0; border-bottom: 1px solid var(--border); }
+  .usage-number { color: var(--primary); font-size: 2.6rem; font-weight: 800; letter-spacing: -.08em; line-height: 1; }
+  .usage-list h3, .usage-list p { margin: 0; }
+  .usage-list p { color: var(--text-soft); }
+  .flow-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(2rem, 6vw, 6rem); }
+  .flow-line { list-style: none; padding: 0; margin: 0; counter-reset: payflow; }
+  .flow-line li { counter-increment: payflow; position: relative; display: grid; grid-template-columns: 170px 1fr; gap: 1rem; padding: .85rem 0 .85rem 3rem; border-bottom: 1px solid var(--border); }
+  .flow-line li::before { content: counter(payflow); position: absolute; left: 0; top: .85rem; width: 28px; height: 28px; display: grid; place-items: center; border-radius: 50%; background: var(--cta); color: #fff; font: 700 .75rem/1 var(--mono); }
+  .flow-line b { color: var(--ink); }
+  .flow-line span { color: var(--text-soft); }
+  .trust-copy { max-width: 930px; }
+  .trust-kicker { color: var(--cta-on-dark) !important; font: 700 .78rem/1 var(--mono); letter-spacing: .12em; text-transform: uppercase; }
+  .trust-copy h2 { font-size: clamp(2rem, 5vw, 4rem); line-height: 1.12; letter-spacing: -.04em; }
+  .trust-copy > p:last-child { max-width: 760px; font-size: 1.1rem; }
+  @media (max-width: 900px) {
+    .hero-layout, .section-intro, .flow-layout { grid-template-columns: 1fr; }
+    .section-intro .eyebrow, .section-intro h2, .section-intro .lead { grid-column: 1; grid-row: auto; }
+    .usage-list article { grid-template-columns: 70px 1fr; gap: 1rem; }
+    .usage-list article p { grid-column: 2; }
+    .payment-stage { padding-left: 0; }
+  }
+  @media (max-width: 560px) {
+    .checkout-hero { padding-top: 42px; }
+    .hero-copy h1 { font-size: clamp(2rem, 12vw, 3.2rem); }
+    .payment-window { padding: .9rem; border-radius: 22px 22px 14px 14px; }
+    .pay-head { grid-template-columns: 38px 1fr; }
+    .secure-chip { grid-column: 1 / -1; justify-self: start; }
+    .usage-list article { grid-template-columns: 1fr; }
+    .usage-list article p { grid-column: 1; }
+    .flow-line li { grid-template-columns: 1fr; }
+  }
+</style>

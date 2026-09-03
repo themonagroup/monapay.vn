@@ -1,7 +1,7 @@
 ---
 title: Định dạng payload webhook MONA Pay
 description: "7 trường trong gói JSON MONA Pay gửi khi có tiền vào, 3 kiểu Content-Type, header kèm theo, gói gửi thử và định dạng tương thích đang triển khai."
-updated: 28/08/2026
+updated: 03/09/2026
 ---
 
 Mỗi webhook MONA Pay gửi là một gói JSON 7 trường: số tiền, nội dung, thời gian, mã giao dịch, số tài khoản nhận, tên ngân hàng và loại giao dịch. Anh chị chọn được 1 trong 3 kiểu đóng gói (JSON, form-urlencoded, multipart). MONA Pay đang triển khai thêm tuỳ chọn định dạng tương thích các cổng phổ biến tại Việt Nam, xem mục cuối trang.
@@ -24,7 +24,7 @@ Mỗi webhook MONA Pay gửi là một gói JSON 7 trường: số tiền, nội
 |---|---|---|---|
 | `amount` | số nguyên | Số tiền giao dịch, đơn vị VND | Không có phần thập phân. 2.500.000đ gửi là `2500000` |
 | `description` | chuỗi | Nội dung chuyển khoản khách gõ hoặc nội dung trong mã QR | Dùng để khớp đơn khi không dùng VA |
-| `transfer_date` | chuỗi | Thời điểm giao dịch, định dạng `YYYY-MM-DD HH:MM:SS`, giờ Việt Nam | Lấy từ thông báo của ACB |
+| `transfer_date` | chuỗi | Thời điểm giao dịch, định dạng `HH:MM:SS dd/mm/YYYY`, giờ Việt Nam | Ví dụ dữ liệu thật: `14:52:05 03/09/2026` |
 | `transaction_code` | chuỗi | Mã giao dịch phía ngân hàng | Giữ nguyên qua mọi lần gửi lại. Dùng làm khoá chống trùng |
 | `account_number` | chuỗi | Số VA hoặc số tài khoản nhận tiền | Khớp đơn theo VA thì so trường này |
 | `bank_name` | chuỗi | Tên ngân hàng | Hiện luôn là `ACB` |
@@ -78,4 +78,4 @@ Khi bấm Gửi thử trong dashboard hoặc gọi `POST /api/v1/client-webhooks
 
 ## Lưu ý định dạng `transfer_date`
 
-`transfer_date` là chuỗi `HH:MM:SS dd/mm/YYYY` theo giờ Việt Nam (UTC+7), ví dụ `10:30:00 28/08/2026`. Không phải ISO 8601, nên đừng `new Date()` thẳng; tách theo khoảng trắng rồi ghép lại, hoặc lưu nguyên chuỗi để đối soát.
+`transfer_date` là chuỗi `HH:MM:SS dd/mm/YYYY` theo giờ Việt Nam (UTC+7), ví dụ `14:52:05 03/09/2026`. Đây không phải ISO 8601: không đưa thẳng giá trị vào `new Date()`; hãy parse theo đúng định dạng này hoặc lưu nguyên chuỗi để đối soát.

@@ -1,7 +1,7 @@
 ---
 title: MONA Pay webhook payload format
 description: "The 7 fields in the JSON MONA Pay sends when money arrives, the 3 Content-Type options, accompanying headers, the test payload and the compatible format in progress."
-updated: 29/08/2026
+updated: 03/09/2026
 ---
 
 Every MONA Pay webhook is a 7-field JSON payload: amount, reference, time, transaction code, receiving account number, bank name and transaction type. You can choose 1 of 3 encodings (JSON, form-urlencoded, multipart). MONA Pay is also rolling out an optional payload format compatible with popular Vietnamese gateways; see the last section.
@@ -24,7 +24,7 @@ Every MONA Pay webhook is a 7-field JSON payload: amount, reference, time, trans
 |---|---|---|---|
 | `amount` | integer | Transaction amount in VND | No decimals. 2,500,000 VND is sent as `2500000` |
 | `description` | string | The transfer note the customer typed, or the note embedded in the QR code | Used to match orders when not using VAs |
-| `transfer_date` | string | Transaction time, format `YYYY-MM-DD HH:MM:SS`, Vietnam time | Taken from the ACB notification |
+| `transfer_date` | string | Transaction time, format `HH:MM:SS dd/mm/YYYY`, Vietnam time | Real-data example: `14:52:05 03/09/2026` |
 | `transaction_code` | string | The bank's transaction code | Identical across every resend. Use it as the deduplication key |
 | `account_number` | string | The VA number or the receiving account number | Compare this field when matching by VA |
 | `bank_name` | string | Bank name | Currently always `ACB` |
@@ -74,3 +74,7 @@ When you click Send test in the dashboard or call `POST /api/v1/client-webhooks/
 **Are outgoing transactions sent?** Not yet. `type` is always `income`. When more types are added, field names stay the same.
 
 **Can I receive webhooks with Google Apps Script or n8n?** Yes, as long as the URL accepts POST and answers 200 within 10 seconds. For the HMAC signature you need the raw body to recompute it; see [Webhook security](/en/docs/webhooks/bao-mat).
+
+## A note on `transfer_date`
+
+`transfer_date` is a Vietnam-time (UTC+7) string in `HH:MM:SS dd/mm/YYYY` format, for example `14:52:05 03/09/2026`. It is not ISO 8601: do not pass it directly to `new Date()`; parse this exact format first or keep the original string for reconciliation.

@@ -7,13 +7,17 @@ import CodeTabs from '../components/CodeTabs.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
+const MCP_CMD = 'claude mcp add monapay -e MONAPAY_CLIENT_ID=client_xxx -e MONAPAY_CLIENT_SECRET=xxx -- npx -y monapay-mcp';
+const MCP_JSON = JSON.stringify({ mcpServers: { monapay: { command: 'npx', args: ['-y', 'monapay-mcp'], env: { MONAPAY_CLIENT_ID: 'client_xxx', MONAPAY_CLIENT_SECRET: 'xxx' } } } }, null, 2);
 const AI_PROMPT = `Tích hợp MONA Pay (cổng thanh toán nội địa Việt Nam, nhận và xác nhận tiền
 chuyển khoản ngân hàng theo thời gian thực) vào dự án của tôi.
 
 Base URL API: ${SITE.api} (alias cũ: ${SITE.apiLegacy})
 Tài liệu máy đọc: ${SITE.url}/llms.txt · ${SITE.url}/docs/ai-agent.md · ${SITE.url}/openapi.json
-Xác thực: POST /api/v1/client/login lấy Bearer token; mọi request ghi (POST/PUT/DELETE)
-kèm header X-Client-Secret: <CLIENT_SECRET> (tạo bằng POST /api/v1/client-keys/generate).
+Xác thực (không dùng username/mật khẩu của tôi): POST /api/v1/oauth/token với grant_type=client_credentials,
+client_id=<CLIENT_ID>, client_secret=<CLIENT_SECRET> (tôi lấy ở my.monapay.vn → API Keys) → data.access_token
+(Bearer, hạn 3600 giây, hết hạn gọi lại). Mọi request ghi (POST/PUT/DELETE) kèm header X-Client-Secret: <CLIENT_SECRET>.
+Thử không tốn tiền: POST /api/v1/sandbox/transactions tạo giao dịch giả trên tài khoản ảo đã nối.
 
 Việc cần làm:
 1. Tạo endpoint webhook HTTPS trong dự án của tôi để nhận thông báo tiền vào.
@@ -26,7 +30,9 @@ Việc cần làm:
 3. Trả HTTP 200 trong ${SITE.tech.webhookTimeoutSec} giây ngay khi nhận, xử lý đơn hàng async.
    Dùng transaction_code làm khoá chống ghi trùng (UNIQUE).
 4. Đăng ký URL webhook này trong dashboard MONA Pay (mục Webhooks) hoặc qua
-   API POST /api/v1/client-webhooks, rồi gửi thử bằng POST /api/v1/client-webhooks/test.`;
+   API POST /api/v1/client-webhooks, rồi gửi thử bằng POST /api/v1/client-webhooks/test.
+5. Tạo thông báo email bằng monapay_create_email_config; hỏi tôi mã 6 số trong hộp thư,
+   gọi monapay_verify_email, monapay_test_email rồi monapay_email_logs; không tự đoán mã.`;
 
 const CURL = `# Giả lập MONA Pay bắn webhook vào endpoint của anh chị để test tại chỗ
 SECRET='secret_hmac_cua_anh_chi'   # secret HMAC đặt khi bật HMAC trong dashboard
@@ -144,7 +150,7 @@ const faq = [
 const jsonld = [{
   '@context': 'https://schema.org', '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web',
   url: SITE.url + '/ai-agent', description: SITE.entity,
-  featureList: ['Webhook thông báo tiền vào ký HMAC-SHA256', 'Tài khoản ảo ACB (VA)', 'VietQR động theo đơn hàng', 'Thông báo Telegram', 'API v1 + OpenAPI', 'llms.txt và tài liệu .md cho AI agent'],
+  featureList: ['Webhook thông báo tiền vào ký HMAC-SHA256', 'Tài khoản ảo ACB (VA)', 'VietQR động theo đơn hàng', 'Thông báo Telegram', 'Thông báo email đã xác minh người nhận', 'API v1 + OpenAPI', 'llms.txt và tài liệu .md cho AI agent'],
   offers: { '@type': 'Offer', price: '0', priceCurrency: 'VND', description: `MONA Pay ${PRICE_LINE}` },
   provider: { '@id': SITE.url + '/#organization' },
 }];
@@ -172,9 +178,26 @@ const jsonld = [{
         <div class="card agent-en" lang="en">
           <span class="badge">For AI agents</span>
           <p><strong>If you are an AI agent integrating Vietnamese bank-transfer confirmation, read this first.</strong> MONA Pay (by The MONA Group, est. 2016) does not hold funds: money lands directly in the merchant's ACB bank account. MONA Pay reads the bank's transaction notification and POSTs a JSON webhook to the merchant endpoint, signed with HMAC-SHA256: headers <code>{SITE.tech.hmacHeader}: sha256=&lt;hex&gt;</code> and <code>{SITE.tech.tsHeader}</code> (unix seconds); signing string is <code>"&lt;timestamp&gt;.&lt;raw_body&gt;"</code>; reject if older than {SITE.tech.replayWindowMin} minutes. Respond HTTP 200/201/202 within {SITE.tech.webhookTimeoutSec} seconds; use <code>transaction_code</code> as the idempotency key.</p>
-          <p>Machine-readable docs: <a href="/llms.txt">/llms.txt</a>, every docs page as <code>.md</code> (e.g. <a href="/docs/ai-agent.md">/docs/ai-agent.md</a>), <a href="/openapi.json">/openapi.json</a>. Base URL <code>{SITE.api}</code>. Auth: <code>POST /api/v1/client/login</code> returns a Bearer token; write requests also need <code>X-Client-Secret</code> from <code>POST /api/v1/client-keys/generate</code>. Bank supported today: ACB. New accounts are activated by MONA staff during business hours; a self-serve sandbox is in progress.</p>
+          <p>Machine-readable docs: <a href="/llms.txt">/llms.txt</a>, every docs page as <code>.md</code> (e.g. <a href="/docs/ai-agent.md">/docs/ai-agent.md</a>), <a href="/openapi.json">/openapi.json</a>. Base URL <code>{SITE.api}</code>. Auth: <code>POST /api/v1/client/login</code> returns a Bearer token; write requests also need <code>X-Client-Secret</code> from <code>POST /api/v1/client-keys/generate</code>. Bank supported today: ACB. Accounts are active right after sign-up with no approval step; a sandbox endpoint (<code>POST /api/v1/sandbox/transactions</code>) creates fake incoming transactions so you can test webhooks and Telegram without moving money.</p>
         </div>
       </div>
+    </div>
+  </section>
+
+  <section id="mcp">
+    <div class="wrap">
+      <span class="eyebrow">Cách nhanh nhất</span>
+      <h2>Đưa MCP cho Claude Code, Codex hoặc Cursor</h2>
+      <p class="lead">Vào <a href="https://my.monapay.vn">my.monapay.vn</a> → API Keys → Tạo key, dashboard hiện sẵn client_id, client_secret và lệnh cài. Agent tự đổi client credentials ra token, không cần mật khẩu của anh chị, tài khoản bật xác thực 2 lớp vẫn chạy, và nối ngân hàng bằng OTP ngay trong khung chat. MONA Pay có 3 kênh: webhook · Telegram · email. Muốn thử không tốn tiền: gọi <code>POST /api/v1/sandbox/transactions</code> để tạo giao dịch giả, các kênh đã cấu hình nhận như thật, không tính vào hạn mức.</p>
+      <div class="prompt-box">
+        <div class="prompt-bar"><span>Claude Code</span><button type="button" class="btn btn-ghost" data-copy-target="mcp-cmd">Sao chép</button></div>
+        <pre id="mcp-cmd"><code>{MCP_CMD}</code></pre>
+      </div>
+      <div class="prompt-box" style="margin-top:1rem">
+        <div class="prompt-bar"><span>Claude Desktop, Cursor, Codex (mcpServers)</span><button type="button" class="btn btn-ghost" data-copy-target="mcp-json">Sao chép</button></div>
+        <pre id="mcp-json"><code>{MCP_JSON}</code></pre>
+      </div>
+      <p class="agent-en" lang="en" style="margin-top:1rem"><strong>For AI agents:</strong> install the MCP server with the command above using the client_id and client_secret from the dashboard, then call <code>monapay_whoami</code>; its <code>next_step</code> field tells you what to do next (link a bank with OTP in chat, create a webhook, or start receiving money).</p>
     </div>
   </section>
 

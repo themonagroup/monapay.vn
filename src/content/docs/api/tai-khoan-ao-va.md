@@ -1,12 +1,18 @@
 ---
 title: "Tài khoản ngân hàng ảo (virtual account) ACB: tạo VA qua API"
 description: "Đăng ký VA ACB 4 bước qua API: gửi yêu cầu, xác thực OTP, đăng ký nhận thông báo, xác thực OTP lần 2. Kèm truy vấn, hủy VA và code mẫu cURL, PHP, Node."
-updated: 28/08/2026
+updated: 03/09/2026
 ---
 
-Tài khoản ảo (VA) là số tài khoản phụ do ACB cấp dưới tài khoản thật của anh chị, theo đầu số (prefix) đã đăng ký. Tiền chuyển vào VA vẫn nằm trong tài khoản ACB thật, nhưng mỗi VA gắn được với 1 đơn hàng hoặc 1 khách nên MONA Pay khớp tiền tự động, không cần đọc nội dung chuyển khoản. Tạo VA qua API gồm 4 bước: gửi yêu cầu đăng ký, nhập OTP ACB gửi về số điện thoại, đăng ký nhận thông báo giao dịch, nhập OTP lần 2. Điều kiện: tài khoản ACB đứng tên anh chị và số điện thoại đang đăng ký với ACB.
+Tài khoản ảo (VA) là số tài khoản phụ do ACB cấp dưới tài khoản thật của anh chị. Tiền chuyển vào VA vẫn nằm trong tài khoản ACB thật, nhưng mỗi VA gắn được với 1 đơn hàng hoặc 1 khách nên MONA Pay khớp tiền tự động, không cần đọc nội dung chuyển khoản. Tạo VA qua API gồm 4 bước: gửi yêu cầu đăng ký, nhập OTP ACB gửi về số điện thoại, đăng ký nhận thông báo giao dịch, nhập OTP lần 2. Điều kiện: tài khoản ACB đứng tên anh chị và số điện thoại đang đăng ký với ACB.
 
 Anh chị không muốn gọi API thì dashboard my.monapay.vn có sẵn wizard 4 bước y hệt, tại mục Ngân hàng & VA.
+
+## Đầu số VA do anh chị tự đặt
+
+`virtual_account_prefix_code` không phải mã cần xin ACB hoặc MONA Pay cấp trước. Anh chị tự đặt ngay khi tạo VA: dùng chữ in hoa và số, chọn ngắn, dễ nhận ra, ví dụ `HOA` hoặc `SHOP`. Không cần ra quầy và không cần đăng ký đầu số trước.
+
+ACB ghép mã đối tác ở phía trước đầu số anh chị chọn, rồi thêm phần số định danh. Ví dụ anh chị chọn `HOA`, số VA hoàn chỉnh ACB trả về có thể là `LOCHOA000123456`. Luôn dùng nguyên `virtual_account_number` trong response khi tạo QR, khớp giao dịch hoặc đưa cho khách; đừng tự ghép chuỗi. Nếu MONA Pay trả lỗi đầu số, đổi sang một đầu số ngắn khác rồi gửi lại yêu cầu.
 
 ## Luồng 4 bước
 
@@ -29,7 +35,7 @@ Mọi request dưới đây cần `Authorization: Bearer` và `X-Client-Secret` 
 | `customer_type` | string | không | Loại khách hàng theo mã ACB, ví dụ `PERS` cho cá nhân |
 | `account_number` | integer | không | Số tài khoản thanh toán ACB (số thật) |
 | `phone_number` | string | không | Số điện thoại đăng ký với ACB, nhận OTP |
-| `virtual_account_info.virtual_account_prefix_code` | string | có | Đầu số VA đã đăng ký với ACB |
+| `virtual_account_info.virtual_account_prefix_code` | string | có | Anh chị tự đặt khi tạo VA; dùng chữ in hoa/số, nên ngắn, ví dụ `HOA`, `SHOP`; không cần đăng ký trước |
 | `virtual_account_info.virtual_account_content` | string | không | Nội dung định danh gắn với VA (mã đơn, mã khách) |
 | `virtual_account_info.virtual_account_explain` | string | không | Diễn giải khi đăng ký |
 | `virtual_account_info.beneficiary_name_rule` | integer | không | Cách hiển thị tên đơn vị hưởng theo quy ước ACB |
@@ -196,7 +202,7 @@ await call(`/api/v1/acb/${noti.acb_request.id}/notification/verification`, { cod
 
 | Tình huống | Nguyên nhân | Cách xử lý |
 |---|---|---|
-| 400 sau bước 1 | Số tài khoản không phải ACB, sai số điện thoại đăng ký với ACB, hoặc đầu số VA chưa được ACB cấp | Kiểm tra lại với ACB; đầu số VA cần đăng ký trước với ACB |
+| 400 sau bước 1 | Số tài khoản không phải ACB, sai số điện thoại đăng ký với ACB, hoặc đầu số VA không được chấp nhận | Kiểm tra lại tài khoản và số điện thoại; nếu lỗi nằm ở đầu số thì đổi đầu số ngắn khác rồi gửi lại, không cần ra quầy đăng ký |
 | 400 `code` sai ở bước 2/4 | OTP nhập sai hoặc hết hạn | Làm lại bước trước để ACB gửi OTP mới |
 | VA tạo xong nhưng không thấy giao dịch | Chưa làm bước 3 và 4 | Gọi `notification/registration` rồi xác thực OTP lần 2 |
 | 401 | Token hết hạn hoặc thiếu X-Client-Secret | Login lại, kiểm tra header |
