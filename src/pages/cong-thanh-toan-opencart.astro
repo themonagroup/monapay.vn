@@ -1,0 +1,302 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const MODULE_URL = 'https://github.com/themonagroup/monapay-connectors/tree/main/modules/opencart-monapay';
+const title = 'Cổng thanh toán OpenCart: chuyển khoản, đơn tự xác nhận';
+const description = 'Cổng thanh toán OpenCart của MONA Pay: module tạo VietQR đúng số tiền, chuyển sang pay.monapay.vn và tự đưa đơn về Complete. Có sandbox, đã thử trên OpenCart 4.1.';
+
+const openCartFlow = [
+  {
+    title: 'Cài module, nhập key và bật Sandbox',
+    body: 'Trong trang cấu hình MONA Pay, shop nhập Client ID, Client Secret, các secret xác thực, chọn trạng thái Complete cho đơn đã trả và bật Sandbox để chạy thử.',
+    image: '/img/opencart/oc-settings',
+    width: 1265,
+    height: 1200,
+    alt: 'Cấu hình module thanh toán OpenCart MONA Pay với Client ID, Client Secret, chế độ redirect và Sandbox',
+    caption: 'Module đã nhập key, chọn chế độ chuyển sang trang thanh toán và bật Sandbox; chụp trên cửa hàng demo OpenCart 4.1, chế độ thử.',
+  },
+  {
+    title: 'Khách chọn “Thanh toán qua MONA Pay”',
+    body: 'Tại checkout, khách thấy MONA Pay trong phần Payment Method, kiểm tra tổng đơn 250.000đ rồi bấm nút thanh toán của module.',
+    image: '/img/opencart/oc-checkout',
+    width: 1265,
+    height: 1752,
+    portrait: true,
+    alt: 'Checkout OpenCart chọn Thanh toán qua MONA Pay cho đơn hàng 250.000 đồng',
+    caption: 'MONA Pay xuất hiện ngay trong Payment Method với nút thanh toán riêng; chụp trên cửa hàng demo OpenCart 4.1, chế độ thử.',
+  },
+  {
+    title: 'Trang pay.monapay.vn hiện đúng 250.000đ',
+    body: 'Module tạo phiên thanh toán rồi chuyển khách sang trang MONA Pay. Số tiền 250.000đ, mã đơn DH1, nội dung chuyển khoản và mã QR đã được điền sẵn.',
+    image: '/img/opencart/oc-pay-page',
+    width: 1280,
+    height: 900,
+    alt: 'Trang pay.monapay.vn hiển thị 250.000 đồng, mã đơn DH1 và mã QR trong chế độ thử',
+    caption: 'Phiên thanh toán DH1 có đúng số tiền, QR và dải cảnh báo phiên thử; chụp trên cửa hàng demo OpenCart 4.1, chế độ thử.',
+  },
+  {
+    title: 'Khách trở lại trang đặt hàng thành công',
+    body: 'Sau khi phiên thử được xác nhận, MONA Pay đưa khách về đúng cửa hàng. Giỏ hàng được làm trống và OpenCart hiển thị trang đặt hàng thành công.',
+    image: '/img/opencart/oc-success',
+    width: 1265,
+    height: 937,
+    alt: 'Trang OpenCart báo đơn hàng đã được đặt thành công sau khi thanh toán qua MONA Pay',
+    caption: 'Khách quay lại cửa hàng và thấy thông báo đặt hàng thành công; chụp trên cửa hàng demo OpenCart 4.1, chế độ thử.',
+  },
+  {
+    title: 'Đơn #1 trong admin tự sang Complete',
+    body: 'Module nhận kết quả có chữ ký, tìm đúng đơn và cập nhật trạng thái đã cấu hình. Admin thấy đơn #1, phương thức MONA Pay và tổng tiền 250.000đ ở trạng thái Complete.',
+    image: '/img/opencart/oc-admin-order',
+    width: 1280,
+    height: 900,
+    alt: 'Admin OpenCart hiển thị đơn số 1 thanh toán qua MONA Pay ở trạng thái Complete',
+    caption: 'Đơn #1 đã ghi nhận phương thức MONA Pay và sang Complete; chụp trên cửa hàng demo OpenCart 4.1, chế độ thử.',
+  },
+];
+
+const faq = [
+  {
+    q: 'Module thanh toán OpenCart của MONA Pay đã tải được chưa?',
+    a: `Đã có mã nguồn tại <a href="${MODULE_URL}" rel="noopener">GitHub của The MONA Group</a>. Module trong brief này đã được chạy hết luồng trên cửa hàng demo OpenCart 4.1, từ trang cấu hình tới đơn #1 sang Complete.`,
+  },
+  {
+    q: 'Chưa nối tài khoản ngân hàng có thử module được không?',
+    a: 'Được. Bật Sandbox trong cấu hình MONA Pay, lưu lại rồi tạo một đơn thử. Trang thanh toán có dải cảnh báo phiên thử và không chuyển tiền thật. Chạy xong đủ 5 bước thì tắt Sandbox trước khi bán thật.',
+  },
+  {
+    q: 'Lấy Client ID và Client Secret ở đâu?',
+    a: 'Đăng nhập my.monapay.vn, mở API Keys và tạo key cho cửa hàng. Dán Client ID, Client Secret cùng các secret xác thực theo hướng dẫn của module vào trang Extensions → Payments → MONA Pay, rồi bấm Save.',
+  },
+  {
+    q: 'Tiền của khách có đi qua MONA Pay không?',
+    a: 'Không. Khi chạy thật, khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay tạo phiên thanh toán, nhận báo có và xác nhận cho module; MONA Pay không giữ tiền và không có bước rút tiền về.',
+  },
+  {
+    q: 'Shop OpenCart dùng MONA Pay tốn bao nhiêu?',
+    a: `MONA Pay ${PRICE_LINE}. Gói gồm VietQR, trang thanh toán, webhook, Telegram và dashboard; không thu phần trăm trên giá trị đơn.`,
+  },
+];
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán OpenCart', item: SITE.url + '/cong-thanh-toan-opencart' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: SITE.url + '/cong-thanh-toan-opencart',
+    inLanguage: 'vi',
+    about: {
+      '@type': 'SoftwareApplication',
+      name: 'MONA Pay for OpenCart',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'OpenCart 4.1',
+      url: MODULE_URL,
+    },
+    publisher: { '@id': SITE.url + '/#organization' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Cài xong là chạy: luồng thật trên OpenCart',
+    description: 'Năm bước từ cấu hình module MONA Pay tới khi đơn OpenCart tự chuyển sang Complete.',
+    image: SITE.url + '/img/opencart/oc-admin-order.png',
+    step: openCartFlow.map((item, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: item.title,
+      text: item.body,
+      image: SITE.url + item.image + '.png',
+      url: SITE.url + '/cong-thanh-toan-opencart#opencart-step-' + (index + 1),
+    })),
+  },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-opencart" ogImage="/img/opencart/oc-pay-page.png" jsonld={jsonld}>
+  <section class="hero opencart-hero">
+    <div class="wrap">
+      <span class="eyebrow">OpenCart 4.1 · module mã nguồn mở</span>
+      <h1 class="opencart-title"><span class="accent">Cổng thanh toán OpenCart</span></h1>
+      <p class="hero-subtitle">Module thanh toán OpenCart chuyển khoản tự động</p>
+      <div class="answer-first">
+        <p>MONA Pay tạo VietQR đúng số tiền cho từng đơn OpenCart, đưa khách sang pay.monapay.vn và trả kết quả về cửa hàng. Tiền vào là đơn tự chuyển sang Complete theo cấu hình. Module có Sandbox để chạy đủ luồng mà không chuyển tiền thật, đã kiểm trực tiếp trên OpenCart 4.1.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={MODULE_URL} rel="noopener">Tải module OpenCart trên GitHub</a>
+        <a class="btn btn-outline" href={SITE.hotlineTel}>Gọi {SITE.hotline}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt opencart-live">
+    <div class="wrap">
+      <span class="eyebrow">Ảnh thật · 5 bước</span>
+      <h2>Cài xong là chạy: luồng thật trên OpenCart</h2>
+      <p class="lead">Năm ảnh dưới đây đi theo một đơn 250.000đ, từ lúc nhập key tới khi đơn #1 xuất hiện trong admin ở trạng thái Complete.</p>
+      <div class="callout ok opencart-sandbox-note">
+        <p><strong>Thử không chuyển tiền thật:</strong> bật Sandbox trong trang cấu hình module, lưu lại rồi tạo đơn như khách mua hàng.</p>
+      </div>
+
+      <ol class="opencart-flow">
+        {openCartFlow.map((item, index) => (
+          <li id={`opencart-step-${index + 1}`} class:list={['opencart-live-step', item.portrait && 'opencart-live-step-portrait']}>
+            <div class="opencart-live-copy">
+              <span class="opencart-live-number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+            <figure class="opencart-shot">
+              <picture>
+                <source srcset={`${item.image}.avif`} type="image/avif" />
+                <source srcset={`${item.image}.webp`} type="image/webp" />
+                <img src={`${item.image}.png`} width={item.width} height={item.height} loading="lazy" decoding="async" alt={item.alt} />
+              </picture>
+              <figcaption>{item.caption}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Bốn việc module tự lo</span>
+      <h2>Khách trả tiền, OpenCart nhận đúng kết quả</h2>
+      <p class="lead">Shop giữ quy trình bán hàng sẵn có. Module thêm MONA Pay vào checkout và xử lý phần tạo phiên, chuyển hướng, xác thực kết quả, cập nhật đơn.</p>
+
+      <div class="benefit-ledger">
+        <article class="benefit-major">
+          <span>01</span>
+          <h3>Đơn tự sang Complete</h3>
+          <p>Tiền vào hoặc giao dịch Sandbox được xác nhận, module tìm đúng đơn OpenCart và đưa về trạng thái shop đã chọn. Nhân viên mở admin là thấy đơn sẵn sàng xử lý.</p>
+          <strong>Đơn #1 · 250.000đ · Complete</strong>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>VietQR đúng số tiền</h3>
+          <p>Trang thanh toán điền sẵn số tiền và mã đơn DH1, khách không cần gõ lại.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Tiền vào thẳng ngân hàng</h3>
+          <p>MONA Pay xác nhận giao dịch cho OpenCart, không đứng giữa và không giữ tiền.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Sandbox chạy đủ luồng</h3>
+          <p>Shop kiểm được checkout, trang pay, trang success và trạng thái đơn trước khi nhận tiền thật.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap install-wrap">
+      <span class="eyebrow">Tải GitHub · cài trong admin</span>
+      <h2>Cài module OpenCart trong 6 bước</h2>
+      <p class="lead">Thứ tự dưới đây đi đúng đường cài của OpenCart và trang cấu hình đã chụp. Nên chạy một đơn Sandbox trước khi tắt chế độ thử.</p>
+
+      <ol class="install-list">
+        <li>
+          <span>01</span>
+          <div><h3>Tải module từ GitHub</h3><p>Mở <a href={MODULE_URL} rel="noopener">opencart-monapay trong monapay-connectors</a> và tải gói module theo hướng dẫn trong repository.</p></div>
+        </li>
+        <li>
+          <span>02</span>
+          <div><h3>Upload trong Extensions → Installer</h3><p>Đăng nhập OpenCart Admin, mở Extensions → Installer, upload gói module và chờ OpenCart báo cài xong.</p></div>
+        </li>
+        <li>
+          <span>03</span>
+          <div><h3>Mở Payments → MONA Pay</h3><p>Vào Extensions → Extensions, chọn Payments rồi mở MONA Pay để vào trang cấu hình.</p></div>
+        </li>
+        <li>
+          <span>04</span>
+          <div><h3>Nhập key MONA Pay</h3><p>Lấy Client ID và Client Secret tại my.monapay.vn → API Keys, dán vào module rồi điền các secret xác thực theo hướng dẫn của repository.</p></div>
+        </li>
+        <li>
+          <span>05</span>
+          <div><h3>Bật Sandbox và chạy thử</h3><p>Chọn Sandbox: Enabled, Status: Enabled, lưu lại rồi tạo đơn. Kiểm đủ trang pay, trang success và đơn trong admin.</p></div>
+        </li>
+        <li>
+          <span>06</span>
+          <div><h3>Tắt Sandbox khi bán thật</h3><p>Sau khi đơn thử sang Complete đúng cấu hình, đổi Sandbox thành Disabled và lưu lại. Các đơn tiếp theo dùng luồng chuyển khoản thật.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Shop OpenCart hay hỏi trước khi cài" />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Cài module OpenCart và chạy đơn thử hôm nay"
+    body="Tải mã nguồn trên GitHub, nhập key, bật Sandbox và đi hết 5 màn hình. Cần người ngồi cùng thì gọi tổng đài MONA."
+    primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }}
+    secondary={{ href: SITE.hotlineTel, label: `Gọi ${SITE.hotline}` }}
+  />
+</Base>
+
+<style>
+  .opencart-hero { overflow: hidden; }
+  .opencart-title { max-width: none; margin-bottom: .2rem; font-size: clamp(1.28rem, 5.2vw, 3.7rem); line-height: 1.15; letter-spacing: -.045em; white-space: nowrap; overflow-wrap: normal; text-wrap: nowrap; }
+  .hero-subtitle { margin: 0 0 1.5rem; color: var(--ink); font-size: clamp(1.05rem, 2vw, 1.35rem); font-weight: 700; }
+  .opencart-hero .answer-first { max-width: 930px; }
+  .opencart-live { overflow: hidden; }
+  .opencart-live h2 { font-size: clamp(1.9rem, 3.7vw, 2.8rem); }
+  .opencart-sandbox-note { max-width: 760px; margin-top: 1.5rem; }
+  .opencart-flow { list-style: none; padding: 0; margin: 2.5rem 0 0; }
+  .opencart-live-step { display: grid; grid-template-columns: minmax(230px, .72fr) minmax(0, 1.28fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; padding: 3.5rem 0; border-top: 1px solid var(--border); }
+  .opencart-live-step:last-child { padding-bottom: 0; }
+  .opencart-live-step:nth-child(even) .opencart-live-copy { grid-column: 2; grid-row: 1; }
+  .opencart-live-step:nth-child(even) .opencart-shot { grid-column: 1; grid-row: 1; }
+  .opencart-live-copy { position: sticky; top: 110px; }
+  .opencart-live-copy h3 { margin: .25rem 0 .55rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .opencart-live-copy p { margin: 0; color: var(--text-soft); }
+  .opencart-live-number { display: block; color: var(--primary); font: 800 1rem/1 var(--mono); letter-spacing: .08em; }
+  .opencart-shot { margin: 0; min-width: 0; }
+  .opencart-shot picture, .opencart-shot img { display: block; width: 100%; }
+  .opencart-shot img { height: auto; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+  .opencart-shot figcaption { margin-top: .75rem; color: var(--text-soft); font-size: .9rem; line-height: 1.6; }
+  .opencart-live-step-portrait .opencart-shot { max-width: 650px; }
+  .benefit-ledger { display: grid; grid-template-columns: 1.15fr .85fr; grid-template-rows: repeat(3, auto); gap: 1px; margin-top: 2rem; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--border); box-shadow: var(--shadow); }
+  .benefit-ledger article { min-width: 0; padding: 1.5rem; background: var(--surface); }
+  .benefit-ledger article > span { color: var(--primary); font: 800 .85rem/1 var(--mono); letter-spacing: .08em; }
+  .benefit-ledger article h3 { margin: .5rem 0 .35rem; }
+  .benefit-ledger article p { margin: 0; color: var(--text-soft); }
+  .benefit-ledger .benefit-major { grid-row: 1 / 4; padding: clamp(1.7rem, 4vw, 3.2rem); display: flex; flex-direction: column; justify-content: center; background: var(--dark); }
+  .benefit-major h3 { color: var(--on-dark); font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .benefit-ledger .benefit-major p { color: var(--on-dark-soft); }
+  .benefit-major strong { display: block; margin-top: 2rem; color: var(--cta-on-dark); font: 700 1rem/1.5 var(--mono); }
+  .install-wrap { max-width: 960px; }
+  .install-list { list-style: none; margin: 2rem 0 0; padding: 0; border-top: 1px solid var(--border); }
+  .install-list li { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 1rem; margin: 0; padding: 1.4rem 0; border-bottom: 1px solid var(--border); }
+  .install-list li > span { color: var(--primary); font: 800 .9rem/1.7 var(--mono); }
+  .install-list h3 { margin: 0 0 .25rem; }
+  .install-list p { margin: 0; color: var(--text-soft); }
+  @media (max-width: 767px) {
+    .opencart-title { font-size: clamp(1.22rem, 6.15vw, 2.4rem); letter-spacing: -.055em; }
+    .hero-subtitle { font-size: 1rem; }
+    .opencart-hero .btn { width: 100%; justify-content: center; white-space: normal; text-align: center; }
+    .opencart-live-step { grid-template-columns: 1fr; gap: 1.4rem; padding: 2.7rem 0; }
+    .opencart-live-step:nth-child(even) .opencart-live-copy, .opencart-live-step:nth-child(even) .opencart-shot { grid-column: 1; grid-row: auto; }
+    .opencart-live-copy { position: static; }
+    .opencart-live-step-portrait .opencart-shot { max-width: none; }
+    .benefit-ledger { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .benefit-ledger .benefit-major { grid-row: auto; }
+  }
+</style>

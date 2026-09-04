@@ -55,6 +55,10 @@ Chưa nối ngân hàng vẫn thử được: bật **Chế độ thử (sandbox
   </figure>
 </div>
 
+## Dùng OpenCart: cài module
+
+Tải [module MONA Pay cho OpenCart](https://github.com/themonagroup/monapay-connectors/tree/main/modules/opencart-monapay), vào **Extensions → Installer** để upload, rồi mở **Extensions → Extensions → Payments → MONA Pay**. Nhập Client ID và Client Secret lấy từ my.monapay.vn → API Keys, bật **Sandbox** để chạy đơn thử. Khi checkout, trang thanh toán, trang success và đơn trong admin đều đúng thì tắt Sandbox trước khi bán thật. Xem [luồng 5 bước có ảnh chụp trên OpenCart 4.1](/cong-thanh-toan-opencart).
+
 ## Bước 1. Đăng ký tài khoản
 
 Vào `https://my.monapay.vn/auth`, chọn tab Đăng ký, điền tên đăng nhập, mật khẩu, tên và email. Anh chị cũng gọi được API:

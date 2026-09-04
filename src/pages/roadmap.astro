@@ -25,7 +25,7 @@ const jsonld = [{ '@context': 'https://schema.org', '@type': 'ItemList', name: '
             {g.items.map((i) => (
               <li>
                 <span class={'badge ' + (i.status === 'da-co' ? 'badge-ok' : i.status === 'dang-lam' ? 'badge-warn' : '')}>{STATUS_LABEL[i.status]}</span>
-                <span>{i.name}{i.note && <em> ({i.note})</em>}</span>
+                <span>{i.href ? <a href={i.href}>{i.name}</a> : i.name}{i.note && <em> ({i.note})</em>}</span>
               </li>
             ))}
           </ul>

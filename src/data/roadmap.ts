@@ -1,6 +1,6 @@
-// Lộ trình công khai — trạng thái đọc theo ROADMAP nội bộ (chỉ 3 mức). Không nêu tên đối thủ, không hứa ngày.
+// Lộ trình công khai: trạng thái đọc theo ROADMAP nội bộ (chỉ 3 mức). Không nêu tên đối thủ, không hứa ngày.
 export type RStatus = 'da-co' | 'dang-lam' | 'ke-hoach';
-export type RItem = { name: string; status: RStatus; note?: string };
+export type RItem = { name: string; status: RStatus; note?: string; href?: string };
 export type RGroup = { title: string; why: string; items: RItem[] };
 export const STATUS_LABEL: Record<RStatus, string> = { 'da-co': 'Đã có', 'dang-lam': 'Đang làm', 'ke-hoach': 'Kế hoạch' };
 export const ROADMAP: RGroup[] = [
@@ -20,9 +20,10 @@ export const ROADMAP: RGroup[] = [
   ]},
   { title: 'Plugin và nền tảng', why: 'Chỗ shop Việt Nam thật sự cắm vào.', items: [
     { name: 'WooCommerce / WordPress', status: 'da-co', note: 'plugin v0.1.0 trên GitHub; bản trên wordpress.org lên sau' },
+    { name: 'OpenCart', status: 'da-co', note: 'module trên GitHub; đã kiểm đủ luồng với OpenCart 4.1', href: '/cong-thanh-toan-opencart' },
     { name: 'Ví dụ 8 framework (Next.js, Express, NestJS, Laravel, Django, FastAPI, Spring Boot, Go)', status: 'da-co' },
     { name: 'Shopify, Haravan, Sapo, KiotViet', status: 'dang-lam', note: 'đã có hướng dẫn nối; app trên kho ứng dụng từng nền tảng là kế hoạch' },
-    { name: 'Magento, OpenCart, PrestaShop', status: 'ke-hoach' },
+    { name: 'Magento, PrestaShop', status: 'ke-hoach' },
   ]},
   { title: 'Công cụ cho lập trình viên và AI agent', why: 'Để Claude Code, Cursor, Codex gọi thẳng MONA Pay khi đang viết code.', items: [
     { name: 'MCP server monapay-mcp', status: 'da-co', note: '17 tool, mã nguồn trên GitHub' },

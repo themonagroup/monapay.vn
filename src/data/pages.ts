@@ -1,6 +1,6 @@
-// Danh mục trang marketing — dùng cho llms.txt + sitemap mô tả. Mỗi trang 1 dòng mô tả cho LLM.
+// Danh mục trang marketing: dùng cho llms.txt + sitemap mô tả. Mỗi trang 1 dòng mô tả cho LLM.
 export const PAGES = [
-  { path: '/', title: 'MONA Pay — cổng thanh toán và API ngân hàng cho thời đại AI', desc: 'Nhận và xác nhận tiền chuyển khoản theo thời gian thực qua VA, VietQR, webhook, Telegram.' },
+  { path: '/', title: 'MONA Pay: cổng thanh toán và API ngân hàng cho thời đại AI', desc: 'Nhận và xác nhận tiền chuyển khoản theo thời gian thực qua VA, VietQR, webhook, Telegram.' },
   { path: '/trang-thanh-toan', title: 'Trang thanh toán MONA Pay: gửi link là thu tiền', desc: 'Tạo checkout có VietQR cho từng đơn, chuyển hướng từ website hoặc gửi link qua Zalo, Facebook và AI agent.' },
   { path: '/ngan-hang', title: 'Ngân hàng hỗ trợ MONA Pay', desc: 'Bảng trạng thái kết nối: ACB đang hoạt động, các ngân hàng khác đang đăng ký; thêm ngân hàng không phải sửa tích hợp.' },
   { path: '/acb', title: 'Nhận thông báo tiền vào tài khoản ACB theo thời gian thực', desc: 'Tài khoản ảo ACB, VietQR, webhook, Telegram; hướng dẫn nối 4 bước.' },
@@ -8,6 +8,7 @@ export const PAGES = [
   { path: '/faq', title: 'Hỏi đáp về MONA Pay', desc: '20 câu hỏi thường gặp: an toàn, tiền có qua MONA Pay không, ngân hàng hỗ trợ, tích hợp.' },
   { path: '/cong-thanh-toan-woocommerce', title: 'Cổng thanh toán chuyển khoản cho WooCommerce', desc: 'Tự xác nhận đơn WooCommerce khi khách chuyển khoản.' },
   { path: '/cong-thanh-toan-wordpress', title: 'Cổng thanh toán chuyển khoản cho WordPress', desc: 'Nhận tiền và xác nhận tự động trên website WordPress.' },
+  { path: '/cong-thanh-toan-opencart', title: 'Cổng thanh toán OpenCart: chuyển khoản, đơn tự xác nhận', desc: 'Module OpenCart tạo VietQR đúng số tiền, chuyển sang pay.monapay.vn và tự đưa đơn về Complete; có sandbox, đã thử trên OpenCart 4.1.' },
   { path: '/chia-se-bien-dong-so-du-telegram', title: 'Báo biến động số dư ngân hàng qua Telegram', desc: 'Nhận thông báo tiền vào ACB trong nhóm Telegram của công ty.' },
   { path: '/loa-thong-bao-chuyen-khoan', title: 'Loa thông báo chuyển khoản: có cần mua loa để biết tiền vào?', desc: 'Loa của ngân hàng làm được gì, thiếu gì; 3 cách nhận báo có qua Telegram, điện thoại thu ngân, webhook không cần mua loa.' },
   { path: '/tao-ma-qr-ngan-hang', title: 'Tạo mã QR ngân hàng (VietQR) miễn phí', desc: 'Công cụ tạo mã QR chuyển khoản chuẩn VietQR cho 36 ngân hàng, chạy trên trình duyệt, không lưu dữ liệu.' },

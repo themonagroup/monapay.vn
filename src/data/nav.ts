@@ -1,4 +1,4 @@
-// Menu chính (mega menu) — nguồn duy nhất cho header. Mỗi nhóm: label + cột items {href,label,desc}. active = path bắt đầu bằng href.
+// Menu chính (mega menu): nguồn duy nhất cho header. Mỗi nhóm: label + cột items {href,label,desc}. active = path bắt đầu bằng href.
 export type NavItem = { href: string; label: string; desc?: string; badge?: string };
 export type NavGroup = { label: string; href?: string; cols?: { title: string; items: NavItem[] }[]; match?: string[] };
 export const MEGA: NavGroup[] = [
@@ -29,6 +29,7 @@ export const MEGA: NavGroup[] = [
       { title: 'Theo nền tảng', items: [
         { href: '/cong-thanh-toan-woocommerce', label: 'WooCommerce', desc: 'Khách chuyển khoản, đơn tự sang đã thanh toán' },
         { href: '/cong-thanh-toan-wordpress', label: 'WordPress', desc: 'Khoá học, đặt cọc, hội viên tự mở khi tiền vào' },
+        { href: '/cong-thanh-toan-opencart', label: 'OpenCart', desc: 'Module GitHub, VietQR động, đơn tự sang Complete' },
         { href: '/cong-thanh-toan-shopify', label: 'Shopify', desc: 'Thu chuyển khoản nội địa cho shop Shopify tại Việt Nam' },
         { href: '/cong-thanh-toan-haravan', label: 'Haravan', desc: 'Đơn Haravan tự xác nhận khi tiền vào ACB' },
         { href: '/cong-thanh-toan-sapo', label: 'Sapo', desc: 'VietQR động theo đơn, báo Telegram' },
@@ -86,6 +87,7 @@ export const MEGA_EN: NavGroup[] = [
       { title: 'By platform', items: [
         { href: '/cong-thanh-toan-woocommerce', label: 'WooCommerce', desc: 'Bank transfer paid, order flips to paid (Vietnamese page)' },
         { href: '/cong-thanh-toan-wordpress', label: 'WordPress', desc: 'Courses, deposits, memberships unlock when money lands (Vietnamese page)' },
+        { href: '/cong-thanh-toan-opencart', label: 'OpenCart', desc: 'GitHub module, dynamic VietQR, order moves to Complete (Vietnamese page)' },
         { href: '/cong-thanh-toan-shopify', label: 'Shopify', desc: 'Domestic transfers for Shopify stores in Vietnam (Vietnamese page)' },
         { href: '/cong-thanh-toan-haravan', label: 'Haravan', desc: 'Haravan orders confirm when money reaches ACB (Vietnamese page)' },
         { href: '/cong-thanh-toan-sapo', label: 'Sapo', desc: 'Dynamic VietQR per order, Telegram alerts (Vietnamese page)' },
