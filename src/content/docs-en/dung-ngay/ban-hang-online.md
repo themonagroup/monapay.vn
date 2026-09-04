@@ -1,7 +1,7 @@
 ---
 title: "Selling on Facebook, Zalo: know a payment landed before you ship"
 description: "Shops selling on Facebook, Zalo with no website using MONA Pay: send a payment link, get an alert the moment it lands, stop guessing whether a customer really paid."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Connect the shop's bank account"
     text: "Create a MONA Pay account and connect the owner's bank account with two OTP codes sent to their phone."
@@ -53,6 +53,25 @@ Add the order handler, packer and accounting if any, then add the MONA Pay bot. 
 ### 3. Create a payment link for each order
 
 Under Hosted checkout in the dashboard, create a link for the exact order amount, name it after the order code so multiple orders don't get confused, and send it in the chat.
+
+<div class="doc-shot-pair">
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/shopify/pay-cho-thanh-toan.avif" type="image/avif">
+      <source srcset="/img/shopify/pay-cho-thanh-toan.webp" type="image/webp">
+      <img src="/img/shopify/pay-cho-thanh-toan.png" width="424" height="1478" loading="lazy" decoding="async" alt="MONA Pay hosted checkout waiting for an online-shop customer to scan VietQR">
+    </picture>
+    <figcaption>The customer opens the link, checks the amount and order code, then scans the QR. Captured on a test store.</figcaption>
+  </figure>
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/shopify/pay-da-thanh-toan.avif" type="image/avif">
+      <source srcset="/img/shopify/pay-da-thanh-toan.webp" type="image/webp">
+      <img src="/img/shopify/pay-da-thanh-toan.png" width="430" height="900" loading="lazy" decoding="async" alt="MONA Pay hosted checkout confirming a successful online-shop payment">
+    </picture>
+    <figcaption>Once the money arrives, the page confirms the payment for both customer and shop. Captured on a test store.</figcaption>
+  </figure>
+</div>
 
 ## Tips against "I already sent it"
 

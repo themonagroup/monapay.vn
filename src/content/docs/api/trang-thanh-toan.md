@@ -1,10 +1,19 @@
 ---
 title: "Trang thanh toán: tạo link là thu tiền"
 description: "Tạo hosted checkout MONA Pay, gửi link cho khách hoặc chuyển hướng từ website, nhận CHECKOUT_PAID và xác minh chữ ký khi khách quay lại."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 Muốn thu một khoản tiền, anh chị gọi `POST /api/v1/checkouts`, lấy `checkout_url` rồi gửi link cho khách hoặc chuyển hướng trình duyệt sang link đó. Khách quét VietQR, tiền vào thẳng tài khoản ngân hàng của anh chị. MONA Pay xác nhận giao dịch, gửi webhook `CHECKOUT_PAID` và đưa khách về `return_url`.
+
+<figure class="doc-phone-shot doc-phone-shot-single">
+  <picture>
+    <source srcset="/img/shopify/pay-cho-thanh-toan.avif" type="image/avif">
+    <source srcset="/img/shopify/pay-cho-thanh-toan.webp" type="image/webp">
+    <img src="/img/shopify/pay-cho-thanh-toan.png" width="424" height="1478" loading="lazy" decoding="async" alt="Trang thanh toán MONA Pay hiển thị VietQR, số tiền và mã đơn đang chờ thanh toán">
+  </picture>
+  <figcaption>Trang hosted checkout thật tại pay.monapay.vn: khách thấy VietQR, số tiền, mã đơn và thời gian còn lại. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+</figure>
 
 > Webhook hoặc `GET /checkouts/{id}` là nguồn sự thật trước khi giao hàng. Redirect về website chỉ phục vụ trải nghiệm người dùng.
 

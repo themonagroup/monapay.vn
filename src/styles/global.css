@@ -1,4 +1,4 @@
-/* MONA Pay — site ngoài. Token = nguồn chân lý brand (P1 Crimson + CTA teal), light mode chủ đạo. */
+/* MONA Pay: site ngoài. Token = nguồn chân lý brand (P1 Crimson + CTA teal), light mode chủ đạo. */
 :root{
   --bg:#FFF7F9; --surface:#FFFFFF; --surface-2:#FCE8ED; --ink:#261118; --text:#3A2830; --text-soft:#6F5960;
   --border:#E1D2D6; --muted:#F2E8EB;
@@ -230,6 +230,13 @@ pre,.codetabs{max-width:100%}
 .docs-meta{display:flex;flex-wrap:wrap;gap:.8rem;align-items:center;font-size:.88rem;color:var(--text-soft);margin-bottom:1.5rem}
 .docs-meta a{font-weight:600}
 .docs-body img{border-radius:var(--radius-sm);box-shadow:var(--shadow)}
+.docs-body .doc-shot-pair{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1.25rem;align-items:start;margin:1.5rem 0 2rem}
+.docs-body .doc-phone-shot{margin:0;max-width:430px}
+.docs-body .doc-phone-shot-single{margin:1.5rem auto 2rem}
+.docs-body .doc-phone-shot picture,.docs-body .doc-phone-shot img{display:block;width:100%}
+.docs-body .doc-phone-shot img{border:8px solid var(--dark);border-radius:28px;box-shadow:var(--shadow-lg)}
+.docs-body .doc-phone-shot figcaption{margin-top:.65rem;color:var(--text-soft);font-size:.88rem;line-height:1.55}
+@media (max-width:620px){.docs-body .doc-shot-pair{grid-template-columns:1fr}.docs-body .doc-phone-shot{margin-left:auto;margin-right:auto}}
 .callout{border-radius:var(--radius-sm);padding:1rem 1.2rem;margin:0 0 1.2em;border:1px solid var(--border);background:var(--surface)}
 .callout.warn{border-color:#F3D9A8;background:#FFF8EA}
 .callout.ok{border-color:#BFE3D2;background:#EEF8F3}

@@ -1,10 +1,19 @@
 ---
 title: "Hosted checkout: create a link and get paid"
 description: "Create a MONA Pay hosted checkout, send or redirect to the link, receive CHECKOUT_PAID and verify the signed return redirect."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 To collect a payment, call `POST /api/v1/checkouts`, take the returned `checkout_url`, then send it to the payer or redirect their browser to it. The payer scans VietQR and the money goes directly to your bank account. MONA Pay confirms the transfer, sends a `CHECKOUT_PAID` webhook and returns the payer to your `return_url`.
+
+<figure class="doc-phone-shot doc-phone-shot-single">
+  <picture>
+    <source srcset="/img/shopify/pay-cho-thanh-toan.avif" type="image/avif">
+    <source srcset="/img/shopify/pay-cho-thanh-toan.webp" type="image/webp">
+    <img src="/img/shopify/pay-cho-thanh-toan.png" width="424" height="1478" loading="lazy" decoding="async" alt="MONA Pay hosted checkout showing VietQR, amount and order code while awaiting payment">
+  </picture>
+  <figcaption>A live pay.monapay.vn hosted checkout with VietQR, the amount, order code and time remaining. Captured on a test store.</figcaption>
+</figure>
 
 > The webhook or `GET /checkouts/{id}` is the source of truth before fulfilment. The return redirect is only a user-experience signal.
 

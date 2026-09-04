@@ -20,6 +20,12 @@ const stepsTam = [
   { title: 'Tạo mã VietQR động trong dashboard MONA Pay', body: 'Vào mục Tạo QR, nhập số tiền và mã đơn, tải ảnh QR về. Gắn ảnh vào trang cảm ơn, email xác nhận đơn hoặc tin nhắn chốt đơn với khách. Khách quét là chuyển đúng số tiền, đúng nội dung.' },
   { title: 'Tiền vào, cả nhóm Telegram thấy ngay', body: 'Cấu hình MONA Pay báo vào nhóm Telegram của shop: tên ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Nhân viên đọc tin, vào Shopify bấm đã thanh toán. Vẫn có một thao tác tay, nhưng không ai phải mở app ngân hàng canh tiền nữa.' },
 ];
+const liveFlow = [
+  { name: 'Cài ứng dụng và nhập key MONA Pay', text: 'Shop cài ứng dụng MONA Pay, nhập Client ID và Client Secret lấy từ dashboard rồi kiểm tra kết nối.', image: SITE.url + '/img/shopify/shopify-app-settings.png' },
+  { name: 'Khách chọn Chuyển khoản MONA Pay', text: 'Khách đặt hàng trên Shopify và chọn Chuyển khoản MONA Pay. Đơn được tạo ở trạng thái chờ thanh toán.' },
+  { name: 'Khách mở link và quét VietQR', text: 'Khách mở link pay.monapay.vn, kiểm tra đúng số tiền và mã đơn rồi quét VietQR bằng ứng dụng ngân hàng.', image: SITE.url + '/img/shopify/pay-cho-thanh-toan.png' },
+  { name: 'Tiền vào, đơn Shopify tự sang Paid', text: 'MONA Pay xác nhận tiền đã vào, trang báo thành công và ứng dụng tự đánh dấu đơn Shopify là đã thanh toán.', image: SITE.url + '/img/shopify/shopify-order-paid.png' },
+];
 const faq = [
   { q: 'Shop Shopify ở Việt Nam có nhận chuyển khoản tự động được không?', a: 'Được, qua 2 đường. Đường đầy đủ: lớp nối nhận webhook từ MONA Pay rồi đổi trạng thái đơn trên Shopify qua API, đơn tự sang đã thanh toán trong vài giây. Đường tạm không cần code: bật chuyển khoản trong Shopify, gắn mã VietQR động, tiền vào là Telegram báo, nhân viên đổi trạng thái tay.' },
   { q: 'Lớp nối giữa MONA Pay và Shopify là gì, ai viết?', a: 'Là một đoạn chương trình nhỏ nhận gói tin webhook của MONA Pay, kiểm chữ ký HMAC, tìm đúng đơn theo mã trong nội dung chuyển khoản, rồi gọi API của Shopify đánh dấu đơn đã thanh toán. Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs.' },
@@ -34,6 +40,9 @@ const jsonld = [
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
     { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán Shopify', item: SITE.url + '/cong-thanh-toan-shopify' },
   ] },
+  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Luồng chạy thật của cổng thanh toán Shopify MONA Pay', description: 'Bốn bước từ cài ứng dụng MONA Pay đến khi đơn Shopify tự chuyển sang trạng thái Paid.', image: SITE.url + '/img/shopify/shopify-order-paid.png',
+    step: liveFlow.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, name: step.name, text: step.text, ...(step.image ? { image: step.image } : {}) })),
+  },
 ];
 ---
 <Base title={title} description={description} path="/cong-thanh-toan-shopify" jsonld={jsonld}>
@@ -49,6 +58,91 @@ const jsonld = [
         <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
         <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Đọc tài liệu webhook</a>
       </div>
+    </div>
+  </section>
+
+  <section class="section-alt shopify-live">
+    <div class="wrap">
+      <span class="eyebrow">Ảnh thật · 4 bước</span>
+      <h2>Luồng chạy thật trên cửa hàng Shopify</h2>
+      <p class="lead">Từ lúc shop nhập key tới khi tiền vào và đơn tự đổi trạng thái, đây là đúng luồng đang chạy trên cửa hàng thử nghiệm của MONA Pay.</p>
+
+      <ol class="live-flow">
+        <li class="live-step live-step-wide">
+          <div class="live-copy">
+            <span class="live-number">01</span>
+            <h3>Cài app, nhập key MONA Pay</h3>
+            <p>Shop lấy Client ID và Client Secret tại dashboard MONA Pay, nhập một lần trong ứng dụng Shopify rồi bấm kiểm tra kết nối.</p>
+          </div>
+          <figure class="desktop-shot">
+            <picture>
+              <source srcset="/img/shopify/shopify-app-settings.avif" type="image/avif" />
+              <source srcset="/img/shopify/shopify-app-settings.webp" type="image/webp" />
+              <img src="/img/shopify/shopify-app-settings.png" width="1280" height="860" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay: màn hình cài ứng dụng và nhập Client ID, Client Secret" />
+            </picture>
+            <figcaption>Màn hình kết nối ứng dụng với MONA Pay. Ảnh chụp trên cửa hàng thử nghiệm nên chế độ sandbox đang được bật.</figcaption>
+          </figure>
+        </li>
+
+        <li class="live-step live-step-bridge">
+          <div class="live-copy">
+            <span class="live-number">02</span>
+            <h3>Khách chọn “Chuyển khoản MONA Pay”</h3>
+            <p>Khách đặt hàng như bình thường, chọn MONA Pay ở bước thanh toán. Shopify tạo đơn chờ thanh toán và ứng dụng gắn link riêng của đơn.</p>
+          </div>
+          <div class="checkout-state" aria-label="Trạng thái đơn sau khi khách chọn Chuyển khoản MONA Pay">
+            <span>Shopify Checkout</span>
+            <strong>Chuyển khoản MONA Pay</strong>
+            <small>Đơn đã tạo · đang chờ thanh toán</small>
+          </div>
+        </li>
+
+        <li class="live-step live-step-phone">
+          <div class="live-copy">
+            <span class="live-number">03</span>
+            <h3>Khách mở link, quét QR</h3>
+            <p>Trang pay.monapay.vn hiện đúng số tiền, mã đơn và VietQR. Khách chỉ cần quét bằng app ngân hàng, không nhập tay.</p>
+          </div>
+          <figure class="phone-shot">
+            <div class="phone-shell">
+              <picture>
+                <source srcset="/img/shopify/pay-cho-thanh-toan.avif" type="image/avif" />
+                <source srcset="/img/shopify/pay-cho-thanh-toan.webp" type="image/webp" />
+                <img src="/img/shopify/pay-cho-thanh-toan.png" width="424" height="1478" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay đang chờ khách quét VietQR cho đơn DH1027" />
+              </picture>
+            </div>
+            <figcaption>Trang chờ thanh toán của đơn DH1027, số tiền 450.000đ và đồng hồ đếm ngược. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+          </figure>
+        </li>
+
+        <li class="live-step live-step-finish">
+          <div class="live-copy">
+            <span class="live-number">04</span>
+            <h3>Tiền vào, Shopify tự sang Paid</h3>
+            <p>MONA Pay nhận báo có, trang thanh toán báo thành công và ứng dụng đánh dấu đúng đơn trên Shopify là đã thanh toán.</p>
+          </div>
+          <div class="finish-media">
+            <figure class="phone-shot success-shot">
+              <div class="phone-shell">
+                <picture>
+                  <source srcset="/img/shopify/pay-da-thanh-toan.avif" type="image/avif" />
+                  <source srcset="/img/shopify/pay-da-thanh-toan.webp" type="image/webp" />
+                  <img src="/img/shopify/pay-da-thanh-toan.png" width="430" height="900" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay báo đã nhận thành công 450.000 đồng" />
+                </picture>
+              </div>
+              <figcaption>Khách thấy xác nhận “Đã nhận 450.000đ” rồi được đưa về cửa hàng. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+            </figure>
+            <figure class="desktop-shot order-paid-shot">
+              <picture>
+                <source srcset="/img/shopify/shopify-order-paid.avif" type="image/avif" />
+                <source srcset="/img/shopify/shopify-order-paid.webp" type="image/webp" />
+                <img src="/img/shopify/shopify-order-paid.png" width="1280" height="860" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay tự đánh dấu đơn hàng Shopify số 1004 là Paid" />
+              </picture>
+              <figcaption>Trong Shopify Admin, đơn có MONA Pay link, mã giao dịch và timeline tự đánh dấu Paid. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+            </figure>
+          </div>
+        </li>
+      </ol>
     </div>
   </section>
 
@@ -130,4 +224,51 @@ const jsonld = [
   .hb,.br-d{display:inline}
   @media (max-width:767px){.hb,.br-d{display:none}}
   .hero h1{font-size:clamp(1.8rem,3.2vw,2.5rem)}
+  .shopify-live{overflow:hidden}
+  .shopify-live h2{font-size:clamp(1.9rem,3.7vw,2.8rem);white-space:nowrap}
+  .live-flow{list-style:none;padding:0;margin:2.5rem 0 0;counter-reset:none}
+  .live-step{position:relative;margin:0;padding:0 0 4.5rem 5.5rem}
+  .live-step::before{content:"";position:absolute;left:1.55rem;top:3.5rem;bottom:0;width:1px;background:var(--border)}
+  .live-step:last-child{padding-bottom:0}
+  .live-step:last-child::before{display:none}
+  .live-copy{max-width:720px;margin-bottom:1.5rem}
+  .live-copy h3{font-size:clamp(1.35rem,2.6vw,2rem);margin:.2rem 0 .35rem}
+  .live-copy p{color:var(--text-soft);margin:0}
+  .live-number{position:absolute;left:0;top:0;width:3.1rem;height:3.1rem;border-radius:50%;display:grid;place-items:center;background:var(--cta);color:var(--on-cta);font:800 .82rem/1 var(--mono);box-shadow:0 0 0 8px var(--surface)}
+  .desktop-shot,.phone-shot{margin:0}
+  .desktop-shot picture,.desktop-shot img{display:block;width:100%}
+  .desktop-shot img{border:1px solid var(--border);border-radius:16px;box-shadow:var(--shadow-lg)}
+  .desktop-shot figcaption,.phone-shot figcaption{margin-top:.75rem;color:var(--text-soft);font-size:.9rem;line-height:1.6}
+  .live-step-wide .desktop-shot{max-width:1040px}
+  .live-step-bridge{display:grid;grid-template-columns:minmax(0,1fr) minmax(280px,390px);gap:clamp(2rem,7vw,7rem);align-items:center}
+  .checkout-state{position:relative;padding:1.35rem 1.5rem;border:1px solid var(--border);border-left:5px solid var(--primary);background:var(--surface);box-shadow:var(--shadow);transform:rotate(1deg)}
+  .checkout-state::before{content:"→";position:absolute;left:-4.1rem;top:50%;transform:translateY(-50%);color:var(--primary);font-size:2rem;font-weight:800}
+  .checkout-state span,.checkout-state small{display:block;color:var(--text-soft);font-size:.8rem}
+  .checkout-state strong{display:block;margin:.2rem 0;color:var(--ink);font-size:1.08rem}
+  .live-step-phone{display:grid;grid-template-columns:minmax(0,1fr) minmax(260px,360px);gap:clamp(2.5rem,9vw,9rem);align-items:start}
+  .live-step-phone .live-copy{position:sticky;top:110px;margin-top:4rem}
+  .phone-shell{padding:10px;background:var(--dark);border:1px solid var(--dark-border);border-radius:34px;box-shadow:0 28px 65px rgba(70,11,25,.18)}
+  .phone-shell picture,.phone-shell img{display:block;width:100%;border-radius:25px}
+  .live-step-finish .live-copy{margin-bottom:2rem}
+  .finish-media{display:grid;grid-template-columns:minmax(230px,330px) minmax(0,1fr);gap:clamp(2rem,5vw,5rem);align-items:center}
+  .order-paid-shot{align-self:center}
+  @media (max-width:767px){
+    .shopify-live h2{font-size:clamp(1.7rem,8vw,2.15rem);white-space:normal;text-wrap:balance}
+    .live-flow{margin-top:2rem}
+    .live-step{padding:0 0 3.5rem 3.8rem}
+    .live-step::before{left:1.25rem;top:3rem}
+    .live-number{width:2.5rem;height:2.5rem;box-shadow:0 0 0 6px var(--surface)}
+    .live-step-bridge,.live-step-phone,.finish-media{grid-template-columns:1fr;gap:1.5rem}
+    .checkout-state{transform:none}
+    .checkout-state::before{display:none}
+    .live-step-phone .live-copy{position:static;margin-top:0}
+    .phone-shot{max-width:360px}
+    .order-paid-shot{margin-left:-3.8rem;width:calc(100% + 3.8rem)}
+  }
+  @media (max-width:420px){
+    .live-step{padding-left:3.25rem}
+    .live-step::before{left:1.1rem}
+    .live-number{left:0;width:2.2rem;height:2.2rem}
+    .order-paid-shot{margin-left:-3.25rem;width:calc(100% + 3.25rem)}
+  }
 </style>

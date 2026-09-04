@@ -1,7 +1,7 @@
 ---
 title: "Bán hàng online qua Facebook, Zalo: khách chuyển là báo có ngay"
 description: "Hướng dẫn shop bán qua Facebook, Zalo chưa có website dùng MONA Pay: gửi link thu tiền, khách quét là báo có, chống khách nói em chuyển rồi mà. Không cần lập trình."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Nối tài khoản ngân hàng của shop"
     text: "Tạo tài khoản MONA Pay, nối tài khoản ngân hàng đứng tên chủ shop bằng hai mã OTP ngân hàng gửi về điện thoại."
@@ -57,6 +57,25 @@ Tạo nhóm gồm người chốt đơn, người đóng gói, kế toán nếu 
 Trong dashboard, mục Trang thanh toán cho phép tạo link thu tiền theo đúng số tiền từng đơn, đặt tên link theo mã đơn để dễ theo dõi khi có nhiều đơn cùng lúc. Gửi link trực tiếp trong khung chat Facebook, Zalo ngay khi chốt đơn, khách bấm vào là ra màn hình chuyển khoản điền sẵn số tiền, không cần shop có website.
 
 ![Màn hình tạo link thu tiền với ô nhập số tiền đơn hàng và mã đơn](/img/docs/dung-ngay/ban-hang-online-tao-link.png)*Tạo link thu tiền đúng số tiền từng đơn, đặt tên theo mã đơn để không nhầm khi có nhiều đơn cùng lúc.*
+
+<div class="doc-shot-pair">
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/shopify/pay-cho-thanh-toan.avif" type="image/avif">
+      <source srcset="/img/shopify/pay-cho-thanh-toan.webp" type="image/webp">
+      <img src="/img/shopify/pay-cho-thanh-toan.png" width="424" height="1478" loading="lazy" decoding="async" alt="Trang thanh toán MONA Pay chờ khách quét QR cho đơn bán hàng online">
+    </picture>
+    <figcaption>Khách mở link, kiểm tra số tiền và mã đơn rồi quét QR. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+  </figure>
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/shopify/pay-da-thanh-toan.avif" type="image/avif">
+      <source srcset="/img/shopify/pay-da-thanh-toan.webp" type="image/webp">
+      <img src="/img/shopify/pay-da-thanh-toan.png" width="430" height="900" loading="lazy" decoding="async" alt="Trang thanh toán MONA Pay báo đã nhận tiền thành công cho shop online">
+    </picture>
+    <figcaption>Tiền vào, trang báo thanh toán thành công để khách và shop cùng biết. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
+  </figure>
+</div>
 
 ## Mẹo chống "em chuyển rồi mà"
 
