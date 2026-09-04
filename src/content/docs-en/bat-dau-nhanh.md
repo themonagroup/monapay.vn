@@ -59,6 +59,10 @@ The bank connection can wait while testing. Turn on **Test mode (sandbox)** in t
 
 Download the [MONA Pay module for OpenCart](https://github.com/themonagroup/monapay-connectors/tree/main/modules/opencart-monapay), upload it under **Extensions → Installer**, then open **Extensions → Extensions → Payments → MONA Pay**. Enter the Client ID and Client Secret from my.monapay.vn → API Keys and turn on **Sandbox** for a test order. Once checkout, the payment page, the success page and the admin order all match, turn Sandbox off before taking real payments. See the [five-step flow captured on OpenCart 4.1](/cong-thanh-toan-opencart) (Vietnamese page).
 
+## Using PrestaShop: install the module
+
+Download the [MONA Pay module for PrestaShop](https://github.com/themonagroup/monapay-connectors/tree/main/modules/prestashop-monapay), open **Modules → Module Manager → Upload a module**, then select **Configure** and enter the Client ID, Client Secret and signature secrets. Turn on **Sandbox mode** for a test order and turn it off before taking real payments. The module only appears when the cart uses VND. See the [four-step flow captured on PrestaShop 8.2](/cong-thanh-toan-prestashop) (Vietnamese page).
+
 ## Step 1. Sign up
 
 Go to `https://my.monapay.vn/auth`, open the Sign up tab and fill in a username, password, name and email. You can also call the API:

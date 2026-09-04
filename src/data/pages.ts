@@ -9,6 +9,7 @@ export const PAGES = [
   { path: '/cong-thanh-toan-woocommerce', title: 'Cổng thanh toán chuyển khoản cho WooCommerce', desc: 'Tự xác nhận đơn WooCommerce khi khách chuyển khoản.' },
   { path: '/cong-thanh-toan-wordpress', title: 'Cổng thanh toán chuyển khoản cho WordPress', desc: 'Nhận tiền và xác nhận tự động trên website WordPress.' },
   { path: '/cong-thanh-toan-opencart', title: 'Cổng thanh toán OpenCart: chuyển khoản, đơn tự xác nhận', desc: 'Module OpenCart tạo VietQR đúng số tiền, chuyển sang pay.monapay.vn và tự đưa đơn về Complete; có sandbox, đã thử trên OpenCart 4.1.' },
+  { path: '/cong-thanh-toan-prestashop', title: 'Cổng thanh toán PrestaShop: chuyển khoản, đơn tự xác nhận', desc: 'Module PrestaShop tạo VietQR đúng số tiền, chuyển sang pay.monapay.vn và tự đưa đơn về Payment accepted; có sandbox, đã thử trên PrestaShop 8.2.' },
   { path: '/chia-se-bien-dong-so-du-telegram', title: 'Báo biến động số dư ngân hàng qua Telegram', desc: 'Nhận thông báo tiền vào ACB trong nhóm Telegram của công ty.' },
   { path: '/loa-thong-bao-chuyen-khoan', title: 'Loa thông báo chuyển khoản: có cần mua loa để biết tiền vào?', desc: 'Loa của ngân hàng làm được gì, thiếu gì; 3 cách nhận báo có qua Telegram, điện thoại thu ngân, webhook không cần mua loa.' },
   { path: '/tao-ma-qr-ngan-hang', title: 'Tạo mã QR ngân hàng (VietQR) miễn phí', desc: 'Công cụ tạo mã QR chuyển khoản chuẩn VietQR cho 36 ngân hàng, chạy trên trình duyệt, không lưu dữ liệu.' },

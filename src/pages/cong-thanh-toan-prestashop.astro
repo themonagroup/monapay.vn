@@ -1,0 +1,292 @@
+---
+import Base from '../layouts/Base.astro';
+import Faq from '../components/Faq.astro';
+import CtaBand from '../components/CtaBand.astro';
+import { SITE } from '../data/site';
+import { PRICE_LINE } from '../data/pricing';
+
+const MODULE_URL = 'https://github.com/themonagroup/monapay-connectors/tree/main/modules/prestashop-monapay';
+const title = 'Cổng thanh toán PrestaShop: chuyển khoản, đơn tự xác nhận';
+const description = 'Cổng thanh toán PrestaShop của MONA Pay tạo VietQR đúng số tiền, chuyển sang pay.monapay.vn và tự đưa đơn về Payment accepted. Có Sandbox, đã thử trên PrestaShop 8.2.';
+
+const prestaShopFlow = [
+  {
+    title: 'Nhập key và bật chế độ Sandbox',
+    body: 'Trong trang Configure, shop nhập Client ID, Client Secret, Webhook Secret và Return Signature Secret. Bật Chế độ sandbox rồi lưu cấu hình để chạy thử.',
+    image: '/img/prestashop/ps-settings',
+    width: 1265,
+    height: 911,
+    alt: 'Cấu hình module thanh toán PrestaShop MONA Pay với Client ID, Client Secret, Webhook Secret, Return Signature Secret và Sandbox',
+    caption: 'Trang Configure có bốn trường key và chế độ sandbox đang bật; chụp trên cửa hàng demo PrestaShop 8.2, chế độ thử.',
+  },
+  {
+    title: 'Khách chọn “Thanh toán qua MONA Pay”',
+    body: 'Tại bước Payment, khách chọn Thanh toán qua MONA Pay cho giỏ 450.000đ, chấp nhận điều khoản rồi bấm Place order.',
+    image: '/img/prestashop/ps-checkout',
+    width: 1280,
+    height: 900,
+    alt: 'Checkout PrestaShop chọn Thanh toán qua MONA Pay cho đơn hàng 450.000 đồng',
+    caption: 'MONA Pay xuất hiện ở bước Payment của giỏ hàng 450.000đ; chụp trên cửa hàng demo PrestaShop 8.2, chế độ thử.',
+  },
+  {
+    title: 'Trang pay.monapay.vn hiện đúng 450.000đ',
+    body: 'Module tạo phiên thanh toán rồi chuyển khách sang trang MONA Pay. Số tiền 450.000đ, mã đơn DH7, nội dung chuyển khoản và mã QR đã được điền sẵn.',
+    image: '/img/prestashop/ps-pay-page',
+    width: 1280,
+    height: 900,
+    alt: 'Trang pay.monapay.vn hiển thị 450.000 đồng, mã đơn DH7 và mã QR trong chế độ thử',
+    caption: 'Phiên thanh toán DH7 có đúng số tiền, QR và dải cảnh báo phiên thử; chụp trên cửa hàng demo PrestaShop 8.2, chế độ thử.',
+  },
+  {
+    title: 'Đơn trở về với trạng thái Payment accepted',
+    body: 'Sau khi giao dịch thử được xác nhận, MONA Pay đưa khách về cửa hàng. Trang chi tiết đơn ghi nhận thanh toán thành công với trạng thái Payment accepted.',
+    image: '/img/prestashop/ps-order-detail',
+    width: 1265,
+    height: 1061,
+    alt: 'Chi tiết đơn PrestaShop phía khách sau khi MONA Pay xác nhận thanh toán với trạng thái Payment accepted',
+    caption: 'Chi tiết đơn phía khách sau khi hệ thống xác nhận Payment accepted; chụp trên cửa hàng demo PrestaShop 8.2, chế độ thử.',
+  },
+];
+
+const faq = [
+  {
+    q: 'Module thanh toán PrestaShop của MONA Pay đã tải được chưa?',
+    a: `Đã có mã nguồn tại <a href="${MODULE_URL}" rel="noopener">GitHub của The MONA Group</a>. Module đã được chạy hết luồng trên cửa hàng demo PrestaShop 8.2, từ trang cấu hình tới đơn chuyển sang Payment accepted.`,
+  },
+  {
+    q: 'Chưa nối tài khoản ngân hàng có thử module được không?',
+    a: 'Được. Bật Chế độ sandbox trong cấu hình MONA Pay, lưu lại rồi tạo một đơn thử. Trang thanh toán có dải cảnh báo phiên thử và không chuyển tiền thật. Chạy xong đủ 4 bước thì tắt Sandbox trước khi bán thật.',
+  },
+  {
+    q: 'Vì sao checkout không hiện MONA Pay?',
+    a: 'Module chỉ hiện khi giỏ hàng dùng tiền tệ VND. Kiểm tra tiền tệ đang chọn, bật module trong Module Manager và lưu đủ Client ID, Client Secret trước khi thử lại.',
+  },
+  {
+    q: 'Tiền của khách có đi qua MONA Pay không?',
+    a: 'Không. Khi chạy thật, khách chuyển thẳng vào tài khoản ngân hàng đứng tên anh chị. MONA Pay tạo phiên thanh toán, nhận báo có và xác nhận cho module; MONA Pay không giữ tiền và không có bước rút tiền về.',
+  },
+  {
+    q: 'Shop PrestaShop dùng MONA Pay tốn bao nhiêu?',
+    a: `MONA Pay ${PRICE_LINE}. Gói gồm VietQR, trang thanh toán, webhook, Telegram và dashboard; không thu phần trăm trên giá trị đơn.`,
+  },
+];
+
+const jsonld = [
+  {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
+      { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán PrestaShop', item: SITE.url + '/cong-thanh-toan-prestashop' },
+    ],
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'WebPage',
+    name: title,
+    description,
+    url: SITE.url + '/cong-thanh-toan-prestashop',
+    inLanguage: 'vi',
+    about: {
+      '@type': 'SoftwareApplication',
+      name: 'MONA Pay for PrestaShop',
+      applicationCategory: 'BusinessApplication',
+      operatingSystem: 'PrestaShop 8.2',
+      url: MODULE_URL,
+    },
+    publisher: { '@id': SITE.url + '/#organization' },
+  },
+  {
+    '@context': 'https://schema.org',
+    '@type': 'HowTo',
+    name: 'Cài xong là chạy: luồng thật trên PrestaShop',
+    description: 'Bốn bước từ cấu hình module MONA Pay tới khi đơn PrestaShop chuyển sang Payment accepted.',
+    image: SITE.url + '/img/prestashop/ps-order-detail.png',
+    step: prestaShopFlow.map((item, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: item.title,
+      text: item.body,
+      image: SITE.url + item.image + '.png',
+      url: SITE.url + '/cong-thanh-toan-prestashop#prestashop-step-' + (index + 1),
+    })),
+  },
+];
+---
+<Base title={title} description={description} path="/cong-thanh-toan-prestashop" ogImage="/img/prestashop/ps-pay-page.png" jsonld={jsonld}>
+  <section class="hero prestashop-hero">
+    <div class="wrap">
+      <span class="eyebrow">PrestaShop 8.2 · module mã nguồn mở</span>
+      <h1 class="prestashop-title"><span class="accent">Cổng thanh toán PrestaShop</span></h1>
+      <p class="hero-subtitle">Module thanh toán PrestaShop chuyển khoản tự động</p>
+      <div class="answer-first">
+        <p>MONA Pay tạo VietQR đúng số tiền cho từng đơn PrestaShop, đưa khách sang pay.monapay.vn và trả kết quả về cửa hàng. Tiền vào là đơn tự chuyển sang Payment accepted. Module có Sandbox để chạy đủ luồng mà không chuyển tiền thật, đã kiểm trực tiếp trên PrestaShop 8.2.</p>
+      </div>
+      <div class="btn-row">
+        <a class="btn btn-primary" href={MODULE_URL} rel="noopener">Tải module PrestaShop trên GitHub</a>
+        <a class="btn btn-outline" href={SITE.hotlineTel}>Gọi {SITE.hotline}</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt prestashop-live">
+    <div class="wrap">
+      <span class="eyebrow">Ảnh thật · 4 bước</span>
+      <h2>Cài xong là chạy: luồng thật trên PrestaShop</h2>
+      <p class="lead">Bốn ảnh dưới đây đi theo đơn DH7 trị giá 450.000đ, từ lúc nhập key tới khi đơn trở về cửa hàng với trạng thái Payment accepted.</p>
+      <div class="callout ok prestashop-sandbox-note">
+        <p><strong>Thử không chuyển tiền thật:</strong> bật Sandbox trong trang cấu hình module, lưu lại rồi tạo đơn như khách mua hàng.</p>
+      </div>
+
+      <ol class="prestashop-flow">
+        {prestaShopFlow.map((item, index) => (
+          <li id={`prestashop-step-${index + 1}`} class:list={['prestashop-live-step', item.portrait && 'prestashop-live-step-portrait']}>
+            <div class="prestashop-live-copy">
+              <span class="prestashop-live-number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+            <figure class="prestashop-shot">
+              <picture>
+                <source srcset={`${item.image}.avif`} type="image/avif" />
+                <source srcset={`${item.image}.webp`} type="image/webp" />
+                <img src={`${item.image}.png`} width={item.width} height={item.height} loading="lazy" decoding="async" alt={item.alt} />
+              </picture>
+              <figcaption>{item.caption}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap">
+      <span class="eyebrow">Bốn việc module tự lo</span>
+      <h2>Khách trả tiền, PrestaShop nhận đúng kết quả</h2>
+      <p class="lead">Shop giữ quy trình bán hàng sẵn có. Module thêm MONA Pay vào checkout và xử lý phần tạo phiên, chuyển hướng, xác thực kết quả, cập nhật đơn.</p>
+
+      <div class="benefit-ledger">
+        <article class="benefit-major">
+          <span>01</span>
+          <h3>Đơn tự sang Payment accepted</h3>
+          <p>Tiền vào hoặc giao dịch Sandbox được xác nhận, module tìm đúng đơn PrestaShop và cập nhật trạng thái. Nhân viên mở admin là thấy đơn sẵn sàng xử lý.</p>
+          <strong>DH7 · 450.000đ · Payment accepted</strong>
+        </article>
+        <article>
+          <span>02</span>
+          <h3>VietQR đúng số tiền</h3>
+          <p>Trang thanh toán điền sẵn 450.000đ và mã đơn DH7, khách không cần gõ lại.</p>
+        </article>
+        <article>
+          <span>03</span>
+          <h3>Tiền vào thẳng ngân hàng</h3>
+          <p>MONA Pay xác nhận giao dịch cho PrestaShop, không đứng giữa và không giữ tiền.</p>
+        </article>
+        <article>
+          <span>04</span>
+          <h3>Sandbox chạy đủ luồng</h3>
+          <p>Shop kiểm được checkout, trang pay, trang chi tiết đơn và trạng thái Payment accepted trước khi nhận tiền thật.</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <section class="section-alt">
+    <div class="wrap install-wrap">
+      <span class="eyebrow">Tải GitHub · cài trong admin</span>
+      <h2>Cài module PrestaShop trong 6 bước</h2>
+      <p class="lead">Thứ tự dưới đây đi đúng đường cài của PrestaShop và trang cấu hình đã chụp. Nên chạy một đơn Sandbox trước khi tắt chế độ thử.</p>
+
+      <ol class="install-list">
+        <li>
+          <span>01</span>
+          <div><h3>Tải module từ GitHub</h3><p>Mở <a href={MODULE_URL} rel="noopener">prestashop-monapay trong monapay-connectors</a> và tải gói module theo hướng dẫn trong repository.</p></div>
+        </li>
+        <li>
+          <span>02</span>
+          <div><h3>Upload trong Modules</h3><p>Đăng nhập PrestaShop Admin, mở Modules → Module Manager → Upload a module, chọn gói module và chờ PrestaShop báo cài xong.</p></div>
+        </li>
+        <li>
+          <span>03</span>
+          <div><h3>Mở trang Configure</h3><p>Trong Module Manager, tìm MONA Pay rồi bấm Configure để mở trang cấu hình module.</p></div>
+        </li>
+        <li>
+          <span>04</span>
+          <div><h3>Nhập key MONA Pay</h3><p>Lấy Client ID và Client Secret tại my.monapay.vn → API Keys, dán vào module rồi nhập Webhook Secret và Return Signature Secret theo hướng dẫn trên GitHub.</p></div>
+        </li>
+        <li>
+          <span>05</span>
+          <div><h3>Bật Sandbox và chạy thử</h3><p>Bật Chế độ sandbox, lưu lại rồi tạo đơn. Module chỉ hiện khi giỏ hàng dùng tiền tệ VND. Kiểm đủ checkout, trang pay và trạng thái đơn.</p></div>
+        </li>
+        <li>
+          <span>06</span>
+          <div><h3>Tắt Sandbox khi bán thật</h3><p>Sau khi đơn thử sang Payment accepted, tắt Chế độ sandbox và lưu cấu hình. Các đơn tiếp theo dùng luồng chuyển khoản thật.</p></div>
+        </li>
+      </ol>
+    </div>
+  </section>
+
+  <section>
+    <div class="wrap narrow">
+      <Faq items={faq} eyebrow="Hỏi đáp" title="Shop PrestaShop hay hỏi trước khi cài" />
+    </div>
+  </section>
+
+  <CtaBand
+    title="Cài module PrestaShop và chạy đơn thử hôm nay"
+    body="Tải mã nguồn trên GitHub, nhập key, bật Sandbox và đi hết 4 màn hình. Cần người ngồi cùng thì gọi tổng đài MONA."
+    primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }}
+    secondary={{ href: SITE.hotlineTel, label: `Gọi ${SITE.hotline}` }}
+  />
+</Base>
+
+<style>
+  .prestashop-hero { overflow: hidden; }
+  .prestashop-title { max-width: none; margin-bottom: .2rem; font-size: clamp(1.28rem, 5.2vw, 3.7rem); line-height: 1.15; letter-spacing: -.045em; white-space: nowrap; overflow-wrap: normal; text-wrap: nowrap; }
+  .hero-subtitle { margin: 0 0 1.5rem; color: var(--ink); font-size: clamp(1.05rem, 2vw, 1.35rem); font-weight: 700; }
+  .prestashop-hero .answer-first { max-width: 930px; }
+  .prestashop-live { overflow: hidden; }
+  .prestashop-live h2 { font-size: clamp(1.9rem, 3.7vw, 2.8rem); }
+  .prestashop-sandbox-note { max-width: 760px; margin-top: 1.5rem; }
+  .prestashop-flow { list-style: none; padding: 0; margin: 2.5rem 0 0; }
+  .prestashop-live-step { display: grid; grid-template-columns: minmax(230px, .72fr) minmax(0, 1.28fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; padding: 3.5rem 0; border-top: 1px solid var(--border); }
+  .prestashop-live-step:last-child { padding-bottom: 0; }
+  .prestashop-live-step:nth-child(even) .prestashop-live-copy { grid-column: 2; grid-row: 1; }
+  .prestashop-live-step:nth-child(even) .prestashop-shot { grid-column: 1; grid-row: 1; }
+  .prestashop-live-copy { position: sticky; top: 110px; }
+  .prestashop-live-copy h3 { margin: .25rem 0 .55rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .prestashop-live-copy p { margin: 0; color: var(--text-soft); }
+  .prestashop-live-number { display: block; color: var(--primary); font: 800 1rem/1 var(--mono); letter-spacing: .08em; }
+  .prestashop-shot { margin: 0; min-width: 0; }
+  .prestashop-shot picture, .prestashop-shot img { display: block; width: 100%; }
+  .prestashop-shot img { height: auto; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+  .prestashop-shot figcaption { margin-top: .75rem; color: var(--text-soft); font-size: .9rem; line-height: 1.6; }
+  .prestashop-live-step-portrait .prestashop-shot { max-width: 650px; }
+  .benefit-ledger { display: grid; grid-template-columns: 1.15fr .85fr; grid-template-rows: repeat(3, auto); gap: 1px; margin-top: 2rem; overflow: hidden; border: 1px solid var(--border); border-radius: var(--radius); background: var(--border); box-shadow: var(--shadow); }
+  .benefit-ledger article { min-width: 0; padding: 1.5rem; background: var(--surface); }
+  .benefit-ledger article > span { color: var(--primary); font: 800 .85rem/1 var(--mono); letter-spacing: .08em; }
+  .benefit-ledger article h3 { margin: .5rem 0 .35rem; }
+  .benefit-ledger article p { margin: 0; color: var(--text-soft); }
+  .benefit-ledger .benefit-major { grid-row: 1 / 4; padding: clamp(1.7rem, 4vw, 3.2rem); display: flex; flex-direction: column; justify-content: center; background: var(--dark); }
+  .benefit-major h3 { color: var(--on-dark); font-size: clamp(1.7rem, 3vw, 2.4rem); }
+  .benefit-ledger .benefit-major p { color: var(--on-dark-soft); }
+  .benefit-major strong { display: block; margin-top: 2rem; color: var(--cta-on-dark); font: 700 1rem/1.5 var(--mono); }
+  .install-wrap { max-width: 960px; }
+  .install-list { list-style: none; margin: 2rem 0 0; padding: 0; border-top: 1px solid var(--border); }
+  .install-list li { display: grid; grid-template-columns: 3.2rem minmax(0, 1fr); gap: 1rem; margin: 0; padding: 1.4rem 0; border-bottom: 1px solid var(--border); }
+  .install-list li > span { color: var(--primary); font: 800 .9rem/1.7 var(--mono); }
+  .install-list h3 { margin: 0 0 .25rem; }
+  .install-list p { margin: 0; color: var(--text-soft); }
+  @media (max-width: 767px) {
+    .prestashop-title { font-size: clamp(1.02rem, 5.1vw, 2.4rem); letter-spacing: -.055em; }
+    .hero-subtitle { font-size: 1rem; }
+    .prestashop-hero .btn { width: 100%; justify-content: center; white-space: normal; text-align: center; }
+    .prestashop-live-step { grid-template-columns: 1fr; gap: 1.4rem; padding: 2.7rem 0; }
+    .prestashop-live-step:nth-child(even) .prestashop-live-copy, .prestashop-live-step:nth-child(even) .prestashop-shot { grid-column: 1; grid-row: auto; }
+    .prestashop-live-copy { position: static; }
+    .prestashop-live-step-portrait .prestashop-shot { max-width: none; }
+    .benefit-ledger { grid-template-columns: 1fr; grid-template-rows: auto; }
+    .benefit-ledger .benefit-major { grid-row: auto; }
+  }
+</style>
