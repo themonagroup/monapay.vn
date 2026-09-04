@@ -1,7 +1,7 @@
 ---
 title: "API keys: tạo, liệt kê, thu hồi X-Client-Secret"
 description: "Sinh client_secret (hiện 1 lần duy nhất), liệt kê và thu hồi key. Quy tắc gửi X-Client-Secret cho lệnh ghi phụ thuộc vào nguồn Bearer token."
-updated: 28/08/2026
+updated: 04/09/2026
 ---
 
 API key của MONA Pay là chuỗi `client_secret` sinh bằng `POST /api/v1/client-keys/generate`. Hệ thống chỉ hiện secret đúng 1 lần lúc tạo, sau đó lưu dạng băm nên không xem lại được. Với Bearer token từ `client/login`, mọi request POST, PUT, PATCH và DELETE bắt buộc kèm `X-Client-Secret`; với token từ `oauth/token`, header này không bắt buộc nhưng MONA Pay vẫn khuyến nghị gửi. Mất secret thì tạo key mới rồi thu hồi key cũ, mỗi tài khoản tạo được nhiều key.
@@ -138,3 +138,12 @@ MONA Pay khuyến nghị luôn gửi `X-Client-Secret` để token lộ qua log 
 | 422 | `key_id` không đúng định dạng UUID | Copy nguyên id từ danh sách |
 
 Thao tác tạo và thu hồi key cũng làm được trên dashboard tại mục API Keys, có sẵn khối "copy prompt cho AI agent" để dán vào Claude Code, Codex hoặc Cursor.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/keys.avif" type="image/avif" />
+    <source srcset="/img/dashboard/keys.webp" type="image/webp" />
+    <img src="/img/dashboard/keys.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay tạo, xem và thu hồi API Keys cho hệ thống hoặc AI agent" />
+  </picture>
+  <figcaption>Dashboard liệt kê từng API key và khối lệnh dùng với AI agent, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>

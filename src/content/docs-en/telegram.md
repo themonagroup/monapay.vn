@@ -1,7 +1,7 @@
 ---
 title: "Balance notifications via Telegram: configuring the MONA Pay bot"
 description: "Get incoming ACB transfers as messages in your company's Telegram group: add the bot, find the group_id, edit the template with {{amount}}, {{transaction_content}}; API /telegram-configs."
-updated: 29/08/2026
+updated: 04/09/2026
 ---
 
 The MONA Pay Telegram channel posts one message to your Telegram group every time your ACB account (or a selected VA) receives money, with no code at all. Setup in the dashboard under Telegram takes 3 actions: add the MONA Pay bot to the group, paste the group's `group_id` (plus `topic_id` if the group uses topics), and click "Send test" to see the first message. The template is editable with variables such as `{{amount}}` and `{{transaction_content}}`. Accountants, shop owners and delivery staff all see the money arrive at the same time, instead of one person watching a banking app and relaying it to everyone.
@@ -14,6 +14,15 @@ The MONA Pay Telegram channel posts one message to your Telegram group every tim
 4. **Send a test**: the "Send test" button has 2 modes, a connection-check message and a simulated transaction rendered with your template. Seeing the message in the group means you are done.
 
 One account can have many configurations: the accounting group receives every transaction, the sales group only the VA of that store.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/telegram.avif" type="image/avif" />
+    <source srcset="/img/dashboard/telegram.webp" type="image/webp" />
+    <img src="/img/dashboard/telegram.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard Telegram Bot setup screen with the start setup action" />
+  </picture>
+  <figcaption>The Telegram Bot screen is where a group connection and test message begin, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## Message template
 

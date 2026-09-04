@@ -1,7 +1,7 @@
 ---
 title: "Báo tiền vào nhóm Zalo"
 description: "Đội bán hàng nhận tin tiền vào ngay trong nhóm Zalo qua bot Gấu Mona, không cần Zalo OA, ứng dụng ngân hàng hay viết code."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 Chủ shop không cần mở ứng dụng ngân hàng rồi báo lại cho từng người. Khi tài khoản hoặc VA đã chọn có tiền vào, MONA Pay gửi ngay 1 tin vào nhóm Zalo để đội bán hàng, thu ngân và kế toán cùng thấy. Cách này không cần Zalo OA, không cần cài thêm ứng dụng và không cần viết code.
@@ -23,6 +23,15 @@ Không gửi mã đăng nhập, OTP ngân hàng hoặc mật khẩu vào nhóm Z
 3. Bấm **Gửi thử**. Nhóm nhận tin “🐼 MONA Pay đã nối nhóm này…” là kết nối đã chạy.
 
 Anh chị có thể nối nhiều nhóm. Ví dụ, nhóm bán hàng chỉ nhận tiền vào một VA, còn nhóm kế toán nhận mọi giao dịch.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/zalo.avif" type="image/avif" />
+    <source srcset="/img/dashboard/zalo.webp" type="image/webp" />
+    <img src="/img/dashboard/zalo.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay thêm nhóm Zalo test monapay và chọn sự kiện Tiền vào, Checkout, Webhook lỗi" />
+  </picture>
+  <figcaption>Nhóm Zalo test monapay đã được nối và chọn ba sự kiện cần báo, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## Mẫu tin và biến
 

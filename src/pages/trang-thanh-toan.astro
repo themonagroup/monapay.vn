@@ -134,6 +134,14 @@ const jsonld = [{
           </article>
         ))}
       </div>
+      <figure class="photo checkout-dashboard-proof">
+        <picture>
+          <source srcset="/img/dashboard/checkouts.avif" type="image/avif" />
+          <source srcset="/img/dashboard/checkouts.webp" type="image/webp" />
+          <img src="/img/dashboard/checkouts.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay Link thu tiền không cần website với các đơn đã thanh toán và đang chờ" />
+        </picture>
+        <figcaption>Danh sách Link thu tiền cho phép tạo link mới, sao chép link và theo dõi trạng thái từng đơn, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+      </figure>
     </div>
   </section>
 
@@ -226,6 +234,7 @@ const jsonld = [{
   .usage-number { color: var(--primary); font-size: 2.6rem; font-weight: 800; letter-spacing: -.08em; line-height: 1; }
   .usage-list h3, .usage-list p { margin: 0; }
   .usage-list p { color: var(--text-soft); }
+  .checkout-dashboard-proof { max-width: 1080px; margin: 2.6rem auto 0; }
   .flow-layout { display: grid; grid-template-columns: .8fr 1.2fr; gap: clamp(2rem, 6vw, 6rem); }
   .flow-line { list-style: none; padding: 0; margin: 0; counter-reset: payflow; }
   .flow-line li { counter-increment: payflow; position: relative; display: grid; grid-template-columns: 170px 1fr; gap: 1rem; padding: .85rem 0 .85rem 3rem; border-bottom: 1px solid var(--border); }

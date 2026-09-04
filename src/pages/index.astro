@@ -1,5 +1,5 @@
 ---
-// Trang chủ monapay.vn — viết cho CHỦ DOANH NGHIỆP KINH DOANH ONLINE không rành kỹ thuật (Mon lệnh 30/08/2026).
+// Trang chủ monapay.vn: viết cho CHỦ DOANH NGHIỆP KINH DOANH ONLINE không rành kỹ thuật (Mon lệnh 30/08/2026).
 // Thứ tự: hero (báo có tự động, miễn phí) → cảnh quen ở shop → công dụng → cách chạy → không có web vẫn dùng → ai dùng → vì sao miễn phí → tiền không qua MONA Pay → chuyện MONA → khối dev/AI → FAQ → CTA.
 import Base from '../layouts/Base.astro';
 import Faq from '../components/Faq.astro';
@@ -161,6 +161,14 @@ const jsonld = [{
           </div>
         ))}
       </div>
+      <figure class="photo home-dashboard-proof">
+        <picture>
+          <source srcset="/img/dashboard/overview.avif" type="image/avif" />
+          <source srcset="/img/dashboard/overview.webp" type="image/webp" />
+          <img src="/img/dashboard/overview.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay tổng quan tài chính với API key, kích hoạt tài khoản và tạo tài khoản ảo" />
+        </picture>
+        <figcaption>Màn hình Tổng quan cho thấy API key, trạng thái kích hoạt và các bước bắt đầu nhận giao dịch, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+      </figure>
     </div>
   </section>
 

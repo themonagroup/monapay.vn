@@ -1,7 +1,7 @@
 ---
 title: "Thông báo biến động số dư qua Telegram: cấu hình bot MONA Pay"
 description: "Nhận tin tiền vào ACB trong nhóm Telegram của công ty: thêm bot, lấy group_id, sửa mẫu tin với biến {{amount}}, {{transaction_content}}; API /telegram-configs."
-updated: 28/08/2026
+updated: 04/09/2026
 ---
 
 Kênh Telegram của MONA Pay gửi 1 tin nhắn vào nhóm Telegram của anh chị mỗi khi tài khoản ACB (hoặc VA đã chọn) có tiền vào, không cần viết dòng code nào. Thiết lập trong dashboard mục Telegram gồm 3 việc: thêm bot MONA Pay vào nhóm, dán `group_id` của nhóm (thêm `topic_id` nếu nhóm chia chủ đề), bấm "Gửi thử" để thấy tin đầu tiên. Mẫu tin sửa được bằng các biến như `{{amount}}`, `{{transaction_content}}`. Kế toán, chủ shop, nhân viên giao hàng đều thấy tiền về cùng lúc, thay cho việc một người ôm điện thoại canh app ngân hàng rồi nhắn lại cho cả nhóm.
@@ -14,6 +14,15 @@ Kênh Telegram của MONA Pay gửi 1 tin nhắn vào nhóm Telegram của anh c
 4. **Gửi thử**: nút "Gửi thử" có 2 kiểu, tin xác nhận kết nối và tin giao dịch giả lập theo đúng mẫu đã đặt. Thấy tin trong nhóm là xong.
 
 Một tài khoản tạo được nhiều cấu hình: nhóm kế toán nhận mọi giao dịch, nhóm bán hàng chỉ nhận VA của cửa hàng đó.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/telegram.avif" type="image/avif" />
+    <source srcset="/img/dashboard/telegram.webp" type="image/webp" />
+    <img src="/img/dashboard/telegram.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay cấu hình Telegram Bot và nút bắt đầu thiết lập ngay" />
+  </picture>
+  <figcaption>Mục Telegram Bot là nơi bắt đầu nối nhóm và gửi thử thông báo, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## Mẫu tin nhắn
 

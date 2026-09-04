@@ -1,7 +1,7 @@
 ---
 title: "Get started today, no website, no code"
 description: "For restaurant, salon and shop owners: connect a bank account, pick a payment-alert channel, print a QR code. No website, no code, about 10 minutes."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Connect a bank account"
     text: "Create a MONA Pay account at my.monapay.vn, then connect a bank account in your own name using two OTP codes sent to your phone."
@@ -44,7 +44,14 @@ MONA Pay was originally built for developers wiring webhooks and an API into a w
 
 With both of those, the three steps below take about 10 minutes.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/dung-ngay-tong-quan.png (Shop owner checking a payment alert on a phone at the counter) -->*No computer, no website needed, all three steps run on the phone you already carry.*
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/overview.avif" type="image/avif" />
+    <source srcset="/img/dashboard/overview.webp" type="image/webp" />
+    <img src="/img/dashboard/overview.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard overview of bank connection, virtual account and payment alert setup" />
+  </picture>
+  <figcaption>The Overview screen temporarily illustrates where the three setup steps begin, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## 3 core steps
 
@@ -70,5 +77,14 @@ Print a bank QR code for the counter so customers scan and pay the right account
 - [Classes and training centres](/en/docs/dung-ngay/lop-hoc)
 
 The same guide is also available inside the [my.monapay.vn](https://my.monapay.vn) dashboard, under **Guide**, with the same content.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/huong-dan.avif" type="image/avif" />
+    <source srcset="/img/dashboard/huong-dan.webp" type="image/webp" />
+    <img src="/img/dashboard/huong-dan.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard Guide for restaurants, salons, online shops and classes" />
+  </picture>
+  <figcaption>The dashboard Guide provides a separate starting route for each business model, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 Stuck on any step, call **1900 636 648** (Vietnamese-speaking support during business hours).

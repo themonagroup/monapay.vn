@@ -1,7 +1,7 @@
 ---
 title: "Restaurants and drink shops: know the moment a payment lands"
 description: "Restaurants and drink shops using MONA Pay: a Zalo group and a read-aloud counter screen report incoming payments, plus a printed QR at the table. No code needed."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Connect the restaurant's bank account"
     text: "Create a MONA Pay account and connect the owner's bank account with two OTP codes sent to their phone."
@@ -55,6 +55,24 @@ Create a group with the owner and 5 to 7 staff on shift, add the MONA Pay bot fo
 ### 3. Turn on the read-aloud counter screen
 
 Open the payment-alert link from the dashboard on a phone or tablet fixed at the counter, tap once to allow audio, and leave the screen on. It reads new payments aloud without anyone touching it again, useful when the cashier's hands are busy.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/loa-dashboard.avif" type="image/avif" />
+    <source srcset="/img/dashboard/loa-dashboard.webp" type="image/webp" />
+    <img src="/img/dashboard/loa-dashboard.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard Read-aloud alert screen with instructions for a counter phone or tablet" />
+  </picture>
+  <figcaption>The Read-aloud alert section creates a dedicated link for the device at the counter, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
+
+<figure class="doc-phone-shot doc-phone-shot-single">
+  <picture>
+    <source srcset="/img/dashboard/loa-public.avif" type="image/avif" />
+    <source srcset="/img/dashboard/loa-public.webp" type="image/webp" />
+    <img src="/img/dashboard/loa-public.png" width="424" height="1132" loading="lazy" decoding="async" alt="MONA Pay read-aloud counter screen enabled on a phone with the latest milk tea shop transactions" />
+  </picture>
+  <figcaption>The counter screen is enabled, showing the latest 450,000đ payment and recent alerts, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ### 4. Print a QR code for tables or the counter
 

@@ -1,7 +1,7 @@
 ---
 title: "Incoming-payment alerts in a Zalo group"
 description: "Let sales, cashier and accounting teams see incoming payments in a Zalo group through MONA's Gấu Mona bot, with no Zalo OA or code."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 A shop owner no longer has to watch a banking app and relay each payment to the team. When money reaches the selected account or VA, MONA Pay posts one message to a Zalo group so sales, cashier and accounting staff see it immediately. There is no Zalo OA to register, no extra app to install and no code to write.
@@ -23,6 +23,15 @@ Never post login credentials, bank OTPs or passwords in the Zalo group.
 3. Select **Send test**. The connection works when the group receives “🐼 MONA Pay đã nối nhóm này…”.
 
 An account can connect several groups. For example, the sales group may receive one VA only while accounting receives every transaction.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/zalo.avif" type="image/avif" />
+    <source srcset="/img/dashboard/zalo.webp" type="image/webp" />
+    <img src="/img/dashboard/zalo.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard with the test monapay Zalo group and incoming payment, checkout and webhook failure events" />
+  </picture>
+  <figcaption>The test monapay Zalo group is connected with all three alert events selected, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## Message template and variables
 

@@ -1,16 +1,34 @@
 ---
 title: Quick start with MONA Pay in 5 minutes
 description: From sign-up to your first webhook. 6 steps with cURL, PHP and Node samples you can paste and run.
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 To receive real-time notifications for money arriving in an ACB account you need 6 steps: sign up (usable immediately, no approval), log in for a token, create an API key, link your ACB account with an OTP, register a webhook URL, then send a small transfer to check. If you already have an ACB account and a server that can receive webhooks, the hands-on part takes about 5 minutes.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/overview.avif" type="image/avif" />
+    <source srcset="/img/dashboard/overview.webp" type="image/webp" />
+    <img src="/img/dashboard/overview.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard overview with API keys, account activation and virtual account setup" />
+  </picture>
+  <figcaption>The Overview screen gathers the tasks required before the first transaction arrives, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## Before you start
 
 - An ACB bank account in your name or your company's name, plus the phone number registered with ACB (to receive the OTP).
 - An HTTPS URL on your server to receive webhooks, for example `https://your-domain.com/webhook/monapay`. No server yet? Telegram notifications still work, see [Telegram](/en/docs/telegram).
 - A way to call the API: cURL, Postman, or let an AI agent do it with the [ready-made prompt](/en/docs/ai-agent).
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/integrations.avif" type="image/avif" />
+    <source srcset="/img/dashboard/integrations.webp" type="image/webp" />
+    <img src="/img/dashboard/integrations.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard integration guide for WooCommerce, Shopify, webhooks and AI agents" />
+  </picture>
+  <figcaption>The Integration guide routes each platform, custom website or AI agent into the right setup flow, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## Step 1. Sign up
 

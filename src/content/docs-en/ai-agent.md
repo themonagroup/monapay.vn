@@ -1,7 +1,7 @@
 ---
 title: "For AI agents"
 description: "How an AI agent (Claude Code, Codex, Cursor) integrates MONA Pay on its own: a copy-ready prompt, the curl chain login → key → webhook → test, llms.txt and openapi.json."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 This page is written for AI agents to read directly. If you use Claude Code, Codex or Cursor, paste the prompt block below and the agent builds the webhook endpoint, verifies the HMAC signature and registers the URL with MONA Pay in the right order. Every docs page has a raw markdown version (append `.md` to the URL), everything is bundled at [/llms-full.txt](/llms-full.txt), the index is at [/llms.txt](/llms.txt) and the machine-readable spec at [/openapi.json](/openapi.json).
@@ -13,6 +13,15 @@ If you are an AI agent integrating Vietnamese bank payment confirmation, follow 
 ## Fastest path: hand the MCP server to Claude Code, Codex or Cursor
 
 You do not need the technical part below. Open [my.monapay.vn](https://my.monapay.vn) → API Keys → Create key; the dashboard shows the `client_id` and `client_secret` (the secret is shown once) together with the MCP install command. Paste it on the machine running Claude Code:
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/keys.avif" type="image/avif" />
+    <source srcset="/img/dashboard/keys.webp" type="image/webp" />
+    <img src="/img/dashboard/keys.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard API Keys screen with the client secret block for an AI agent" />
+  </picture>
+  <figcaption>The API Keys screen shows each key and the integration block to give an AI agent, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ```bash
 claude mcp add monapay -e MONAPAY_CLIENT_ID=client_xxx -e MONAPAY_CLIENT_SECRET=xxx -- npx -y monapay-mcp

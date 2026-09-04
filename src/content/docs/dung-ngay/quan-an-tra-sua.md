@@ -1,7 +1,7 @@
 ---
 title: "Quán ăn, quán trà sữa dùng MONA Pay: tiền vào là quầy biết ngay"
 description: "Hướng dẫn quán ăn, quán trà sữa dùng MONA Pay: nhóm Zalo báo tiền vào, loa đọc to ở quầy, in QR dán bàn. Không cần hỏi chủ tiền vô chưa, không cần lập trình."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Nối tài khoản ngân hàng của quán"
     text: "Tạo tài khoản MONA Pay, nối tài khoản ngân hàng đứng tên chủ quán bằng hai mã OTP ngân hàng gửi về điện thoại chủ."
@@ -66,7 +66,23 @@ Tạo một nhóm gồm chủ quán và khoảng 5 đến 7 nhân viên đang l�
 
 Mục Loa báo có trong dashboard cho ra một đường link, mở link đó trên điện thoại hoặc máy tính bảng đặt cố định tại quầy, bấm nút bật loa một lần đầu tiên (trình duyệt cần một lần bấm để cho phép phát âm thanh). Sau đó cứ để màn hình sáng ở quầy, tiền vào là tự đọc to, không cần chạm vào máy nữa. Hợp với quán đông khách, thu ngân không có tay rảnh để cầm điện thoại xem liên tục.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/quan-an-buoc-3-loa-bao-co.png (Màn hình Loa báo có tại quầy với nút bật loa và danh sách giao dịch mới nhất) -->*Màn hình đặt tại quầy đọc to số tiền và nội dung mỗi khi có giao dịch mới, không cần ai chạm vào máy.*
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/loa-dashboard.avif" type="image/avif" />
+    <source srcset="/img/dashboard/loa-dashboard.webp" type="image/webp" />
+    <img src="/img/dashboard/loa-dashboard.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay mục Loa báo có với hướng dẫn mở link trên điện thoại hoặc máy tính bảng tại quầy" />
+  </picture>
+  <figcaption>Mục Loa báo có tạo đường link riêng để mở trên thiết bị đặt tại quầy, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
+
+<figure class="doc-phone-shot doc-phone-shot-single">
+  <picture>
+    <source srcset="/img/dashboard/loa-public.avif" type="image/avif" />
+    <source srcset="/img/dashboard/loa-public.webp" type="image/webp" />
+    <img src="/img/dashboard/loa-public.png" width="424" height="1132" loading="lazy" decoding="async" alt="Màn hình điện thoại Loa báo có MONA Pay tại quầy trà sữa đang bật và hiển thị giao dịch mới nhất" />
+  </picture>
+  <figcaption>Loa tại Quầy trà sữa 1 đang bật, hiện giao dịch 450.000đ và danh sách báo có gần nhất, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ### 4. In mã QR dán tại bàn hoặc quầy thu ngân
 

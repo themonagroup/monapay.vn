@@ -1,7 +1,7 @@
 ---
 title: "Incoming-payment email notifications: configuration, recipient verification and logs"
 description: "Configure MONA Pay email notifications, verify recipients with a six-digit code, send a test, inspect delivery logs and manage suppressed addresses through the API, MCP or dashboard."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 MONA Pay sends email when money reaches your account or VA, a webhook delivery fails, or a VA is created. Each configuration accepts up to 10 recipients and becomes active only after every recipient enters a six-digit verification code. You can configure it through the API, MCP or dashboard, send a test, then inspect metadata-only logs; MONA Pay never stores the email body.
@@ -170,6 +170,15 @@ Then call monapay_test_email and monapay_email_logs; finish only when the log st
 
 Open `my.monapay.vn` → **Email** → **Create configuration**, enter a name, add up to 10 addresses, select events and optionally a VA. Each recipient opens the verification message and enters the six-digit code. MONA Pay activates the configuration when every address is verified; click **Send test**, then open **Email logs** to confirm delivery.
 
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/email.avif" type="image/avif" />
+    <source srcset="/img/dashboard/email.webp" type="image/webp" />
+    <img src="/img/dashboard/email.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard screen for creating an incoming-payment email notification configuration" />
+  </picture>
+  <figcaption>The Email screen creates a configuration, adds recipients and selects delivery events, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
+
 ## Supported events
 
 | Event | When it is sent | Notes |
@@ -191,6 +200,15 @@ The message shows the amount, VA or account number, transfer reference, time, tr
 ## Logs, suppressions and bounces
 
 `GET /email-logs` returns the recipient, subject, `message_id`, status, SMTP code, duration, error label and attempt number. MONA Pay **does not store the email body**. Statuses are `sent`, `failed`, `suppressed`, `skipped`; error labels are `OK`, `SMTP_4XX`, `SMTP_5XX`, `TIMEOUT`, `CONNECTION`, `SUPPRESSED`, `RATE_LIMITED`, `TEMPLATE`, `UNVERIFIED`.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/email-logs.avif" type="image/avif" />
+    <source srcset="/img/dashboard/email-logs.webp" type="image/webp" />
+    <img src="/img/dashboard/email-logs.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard email delivery logs with recipient, event, status and SMTP timing" />
+  </picture>
+  <figcaption>Email logs show the recipient, event, status, SMTP code and delivery time for each alert, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 A hard bounce with a 5.x.x code adds the address to suppressions with reason `hard_bounce`; complaints and manual blocks may suppress it too. MONA Pay stops sending and records `SUPPRESSED`. After correcting the address or resolving the cause, inspect `GET /email-suppressions`, then call `DELETE /email-suppressions/{email}` to remove the block at your own responsibility. A 4.x.x delayed bounce is logged only.
 

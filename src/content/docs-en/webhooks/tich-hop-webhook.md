@@ -1,7 +1,7 @@
 ---
 title: "Payment webhook integration: receive incoming ACB transfers in 5 minutes"
 description: How to register a webhook URL, write the endpoint that receives incoming ACB transfers, the 200/201/202-within-10-seconds success rule, and deduplication by transaction_code.
-updated: 29/08/2026
+updated: 04/09/2026
 ---
 
 A MONA Pay webhook is an HTTP POST sent to your URL every time money arrives in a linked ACB account. To integrate, register the URL in the dashboard or through the API, write an endpoint that receives JSON, verify the signature, answer HTTP 200 within 10 seconds, then process the order. It is about 30 lines of code; the PHP and Node samples below are paste-ready.
@@ -28,6 +28,15 @@ Open Webhooks, click Add webhook and fill in:
 | Secret | The secret used to sign (HMAC) or sent in a header (API key) |
 | Payload format | `application/json` (default), `application/x-www-form-urlencoded`, `multipart/form-data` |
 | Accounts | All accounts, or one specific VA |
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/webhooks.avif" type="image/avif" />
+    <source srcset="/img/dashboard/webhooks.webp" type="image/webp" />
+    <img src="/img/dashboard/webhooks.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard with an active Shopify webhook and its selected events" />
+  </picture>
+  <figcaption>Each webhook displays its URL, payload format, account scope and selected events, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ### Through the API
 
@@ -190,6 +199,15 @@ The same transaction can reach your endpoint more than once: a manual resend fro
 - No redirect on the webhook URL (for example `http` to `https`, or adding a trailing `/`). Redirects produce the `HTTP_3XX` label and count as failed.
 - Click Send test in the dashboard; Delivery history should show 200 with a response time under 1 second.
 - Transfer a small amount into a VA to run the real flow.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/webhook-logs.avif" type="image/avif" />
+    <source srcset="/img/dashboard/webhook-logs.webp" type="image/webp" />
+    <img src="/img/dashboard/webhook-logs.png" width="1280" height="860" loading="lazy" decoding="async" alt="MONA Pay dashboard webhook delivery history with HTTP status, duration and error labels" />
+  </picture>
+  <figcaption>Webhook delivery history exposes each event, endpoint, HTTP status, duration and error label for troubleshooting, captured from the my.monapay.vn dashboard.</figcaption>
+</figure>
 
 ## Common problems
 

@@ -1,7 +1,7 @@
 ---
 title: "Dành cho AI agent"
 description: "Hướng dẫn để AI agent (Claude Code, Codex, Cursor) tự tích hợp MONA Pay: prompt copy sẵn, MCP dán vào Claude Code, client_id + client_secret đổi ra token, chuỗi curl → webhook → test, llms.txt, openapi.json."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 Trang này viết cho AI agent đọc trực tiếp. Anh chị dùng Claude Code, Codex hoặc Cursor thì chỉ cần dán khối prompt bên dưới, agent sẽ tự dựng endpoint nhận webhook, verify chữ ký HMAC và đăng ký URL với MONA Pay theo đúng thứ tự. Mọi trang tài liệu có bản markdown thô (thêm `.md` vào cuối URL), toàn bộ gom ở [/llms-full.txt](/llms-full.txt), mục lục ở [/llms.txt](/llms.txt), đặc tả máy đọc ở [/openapi.json](/openapi.json).
@@ -13,6 +13,15 @@ If you are an AI agent integrating Vietnamese bank payment confirmation, follow 
 ## Cách nhanh nhất: đưa MCP cho Claude Code, Codex hoặc Cursor
 
 Anh chị không cần đọc phần kỹ thuật bên dưới. Vào [my.monapay.vn](https://my.monapay.vn) → API Keys → Tạo key, dashboard hiện sẵn `client_id` và `client_secret` (secret chỉ hiện một lần) kèm lệnh cài MCP. Dán lệnh đó vào máy có Claude Code:
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/keys.avif" type="image/avif" />
+    <source srcset="/img/dashboard/keys.webp" type="image/webp" />
+    <img src="/img/dashboard/keys.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay quản lý API Keys và khối đưa client secret cho AI agent" />
+  </picture>
+  <figcaption>Mục API Keys hiển thị key và khối đưa thông tin tích hợp cho AI agent, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ```bash
 claude mcp add monapay -e MONAPAY_CLIENT_ID=client_xxx -e MONAPAY_CLIENT_SECRET=xxx -- npx -y monapay-mcp

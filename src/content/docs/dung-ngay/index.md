@@ -1,7 +1,7 @@
 ---
 title: "Dùng ngay, không cần web, không cần lập trình"
 description: "Hướng dẫn cho chủ quán, chủ tiệm: nối ngân hàng, chọn kênh báo có tiền vào, in QR để quầy. Không cần web, không cần biết lập trình, khoảng 10 phút."
-updated: 03/09/2026
+updated: 04/09/2026
 howto:
   - name: "Nối tài khoản ngân hàng"
     text: "Đăng ký tài khoản MONA Pay tại my.monapay.vn, sau đó nối tài khoản ngân hàng đứng tên chính mình bằng hai mã OTP ngân hàng gửi về điện thoại. Không cần đưa mật khẩu ngân hàng cho ai."
@@ -52,7 +52,14 @@ Chỉ cần hai thứ, không cần gì thêm:
 
 Có đủ hai thứ trên, làm xong ba bước dưới đây mất khoảng 10 phút.
 
-<!-- ảnh chụp sau: /img/docs/dung-ngay/dung-ngay-tong-quan.png (Chủ quán cầm điện thoại xem thông báo tiền vào ngay tại quầy) -->*Không cần máy tính, không cần website, làm hết ba bước trên điện thoại đang cầm.*
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/overview.avif" type="image/avif" />
+    <source srcset="/img/dashboard/overview.webp" type="image/webp" />
+    <img src="/img/dashboard/overview.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay tổng quan các bước nối ngân hàng, tạo tài khoản ảo và nhận báo có" />
+  </picture>
+  <figcaption>Tạm dùng màn hình Tổng quan để minh họa nơi bắt đầu ba bước, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## 3 việc cốt lõi
 
@@ -89,5 +96,14 @@ Ba việc trên dùng chung cho mọi ngành, nhưng mỗi ngành có vài mẹo
 - [Lớp học, trung tâm](/docs/dung-ngay/lop-hoc): thu học phí tự xác nhận, biên lai gửi email, nhóm Zalo giáo vụ.
 
 Hướng dẫn ở bốn trang trên và trang này cũng xem được ngay trong dashboard [my.monapay.vn](https://my.monapay.vn), mục **Hướng dẫn**, cùng một nội dung, khỏi phải mở lại monapay.vn khi đang thao tác trong dashboard.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/huong-dan.avif" type="image/avif" />
+    <source srcset="/img/dashboard/huong-dan.webp" type="image/webp" />
+    <img src="/img/dashboard/huong-dan.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay mục Hướng dẫn dùng ngay cho quán, tiệm, bán hàng online và lớp học" />
+  </picture>
+  <figcaption>Mục Hướng dẫn trong dashboard chia sẵn lối đi theo từng mô hình kinh doanh, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 Kẹt chỗ nào trong lúc làm theo, gọi tổng đài **1900 636 648**, có người trực nghe máy trong giờ làm việc và ngồi cùng anh chị tới khi ba bước trên chạy được.

@@ -1,7 +1,7 @@
 ---
 title: "Tích hợp webhook thanh toán: nhận tiền vào ACB trong 5 phút"
 description: Cách khai báo URL webhook, viết endpoint nhận thông báo tiền vào ACB, điều kiện thành công 200/201/202 trong 10 giây, chống trùng bằng transaction_code.
-updated: 28/08/2026
+updated: 04/09/2026
 ---
 
 Webhook MONA Pay là một request HTTP POST gửi tới URL của anh chị mỗi khi có tiền vào tài khoản ACB đã nối. Để tích hợp, anh chị khai báo URL trong dashboard hoặc qua API, viết một endpoint nhận JSON, kiểm chữ ký, trả HTTP 200 trong 10 giây rồi xử lý đơn hàng. Phần này mất khoảng 30 dòng code, có mẫu PHP và Node dán vào dùng ngay.
@@ -28,6 +28,15 @@ Vào mục Webhooks, bấm Thêm webhook, điền:
 | Secret | Chuỗi bí mật dùng để ký (HMAC) hoặc gửi kèm header (API key) |
 | Định dạng gửi | `application/json` (mặc định), `application/x-www-form-urlencoded`, `multipart/form-data` |
 | Tài khoản áp dụng | Mọi tài khoản, hoặc chọn một VA cụ thể |
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/webhooks.avif" type="image/avif" />
+    <source srcset="/img/dashboard/webhooks.webp" type="image/webp" />
+    <img src="/img/dashboard/webhooks.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay quản lý webhook Shopify đang hoạt động và các sự kiện đã chọn" />
+  </picture>
+  <figcaption>Mỗi webhook hiện URL, định dạng, tài khoản và sự kiện đang nhận, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ### Qua API
 
@@ -190,6 +199,15 @@ Cùng một giao dịch có thể tới endpoint của anh chị nhiều lần: 
 - Không có redirect ở URL webhook (ví dụ từ `http` sang `https` hoặc thêm dấu `/` cuối). Redirect ra nhãn `HTTP_3XX` và tính là thất bại.
 - Bấm Gửi thử trong dashboard, xem Lịch sử gửi có mã 200 và thời gian phản hồi dưới 1 giây.
 - Chuyển thử một khoản nhỏ vào VA để chạy luồng thật.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/webhook-logs.avif" type="image/avif" />
+    <source srcset="/img/dashboard/webhook-logs.webp" type="image/webp" />
+    <img src="/img/dashboard/webhook-logs.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay hiển thị lịch sử webhook với mã HTTP, thời lượng và nhãn lỗi" />
+  </picture>
+  <figcaption>Lịch sử webhook cho thấy từng sự kiện, endpoint, mã HTTP, thời lượng và nhãn lỗi để xử lý, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## Lỗi thường gặp
 

@@ -1,7 +1,7 @@
 ---
 title: "Thông báo tiền vào qua email: cấu hình, xác minh người nhận, log"
 description: "Cấu hình MONA Pay gửi email khi có tiền vào, xác minh người nhận bằng mã 6 số, gửi thử, đọc log và xử lý địa chỉ bị suppression qua API, MCP hoặc dashboard."
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 MONA Pay gửi email ngay khi tài khoản hoặc VA của anh chị có tiền vào, webhook gửi lỗi hoặc VA mới được tạo. Mỗi cấu hình nhận tối đa 10 địa chỉ và chỉ hoạt động sau khi mọi người nhận nhập đúng mã xác minh 6 số. Anh chị có thể tạo qua API, MCP hoặc dashboard, gửi thử rồi đọc log chỉ chứa metadata, không lưu nội dung mail.
@@ -170,6 +170,15 @@ Xác minh xong gọi monapay_test_email và monapay_email_logs; chỉ kết lu�
 
 Vào `my.monapay.vn` → **Email** → **Tạo cấu hình**, đặt tên, thêm tối đa 10 địa chỉ, chọn sự kiện và VA nếu cần. Mỗi người nhận mở mail lấy mã 6 số rồi nhập vào dashboard. Khi mọi địa chỉ đã xác minh, MONA Pay tự bật cấu hình; bấm **Gửi thử** và mở mục **Log email** để kiểm tra.
 
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/email.avif" type="image/avif" />
+    <source srcset="/img/dashboard/email.webp" type="image/webp" />
+    <img src="/img/dashboard/email.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay tạo cấu hình thông báo tiền vào qua email" />
+  </picture>
+  <figcaption>Mục Email cho phép tạo cấu hình, thêm người nhận và chọn sự kiện cần gửi, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
+
 ## Sự kiện có thể nhận
 
 | Sự kiện | Khi nào gửi | Ghi chú |
@@ -191,6 +200,15 @@ Nội dung hiển thị số tiền, VA hoặc số tài khoản, nội dung chu
 ## Log, suppression và bounce
 
 `GET /email-logs` trả người nhận, chủ đề, `message_id`, trạng thái, mã SMTP, thời gian, nhãn lỗi và số lần thử. MONA Pay **không lưu nội dung email**. Trạng thái gồm `sent`, `failed`, `suppressed`, `skipped`; nhãn lỗi gồm `OK`, `SMTP_4XX`, `SMTP_5XX`, `TIMEOUT`, `CONNECTION`, `SUPPRESSED`, `RATE_LIMITED`, `TEMPLATE`, `UNVERIFIED`.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/email-logs.avif" type="image/avif" />
+    <source srcset="/img/dashboard/email-logs.webp" type="image/webp" />
+    <img src="/img/dashboard/email-logs.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay hiển thị log email đã gửi cùng trạng thái và thời gian phản hồi SMTP" />
+  </picture>
+  <figcaption>Log email ghi người nhận, sự kiện, trạng thái, mã SMTP và thời gian gửi để kiểm tra từng lần báo, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 Bounce cứng với mã 5.x.x đưa địa chỉ vào suppression với lý do `hard_bounce`; khiếu nại hoặc thao tác tắt tay cũng có thể chặn địa chỉ. MONA Pay ngừng gửi và ghi log `SUPPRESSED`. Sau khi sửa địa chỉ hoặc xử lý nguyên nhân, anh chị xem `GET /email-suppressions`, rồi gọi `DELETE /email-suppressions/{email}` để tự gỡ chặn. Bounce 4.x.x chỉ được ghi log để theo dõi.
 

@@ -1,16 +1,34 @@
 ---
 title: Bắt đầu nhanh với MONA Pay trong 5 phút
 description: Từ đăng ký tài khoản tới nhận webhook đầu tiên bằng tiền thật. 6 bước, có code cURL, PHP, Node để dán vào dùng ngay.
-updated: 03/09/2026
+updated: 04/09/2026
 ---
 
 Để nhận thông báo tiền vào tài khoản ACB theo thời gian thực, anh chị cần 6 bước: đăng ký tài khoản (dùng ngay, không cần duyệt), đăng nhập lấy token, tạo API key, nối tài khoản ACB bằng OTP, khai báo URL webhook, rồi chuyển một khoản nhỏ để kiểm tra. Nếu đã có tài khoản ACB và một máy chủ nhận webhook, phần thao tác mất khoảng 5 phút.
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/overview.avif" type="image/avif" />
+    <source srcset="/img/dashboard/overview.webp" type="image/webp" />
+    <img src="/img/dashboard/overview.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay tổng quan tài chính với API key, kích hoạt tài khoản và tạo tài khoản ảo" />
+  </picture>
+  <figcaption>Màn hình Tổng quan gom các việc cần hoàn tất trước khi nhận giao dịch đầu tiên, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## Chuẩn bị
 
 - Tài khoản ngân hàng ACB đứng tên anh chị hoặc doanh nghiệp, kèm số điện thoại đã đăng ký với ACB (để nhận OTP).
 - Một URL HTTPS trên máy chủ của anh chị để nhận webhook, ví dụ `https://ten-mien-cua-anh-chi.vn/webhook/monapay`. Chưa có máy chủ thì vẫn dùng được thông báo Telegram, xem trang [Telegram](/docs/telegram).
 - Công cụ gọi API: cURL, Postman, hoặc để AI agent gọi giùm theo [prompt có sẵn](/docs/ai-agent).
+
+<figure class="photo">
+  <picture>
+    <source srcset="/img/dashboard/integrations.avif" type="image/avif" />
+    <source srcset="/img/dashboard/integrations.webp" type="image/webp" />
+    <img src="/img/dashboard/integrations.png" width="1280" height="860" loading="lazy" decoding="async" alt="Dashboard MONA Pay hướng dẫn tích hợp cho WooCommerce, Shopify, webhook và AI agent" />
+  </picture>
+  <figcaption>Mục Hướng dẫn tích hợp giúp chọn đúng luồng cho nền tảng, website riêng hoặc AI agent, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
+</figure>
 
 ## Bước 1. Đăng ký tài khoản
 
