@@ -121,9 +121,62 @@ const steps = [
   { title: 'Đơn WooCommerce tự chuyển sang đã thanh toán', body: 'Đơn đổi trạng thái, khách nhận email xác nhận, kho nhận lệnh đóng gói. Toàn bộ chuyện này diễn ra lúc 2 giờ sáng cũng y như 2 giờ chiều, không cần ai mở app ngân hàng ra dò.' },
 ];
 
+const wooFlow = [
+  {
+    title: 'Cài plugin, nhập key và bật chế độ thử',
+    body: 'Tải bản mới nhất, cài file zip trong WordPress rồi nhập Client ID, Client Secret. Lúc chạy thử, bật Chế độ thử và lưu cấu hình.',
+    image: '/img/woo/woo-settings',
+    width: 1265,
+    height: 2616,
+    portrait: true,
+    alt: 'Ảnh cài đặt plugin WooCommerce MONA Pay với Client ID, Client Secret và chế độ thử sandbox',
+    caption: 'Cài đặt plugin với Client ID, Client Secret và Chế độ thử đang bật; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.',
+  },
+  {
+    title: 'Khách chọn MONA Pay ở checkout',
+    body: 'Khách điền thông tin nhận hàng, kiểm tra tổng tiền 900.000đ rồi chọn MONA Pay làm phương thức thanh toán trước khi đặt hàng.',
+    image: '/img/woo/woo-checkout',
+    width: 1265,
+    height: 1978,
+    portrait: true,
+    alt: 'Ảnh plugin WooCommerce MONA Pay được chọn tại trang checkout của đơn hàng 900.000 đồng',
+    caption: 'MONA Pay xuất hiện ngay trong các phương thức thanh toán ở checkout; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.',
+  },
+  {
+    title: 'Chuyển sang trang thanh toán, quét QR',
+    body: 'Sau khi đặt hàng, khách được chuyển sang pay.monapay.vn. Trang hiển thị đúng 900.000đ, mã đơn DH20, VietQR và thời gian còn lại.',
+    image: '/img/woo/woo-pay-page',
+    width: 1280,
+    height: 900,
+    portrait: false,
+    alt: 'Ảnh plugin WooCommerce MONA Pay chuyển đơn 900.000 đồng sang trang pay.monapay.vn với mã VietQR',
+    caption: 'Trang thanh toán hiển thị đúng số tiền, nội dung DH20 và mã VietQR; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.',
+  },
+  {
+    title: 'Tiền vào, trang cảm ơn báo đã thanh toán',
+    body: 'MONA Pay nhận giao dịch và xác nhận về WooCommerce. Khách trở lại trang Đơn hàng đã nhận, thấy trạng thái Đã thanh toán cùng đúng số tiền.',
+    image: '/img/woo/woo-thankyou',
+    width: 1265,
+    height: 1640,
+    portrait: true,
+    alt: 'Ảnh plugin WooCommerce MONA Pay báo trạng thái Đã thanh toán trên trang Đơn hàng đã nhận',
+    caption: 'Trang cảm ơn ghi Trạng thái: Đã thanh toán và vẫn có dải nhận diện sandbox; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.',
+  },
+  {
+    title: 'Đơn trong admin tự sang Đang xử lý',
+    body: 'Ở WooCommerce Admin, đơn số 20 tự chuyển sang Đang xử lý. Shop có thể đóng gói ngay mà không cần mở app ngân hàng để đối chiếu tay.',
+    image: '/img/woo/woo-admin-order',
+    width: 1280,
+    height: 900,
+    portrait: false,
+    alt: 'Ảnh plugin WooCommerce MONA Pay tự chuyển đơn số 20 trong admin sang trạng thái Đang xử lý',
+    caption: 'Đơn số 20 trong WooCommerce Admin đã sẵn sàng cho khâu xử lý; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.',
+  },
+];
+
 const faq = [
   { q: 'Tiền của shop có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB của anh chị. MONA Pay chỉ nhận thông báo từ ngân hàng rằng có giao dịch vào, rồi báo lại cho web. Không có ví trung gian, không có chuyện rút tiền về sau, không có phí trên từng giao dịch kiểu cổng thẻ.' },
-  { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Có. Plugin "MONA Pay for WooCommerce" đang ở bản 0.1.0, tải file zip tại https://github.com/themonagroup/woocommerce-monapay/releases rồi cài trong WordPress (Plugins → Thêm mới → Tải plugin lên); bản nộp kho wordpress.org đang chờ duyệt. Khách làm web tại MONA thì đội kỹ thuật tụi em cài sẵn khi bàn giao; dev của anh chị cũng có thể dán đoạn PHP mẫu trên trang này nếu không muốn cài plugin.' },
+  { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Có. Plugin "MONA Pay for WooCommerce" hiện ở bản 0.3.2, tải file zip mới nhất tại https://github.com/themonagroup/woocommerce-monapay/releases/latest rồi cài trong WordPress (Plugins → Thêm mới → Tải plugin lên); bản nộp kho wordpress.org đang chờ duyệt. Khách làm web tại MONA thì đội kỹ thuật tụi em cài sẵn khi bàn giao; dev của anh chị cũng có thể dán đoạn PHP mẫu trên trang này nếu không muốn cài plugin.' },
   { q: 'Khách chuyển thiếu tiền hoặc gõ sai nội dung thì sao?', a: 'Đoạn code mẫu chỉ xác nhận khi số tiền nhận được lớn hơn hoặc bằng tổng đơn và nội dung có đúng mã đơn. Trường hợp còn lại, giao dịch vẫn nằm trong dashboard MONA Pay với đầy đủ số tiền, nội dung, thời gian để nhân viên đối chiếu tay, không mất dấu.' },
   { q: 'Web bị sập đúng lúc khách chuyển thì có mất giao dịch không?', a: 'Không mất. MONA Pay ghi lại từng lần gửi webhook kèm kết quả (mã HTTP, thời gian phản hồi, nhãn lỗi). Web trả về 200/201/202 trong 10 giây mới tính thành công; lỗi thì anh chị vào Webhooks, mục Lịch sử, bấm gửi lại. Lịch gửi lại tự động tối đa 7 lần đang được triển khai và sẽ công bố tại trang tài liệu khi lên.' },
   { q: 'Nhiều khách chuyển cùng số tiền cùng lúc, web có xác nhận nhầm đơn không?', a: 'Không, vì web khớp đơn theo mã đơn trong nội dung chuyển khoản (DH1234), không khớp theo số tiền. Muốn chắc hơn nữa, anh chị cấp mỗi đơn 1 tài khoản ảo (VA) riêng: tiền vào VA nào là biết đơn nào, kể cả khi khách quên gõ nội dung.' },
@@ -139,6 +192,17 @@ const jsonld = [
   { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + '/cong-thanh-toan-woocommerce', inLanguage: 'vi',
     about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
     publisher: { '@id': SITE.url + '/#organization' } },
+  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Cài xong là chạy: luồng thật trên WooCommerce',
+    description: 'Năm bước từ cài plugin WooCommerce MONA Pay tới khi đơn tự chuyển sang Đang xử lý.',
+    step: wooFlow.map((item, index) => ({
+      '@type': 'HowToStep',
+      position: index + 1,
+      name: item.title,
+      text: item.body,
+      image: SITE.url + item.image + '.png',
+      url: SITE.url + '/cong-thanh-toan-woocommerce#woo-step-' + (index + 1),
+    })),
+  },
 ];
 ---
 <Base title={title} description={description} path="/cong-thanh-toan-woocommerce" jsonld={jsonld}>
@@ -154,6 +218,37 @@ const jsonld = [
         <a class="btn btn-outline" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
         <a class="btn btn-outline" href="/docs/webhooks/tich-hop-webhook">Xem tài liệu webhook</a>
       </div>
+    </div>
+  </section>
+
+  <section class="section-alt woo-live">
+    <div class="wrap">
+      <span class="eyebrow">Ảnh thật · 5 bước</span>
+      <h2>Cài xong là chạy: luồng thật trên WooCommerce</h2>
+      <p class="lead">Từ lúc shop nhập key tới khi đơn số 20 tự đổi trạng thái, đây là luồng plugin đang chạy trên cửa hàng demo của MONA Pay.</p>
+      <div class="callout ok woo-sandbox-note">
+        <p><strong>Chưa nối ngân hàng vẫn thử được:</strong> bật Chế độ thử (sandbox) trong cài đặt plugin.</p>
+      </div>
+
+      <ol class="woo-flow">
+        {wooFlow.map((item, index) => (
+          <li id={`woo-step-${index + 1}`} class:list={['woo-live-step', item.portrait && 'woo-live-step-portrait']}>
+            <div class="woo-live-copy">
+              <span class="woo-live-number">{String(index + 1).padStart(2, '0')}</span>
+              <h3>{item.title}</h3>
+              <p>{item.body}</p>
+            </div>
+            <figure class="woo-shot">
+              <picture>
+                <source srcset={`${item.image}.avif`} type="image/avif" />
+                <source srcset={`${item.image}.webp`} type="image/webp" />
+                <img src={`${item.image}.png`} width={item.width} height={item.height} loading="lazy" decoding="async" alt={item.alt} />
+              </picture>
+              <figcaption>{item.caption}</figcaption>
+            </figure>
+          </li>
+        ))}
+      </ol>
     </div>
   </section>
 
@@ -205,7 +300,7 @@ const jsonld = [
           <span class="badge">Cách 3</span>
           <h3>Web làm nơi khác: dev dán đoạn PHP mẫu, khoảng 30 phút</h3>
           <p>Đoạn code bên dưới tạo 1 địa chỉ nhận webhook ngay trong WordPress, kiểm chữ ký HMAC, chống gửi trùng, tìm đơn theo mã trong nội dung chuyển khoản rồi gọi <code>payment_complete()</code> của WooCommerce. Dán vào thư mục <code>mu-plugins</code>, khai báo secret trong <code>wp-config.php</code>, vào dashboard MONA Pay dán địa chỉ webhook là chạy.</p>
-          <p>Plugin cài 1 nút đã có: <a href="https://github.com/themonagroup/woocommerce-monapay/releases" rel="noopener">tải zip bản mới nhất trên GitHub</a>, cài trong WordPress rồi dán Client ID, Client Secret và đầu số VA. Bản trên kho wordpress.org đang chờ duyệt, lên là tụi em công bố tại đây và trong dashboard.</p>
+          <p>Plugin cài 1 nút đã có: <a href="https://github.com/themonagroup/woocommerce-monapay/releases/latest" rel="noopener">tải zip bản mới nhất trên GitHub</a>, cài trong WordPress rồi dán Client ID, Client Secret và đầu số VA. Bản trên kho wordpress.org đang chờ duyệt, lên là tụi em công bố tại đây và trong dashboard.</p>
         </div>
       </div>
 
@@ -253,4 +348,27 @@ const jsonld = [
 <style>
   @media (max-width: 767px) { .hb { display: none; } }
   .hero h1 { font-size: clamp(1.9rem, 4vw, 2.9rem); }
+  .woo-live { overflow: hidden; }
+  .woo-live h2 { font-size: clamp(1.9rem, 3.7vw, 2.8rem); }
+  .woo-sandbox-note { max-width: 760px; margin-top: 1.5rem; }
+  .woo-flow { list-style: none; padding: 0; margin: 2.5rem 0 0; }
+  .woo-live-step { display: grid; grid-template-columns: minmax(230px, .72fr) minmax(0, 1.28fr); gap: clamp(2rem, 6vw, 6rem); align-items: start; padding: 3.5rem 0; border-top: 1px solid var(--border); }
+  .woo-live-step:last-child { padding-bottom: 0; }
+  .woo-live-step:nth-child(even) .woo-live-copy { grid-column: 2; grid-row: 1; }
+  .woo-live-step:nth-child(even) .woo-shot { grid-column: 1; grid-row: 1; }
+  .woo-live-copy { position: sticky; top: 110px; }
+  .woo-live-copy h3 { margin: .25rem 0 .55rem; font-size: clamp(1.35rem, 2.5vw, 2rem); }
+  .woo-live-copy p { margin: 0; color: var(--text-soft); }
+  .woo-live-number { display: block; color: var(--primary); font: 800 1rem/1 var(--mono); letter-spacing: .08em; }
+  .woo-shot { margin: 0; min-width: 0; }
+  .woo-shot picture, .woo-shot img { display: block; width: 100%; }
+  .woo-shot img { height: auto; border: 1px solid var(--border); border-radius: var(--radius); box-shadow: var(--shadow-lg); }
+  .woo-shot figcaption { margin-top: .75rem; color: var(--text-soft); font-size: .9rem; line-height: 1.6; }
+  .woo-live-step-portrait .woo-shot { max-width: 650px; }
+  @media (max-width: 767px) {
+    .woo-live-step { grid-template-columns: 1fr; gap: 1.4rem; padding: 2.7rem 0; }
+    .woo-live-step:nth-child(even) .woo-live-copy, .woo-live-step:nth-child(even) .woo-shot { grid-column: 1; grid-row: auto; }
+    .woo-live-copy { position: static; }
+    .woo-live-step-portrait .woo-shot { max-width: none; }
+  }
 </style>

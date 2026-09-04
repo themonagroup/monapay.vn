@@ -30,6 +30,31 @@ updated: 04/09/2026
   <figcaption>Mục Hướng dẫn tích hợp giúp chọn đúng luồng cho nền tảng, website riêng hoặc AI agent, ảnh chụp từ dashboard my.monapay.vn.</figcaption>
 </figure>
 
+## Dùng WooCommerce: cài plugin
+
+Tải [plugin MONA Pay for WooCommerce mới nhất](https://github.com/themonagroup/woocommerce-monapay/releases/latest), cài file zip tại **Plugins → Thêm mới → Tải plugin lên**, rồi vào **WooCommerce → Cài đặt → Thanh toán → MONA Pay VietQR** để nhập Client ID và Client Secret.
+
+Chưa nối ngân hàng vẫn thử được: bật **Chế độ thử (sandbox)** trong cài đặt plugin. Sau khi lưu, tạo một đơn và chọn MONA Pay tại checkout để chạy hết luồng thử.
+
+<div class="doc-shot-pair">
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/woo/woo-settings.avif" type="image/avif" />
+      <source srcset="/img/woo/woo-settings.webp" type="image/webp" />
+      <img src="/img/woo/woo-settings.png" width="1265" height="2616" loading="lazy" decoding="async" alt="Ảnh cài đặt plugin WooCommerce MONA Pay với Client ID, Client Secret và chế độ thử sandbox" />
+    </picture>
+    <figcaption>Màn hình nhập key và bật sandbox; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.</figcaption>
+  </figure>
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/woo/woo-checkout.avif" type="image/avif" />
+      <source srcset="/img/woo/woo-checkout.webp" type="image/webp" />
+      <img src="/img/woo/woo-checkout.png" width="1265" height="1978" loading="lazy" decoding="async" alt="Ảnh plugin WooCommerce MONA Pay được chọn tại trang checkout của đơn hàng 900.000 đồng" />
+    </picture>
+    <figcaption>Khách chọn MONA Pay tại checkout; chụp trên cửa hàng demo WooCommerce 11.1, chế độ thử.</figcaption>
+  </figure>
+</div>
+
 ## Bước 1. Đăng ký tài khoản
 
 Vào `https://my.monapay.vn/auth`, chọn tab Đăng ký, điền tên đăng nhập, mật khẩu, tên và email. Anh chị cũng gọi được API:

@@ -30,6 +30,31 @@ To receive real-time notifications for money arriving in an ACB account you need
   <figcaption>The Integration guide routes each platform, custom website or AI agent into the right setup flow, captured from the my.monapay.vn dashboard.</figcaption>
 </figure>
 
+## Using WooCommerce: install the plugin
+
+Download the [latest MONA Pay for WooCommerce plugin](https://github.com/themonagroup/woocommerce-monapay/releases/latest), upload the zip under **Plugins → Add New Plugin → Upload Plugin**, then open **WooCommerce → Settings → Payments → MONA Pay VietQR** and enter the Client ID and Client Secret.
+
+The bank connection can wait while testing. Turn on **Test mode (sandbox)** in the plugin settings, save, then place an order and select MONA Pay at checkout to run the complete test flow.
+
+<div class="doc-shot-pair">
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/woo/woo-settings.avif" type="image/avif" />
+      <source srcset="/img/woo/woo-settings.webp" type="image/webp" />
+      <img src="/img/woo/woo-settings.png" width="1265" height="2616" loading="lazy" decoding="async" alt="Ảnh cài đặt plugin WooCommerce MONA Pay với Client ID, Client Secret và chế độ thử sandbox" />
+    </picture>
+    <figcaption>The key fields and sandbox setting; captured on a WooCommerce 11.1 demo store in test mode.</figcaption>
+  </figure>
+  <figure class="doc-phone-shot">
+    <picture>
+      <source srcset="/img/woo/woo-checkout.avif" type="image/avif" />
+      <source srcset="/img/woo/woo-checkout.webp" type="image/webp" />
+      <img src="/img/woo/woo-checkout.png" width="1265" height="1978" loading="lazy" decoding="async" alt="Ảnh plugin WooCommerce MONA Pay được chọn tại trang checkout của đơn hàng 900.000 đồng" />
+    </picture>
+    <figcaption>MONA Pay selected at checkout; captured on a WooCommerce 11.1 demo store in test mode.</figcaption>
+  </figure>
+</div>
+
 ## Step 1. Sign up
 
 Go to `https://my.monapay.vn/auth`, open the Sign up tab and fill in a username, password, name and email. You can also call the API:
