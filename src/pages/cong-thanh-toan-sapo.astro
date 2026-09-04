@@ -6,8 +6,8 @@ import Steps from '../components/Steps.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'Cổng thanh toán Sapo: nhận chuyển khoản VietQR, tự xác nhận đơn';
-const description = 'Cổng thanh toán Sapo với MONA Pay: khách quét VietQR động đúng số tiền, tiền vào thẳng tài khoản ACB, Telegram báo trong vài giây, đơn tự xác nhận. Miễn phí.';
+const title = 'Sapo chuyển khoản QR tự động xác nhận đơn, báo có | MONA Pay';
+const description = 'Sapo chuyển khoản QR tự động xác nhận đơn. Sapo báo có chuyển khoản qua webhook, 0% phí, miễn phí 500 giao dịch/tháng; thử trước khi nối ngân hàng với MONA Pay.';
 
 const stepsNoi = [
   { title: 'Nối ACB vào MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng ngay. Wizard 4 bước, 2 lần OTP do ACB gửi. Xong là tiền vào ACB có thông báo về MONA Pay.' },
@@ -21,10 +21,11 @@ const stepsTam = [
   { title: 'Telegram báo, nhân viên đổi trạng thái đơn', body: 'Tin về nhóm trong vài giây với số tiền, nội dung, thời gian. Không ai phải canh app ngân hàng.' },
 ];
 const faq = [
+  { q: 'Cổng thanh toán Sapo có mất phí không?', a: `MONA Pay thu 0% trên giá trị chuyển khoản và ${PRICE_LINE}. Nếu shop cần đội MONA viết lớp nối riêng với Sapo thì chi phí phần mềm được báo riêng.` },
+  { q: 'Chưa nối ngân hàng có thử thanh toán QR Sapo Web được không?', a: 'Được. Anh chị tạo tài khoản, thử tạo VietQR, gửi webhook và kiểm tra luồng xử lý trước. Khi phần nhận webhook chạy đúng mới nối tài khoản ngân hàng để nhận giao dịch thật.' },
   { q: 'Sapo có nhận chuyển khoản tự xác nhận được không?', a: 'Được. Đường đầy đủ dùng lớp nối nhận webhook MONA Pay rồi gọi API Sapo đổi trạng thái đơn. Đường tạm không cần code: VietQR động cộng Telegram báo tiền vào, nhân viên đổi trạng thái tay.' },
   { q: 'Ai viết lớp nối Sapo?', a: 'Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs. MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án.' },
   { q: 'Tiền có qua Sapo hay MONA Pay không?', a: 'Không. Tiền vào thẳng tài khoản ACB của anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về.' },
-  { q: 'Phí bao nhiêu?', a: `MONA Pay ${PRICE_LINE}. Không phần trăm, không phí rút. Để đối chiếu, PayPal Việt Nam thu 4,40% cộng phí cố định và 60.000đ mỗi lần rút về ngân hàng trong nước (biểu phí công bố, kiểm 28/08/2026).` },
   { q: 'Cần tài khoản ngân hàng nào?', a: 'Tài khoản thanh toán ACB đứng tên anh chị và số điện thoại nhận OTP. Các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>.' },
 ];
 const jsonld = [
@@ -39,9 +40,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">Sapo · chuyển khoản ACB</span>
-      <h1>Cổng thanh toán Sapo:<br class="hb" /> <span class="accent">khách quét VietQR, đơn tự xác nhận</span></h1>
+      <h1><span class="accent">Sapo chuyển khoản QR</span><br class="hb" /> tự động xác nhận đơn</h1>
       <div class="answer-first">
-        <p>Cổng thanh toán Sapo với MONA Pay làm việc như sau: mỗi đơn một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và lớp nối đánh dấu đơn trên Sapo đã thanh toán. Không phần trăm, miễn phí 500 giao dịch mỗi tháng, tiền không qua ai.</p>
+        <p>Sapo chuyển khoản QR tự động xác nhận đơn bằng cách nhận webhook báo có từ MONA Pay qua một lớp nối. Mỗi đơn có VietQR đúng số tiền; shop được thử luồng trước khi nối ngân hàng, trả 0% phí giao dịch và dùng {PRICE_LINE}.</p>
       </div>
       <p class="lead">{SITE.entity}</p>
       <div class="btn-row">
@@ -54,7 +55,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Chuyện shop Sapo hay gặp</span>
-      <h2>Bán trên Sapo, khâu tiền về<br class="br-d" /> vẫn phải ngồi đối chiếu</h2>
+      <h2>Sapo báo có chuyển khoản để xử lý đơn ra sao?</h2>
       <p class="lead">Khách MONA dùng Sapo để quản lý bán hàng nhiều kênh, nhưng khâu xác nhận chuyển khoản vẫn là người mở app ngân hàng, dò số tiền, dò nội dung. Ngày 30 đơn mất hơn một tiếng, đơn tối nằm chờ tới sáng, nhân viên muốn tự xác nhận thì phải được xem tài khoản ngân hàng của chủ.</p>
       <div class="grid grid-3">
         <div class="card"><div class="icon">1</div><h3>Đối chiếu tay từng đơn</h3><p>Ảnh biên lai qua chat, soi số tiền, soi giờ. Nhiều khách chuyển cùng số tiền là đoán.</p></div>
@@ -67,7 +68,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Đường đầy đủ</span>
-      <h2>Lớp nối Sapo với MONA Pay<br class="br-d" /> tự đổi trạng thái đơn</h2>
+      <h2>Cổng thanh toán Sapo tự xác nhận đơn qua lớp nối</h2>
       <p class="lead">MONA Pay chưa có ứng dụng trên kho ứng dụng Sapo. Đơn tự đổi trạng thái nhờ một lớp nối nhỏ: nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Sapo. Đội MONA viết cho khách hoặc dev của anh chị tự viết.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
     </div>
@@ -76,7 +77,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Đường tạm, không cần code</span>
-      <h2>Chưa có dev thì dùng VietQR động<br class="br-d" /> cộng Telegram báo tiền vào</h2>
+      <h2>Thanh toán QR Sapo Web khi chưa có dev</h2>
       <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
     </div>
   </section>
@@ -84,7 +85,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">So sánh</span>
-      <h2>Ba cách nhận tiền cho shop Sapo</h2>
+      <h2>Ba cách nhận tiền qua cổng thanh toán Sapo</h2>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>

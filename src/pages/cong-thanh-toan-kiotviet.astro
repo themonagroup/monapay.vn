@@ -6,8 +6,8 @@ import Steps from '../components/Steps.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'KiotViet thanh toán chuyển khoản: tự báo có, khỏi canh app bank';
-const description = 'KiotViet thanh toán chuyển khoản với MONA Pay: khách quét VietQR tại quầy, tiền vào thẳng ACB, Telegram báo theo chi nhánh, hoá đơn tự ghi nhận qua lớp nối.';
+const title = 'Thông báo chuyển khoản tự động cho KiotViet: loa báo có, Zalo';
+const description = 'Thông báo chuyển khoản tự động cho KiotViet. Loa thông báo thanh toán QR và nhóm Zalo; 0% phí, miễn phí 500 giao dịch/tháng, thử trước khi nối ngân hàng.';
 
 const stepsNoi = [
   { title: 'Nối ACB vào MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng ngay. Wizard 4 bước, 2 lần OTP do ACB gửi về số điện thoại chủ tài khoản.' },
@@ -17,15 +17,17 @@ const stepsNoi = [
 ];
 const stepsTam = [
   { title: 'Thu ngân tạo VietQR động trong dashboard MONA Pay', body: 'Nhập số tiền và mã hoá đơn, hiện QR lên màn hình hoặc in ra để khách quét. Không đụng gì tới KiotViet.' },
-  { title: 'Tiền vào, Telegram nhóm cửa hàng báo ngay', body: 'Tin về trong vài giây: ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Thu ngân nhìn tin trên điện thoại của chính mình, không cần xem app ngân hàng của chủ.' },
-  { title: 'Thu ngân bấm đã thanh toán trên KiotViet', body: 'Vẫn một thao tác tay, nhưng bỏ hẳn chuyện chủ phải đứng cạnh quầy để xác nhận tiền vào.' },
+  { title: 'Tiền vào, nhóm Zalo hoặc Telegram nhận báo có', body: 'Tin về trong vài giây với ngân hàng, số tài khoản, số tiền, thời gian và nội dung. Thu ngân nhìn tin trên điện thoại của mình, không cần xem app ngân hàng của chủ.' },
+  { title: 'Loa web đọc giao dịch của mọi tài khoản đã nối', body: 'Mở loa web MONA Pay trên máy tính hoặc thiết bị tại quầy. Tiền vào bất kỳ tài khoản ngân hàng nào đã nối đều được đọc; thu ngân nghe báo rồi ghi nhận trên KiotViet.' },
 ];
 const faq = [
-  { q: 'KiotViet nhận chuyển khoản có tự báo có được không?', a: 'Được. Nối ACB vào MONA Pay xong, tiền vào là Telegram nhóm cửa hàng nhận tin trong vài giây. Muốn hoá đơn trên KiotViet tự ghi nhận thanh toán thì thêm lớp nối gọi API của KiotViet.' },
-  { q: 'Cửa hàng nhiều thu ngân, không muốn đưa app ngân hàng cho họ thì sao?', a: 'Đây là lý do nhiều khách MONA dùng Telegram: thu ngân nhìn tin báo tiền vào trên điện thoại của mình, không cần đăng nhập tài khoản ngân hàng của chủ. Có thể tách nhóm theo chi nhánh hoặc theo từng tài khoản ảo.' },
-  { q: 'Ai viết lớp nối KiotViet?', a: 'Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs. Chi phí lớp nối báo riêng, MONA Pay vẫn miễn phí.' },
+  { q: 'KiotViet có loa thông báo thanh toán QR rồi, cần MONA Pay không?', a: 'KiotViet có loa riêng cho giao dịch QR trong hệ thống của họ. MONA Pay dùng cùng KiotViet khi anh chị muốn báo có qua nhóm Zalo, Telegram hoặc loa web cho mọi tài khoản ngân hàng đã nối; không thay thế loa KiotViet.' },
+  { q: 'Chưa nối ngân hàng có thử thông báo chuyển khoản tự động không?', a: 'Được. Anh chị tạo tài khoản, thử kênh báo có và kiểm tra luồng webhook trước. Khi nhóm Zalo, Telegram hoặc loa web hoạt động đúng mới nối tài khoản ngân hàng để nhận giao dịch thật.' },
+  { q: 'KiotViet nhận chuyển khoản có tự báo có được không?', a: 'Được. Sau khi nối ngân hàng vào MONA Pay, tiền vào là nhóm Zalo, Telegram hoặc loa web báo trong vài giây. Muốn hoá đơn trên KiotViet tự ghi nhận thanh toán thì thêm lớp nối gọi API của KiotViet.' },
+  { q: 'Cửa hàng nhiều thu ngân, không muốn đưa app ngân hàng cho họ thì sao?', a: 'Thu ngân xem tin báo có trong nhóm Zalo, Telegram hoặc nghe loa web trên thiết bị tại quầy, không cần đăng nhập tài khoản ngân hàng của chủ. Có thể tách kênh theo chi nhánh hoặc theo từng tài khoản ảo.' },
+  { q: 'Ai viết lớp nối KiotViet?', a: `Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs. Chi phí lớp nối báo riêng; MONA Pay ${PRICE_LINE}.` },
   { q: 'Tiền có qua KiotViet hay MONA Pay không?', a: 'Không. Tiền vào thẳng tài khoản ACB của anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về.' },
-  { q: 'Phí bao nhiêu?', a: `MONA Pay ${PRICE_LINE}. Không phần trăm, không phí rút. Để đối chiếu, PayPal Việt Nam thu 4,40% cộng phí cố định và 60.000đ mỗi lần rút về ngân hàng trong nước (biểu phí công bố, kiểm 28/08/2026).` },
+  { q: 'Loa thông báo thanh toán QR của MONA Pay có mất phí không?', a: `MONA Pay thu 0% trên giá trị chuyển khoản và ${PRICE_LINE}. Chi phí lớp nối tự ghi nhận hoá đơn trên KiotViet được báo riêng nếu cửa hàng cần đội MONA viết.` },
 ];
 const jsonld = [
   { '@context': 'https://schema.org', '@type': 'Article', headline: title, description, inLanguage: 'vi', url: SITE.url + '/cong-thanh-toan-kiotviet', author: { '@id': SITE.url + '/#organization' }, publisher: { '@id': SITE.url + '/#organization' }, isPartOf: { '@id': SITE.url + '/#website' } },
@@ -39,9 +41,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">KiotViet · chuyển khoản ACB</span>
-      <h1>KiotViet thanh toán chuyển khoản:<br class="hb" /> <span class="accent">tự báo có, khỏi canh app ngân hàng</span></h1>
+      <h1><span class="accent">Thông báo chuyển khoản tự động cho KiotViet:</span><br class="hb" /> loa báo có, nhóm Zalo</h1>
       <div class="answer-first">
-        <p>KiotViet thanh toán chuyển khoản với MONA Pay chạy thế này: thu ngân tạo mã VietQR động đúng số tiền hoá đơn, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, Telegram nhóm cửa hàng báo trong vài giây, muốn hoá đơn tự ghi nhận thanh toán thì thêm lớp nối. Miễn phí 500 giao dịch mỗi tháng, không phần trăm.</p>
+        <p>Thông báo chuyển khoản tự động cho KiotViet: loa báo có, nhóm Zalo là cách dùng MONA Pay song song với KiotViet. KiotViet có loa riêng cho QR của họ; MONA Pay báo vào Zalo, Telegram và loa web cho mọi tài khoản ngân hàng đã nối. Muốn hoá đơn tự ghi nhận thì thêm lớp nối.</p>
       </div>
       <p class="lead">{SITE.entity}</p>
       <div class="btn-row">
@@ -54,12 +56,12 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Chuyện cửa hàng dùng KiotViet hay gặp</span>
-      <h2>Khách chuyển khoản tại quầy,<br class="br-d" /> chủ phải đứng đó xác nhận</h2>
-      <p class="lead">Cửa hàng bán lẻ dùng KiotViet mà khách MONA hay kể: khách quét chuyển khoản xong, thu ngân không có quyền xem tài khoản ngân hàng nên phải gọi chủ, chủ mở app xem tiền vào chưa rồi mới cho lấy hàng. Giờ cao điểm là ùn ở quầy.</p>
+      <h2>Loa thông báo thanh toán QR dùng cùng KiotViet ra sao?</h2>
+      <p class="lead">KiotViet đã có loa riêng cho giao dịch QR trong hệ thống của họ. MONA Pay bổ sung nhóm Zalo, Telegram và loa web để báo tiền vào mọi tài khoản ngân hàng đã nối, kể cả khoản chuyển không đi qua QR của KiotViet.</p>
       <div class="grid grid-3">
-        <div class="card"><div class="icon">1</div><h3>Chủ thành người xác nhận tiền</h3><p>Mỗi giao dịch chuyển khoản là một cuộc gọi hoặc một lần chủ phải nhìn điện thoại. Chủ đi vắng là quầy đứng.</p></div>
-        <div class="card"><div class="icon">2</div><h3>Nhiều chi nhánh, một tài khoản</h3><p>Ba chi nhánh cùng nhận vào một số tài khoản, nhìn biến động không biết tiền của quầy nào. Cuối ngày đối soát mất cả tiếng.</p></div>
-        <div class="card"><div class="icon">3</div><h3>Khách gửi ảnh biên lai giả</h3><p>Ảnh chuyển khoản chỉnh sửa không hiếm. Chỉ có thông báo từ ngân hàng về đúng số tiền mới là bằng chứng.</p></div>
+        <div class="card"><div class="icon">1</div><h3>Nhiều tài khoản nhận tiền</h3><p>Loa web đọc giao dịch từ mọi tài khoản ngân hàng đã nối. Thu ngân không phải mở từng app ngân hàng để kiểm tra.</p></div>
+        <div class="card"><div class="icon">2</div><h3>Nhiều chi nhánh cần cùng thấy báo có</h3><p>Nhóm Zalo hoặc Telegram giúp quản lý và thu ngân cùng thấy số tiền, thời gian, nội dung chuyển khoản.</p></div>
+        <div class="card"><div class="icon">3</div><h3>Khoản chuyển ngoài QR KiotViet</h3><p>Khách chuyển theo số tài khoản hoặc VietQR từ kênh khác vẫn có thể được MONA Pay báo vào nhóm và loa web.</p></div>
       </div>
     </div>
   </section>
@@ -67,8 +69,8 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Đường tạm, không cần code</span>
-      <h2>Bắt đầu ngay hôm nay:<br class="br-d" /> VietQR động cộng Telegram</h2>
-      <p class="lead">Với cửa hàng bán lẻ, đường này giải quyết được phần nặng nhất là chủ không phải đứng canh tiền. Tạo tài khoản ảo riêng cho từng chi nhánh, mỗi chi nhánh một nhóm Telegram, tiền vào quầy nào nhóm đó báo.</p>
+      <h2>Báo có chuyển khoản tự động qua Zalo, Telegram và loa web</h2>
+      <p class="lead">Cửa hàng có thể tạo tài khoản ảo riêng theo chi nhánh, chọn nhóm nhận tin và mở loa web tại quầy. Tiền vào tài khoản nào thì đúng nhóm và thiết bị đã cấu hình nhận thông báo.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
     </div>
   </section>
@@ -76,7 +78,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Đường đầy đủ</span>
-      <h2>Lớp nối với KiotViet<br class="br-d" /> tự ghi nhận thanh toán trên hoá đơn</h2>
+      <h2>KiotViet thanh toán chuyển khoản tự ghi nhận qua lớp nối</h2>
       <p class="lead">MONA Pay chưa có ứng dụng cài sẵn cho KiotViet. Hoá đơn tự ghi nhận nhờ lớp nối: nhận webhook, kiểm chữ ký, gọi API của KiotViet. Đội MONA viết cho khách hoặc dev của anh chị tự viết theo tài liệu.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
     </div>
@@ -85,7 +87,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">So sánh</span>
-      <h2>Ba cách nhận tiền cho cửa hàng dùng KiotViet</h2>
+      <h2>Dùng cùng KiotViet: loa riêng, nhóm báo có và lớp nối</h2>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>
@@ -107,7 +109,7 @@ const jsonld = [
     </div>
   </section>
 
-  <CtaBand title="Cửa hàng của anh chị tự báo có từ hôm nay" body="Tạo tài khoản, nối ACB 4 bước, lập nhóm Telegram cho từng chi nhánh. Cần lớp nối KiotViet thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
+  <CtaBand title="Cửa hàng của anh chị tự báo có từ hôm nay" body="Tạo tài khoản, nối ACB 4 bước, chọn nhóm Zalo hoặc Telegram và mở loa web tại quầy. Cần lớp nối KiotViet thì gọi tụi em." primary={{ href: SITE.appRegister, label: 'Tạo tài khoản miễn phí' }} secondary={{ href: '/docs/bat-dau-nhanh', label: 'Đọc hướng dẫn 5 phút' }} />
 </Base>
 <style>
   .hb,.br-d{display:inline}

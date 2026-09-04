@@ -7,8 +7,8 @@ import CodeTabs from '../components/CodeTabs.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'Tích hợp cổng thanh toán vào website WordPress (chuyển khoản ACB)';
-const description = 'Tích hợp cổng thanh toán vào website WordPress: nhận chuyển khoản ACB, tự xác nhận trong vài giây cho khoá học, đặt cọc, hội viên. Miễn phí 500 giao dịch mỗi tháng.';
+const title = 'Plugin tự động xác nhận thanh toán chuyển khoản cho WordPress';
+const description = 'Plugin tự động xác nhận thanh toán chuyển khoản cho WordPress. Dùng QR code chuyển khoản, 0% phí, miễn phí 500 giao dịch/tháng; thử trước khi nối ngân hàng.';
 
 const PHP = `<?php
 // mona-pay-webhook.php: bỏ vào wp-content/mu-plugins/
@@ -117,12 +117,14 @@ const steps = [
 ];
 
 const faq = [
+  { q: 'Plugin thanh toán WordPress có mất phí không?', a: `MONA Pay thu 0% trên giá trị chuyển khoản và ${PRICE_LINE}. Chi phí chỉ phát sinh nếu web làm ngoài MONA cần thuê dev viết phần xử lý riêng.` },
+  { q: 'Chưa nối ngân hàng có thử tích hợp WordPress được không?', a: 'Được. Anh chị tạo tài khoản, cấu hình webhook và dùng chức năng gửi thử để kiểm tra địa chỉ nhận, chữ ký HMAC cùng logic xử lý trên WordPress. Khi luồng thử chạy đúng mới nối tài khoản ngân hàng để nhận giao dịch thật.' },
   { q: 'Web WordPress không dùng WooCommerce có dùng được không?', a: 'Được. MONA Pay chỉ cần 1 địa chỉ trên web để gửi webhook tới. Đoạn PHP mẫu trên trang này tạo địa chỉ đó và phát sự kiện monapay_tien_vao, phần còn lại anh chị nối vào bất kỳ plugin hay code nào đang chạy: khoá học, thành viên, đặt lịch, form đăng ký thu phí. Bán hàng bằng WooCommerce thì xem trang riêng cho WooCommerce.' },
   { q: 'Tiền có nằm ở MONA Pay lúc nào không?', a: 'Không. Tiền đi thẳng từ ngân hàng khách vào tài khoản ACB của anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ngân hàng rồi báo về web. Vì vậy không có chuyện rút tiền về, không có phí giữ tiền, và sao kê ngân hàng của anh chị vẫn là nguồn sự thật cuối cùng.' },
   { q: 'Web dùng cache, CDN, Cloudflare có chặn webhook không?', a: 'Địa chỉ /wp-json/monapay/v1/webhook là request POST nên cache trang thường không đụng tới. Nếu anh chị bật tường lửa chặn POST lạ, cho phép địa chỉ máy chủ gửi webhook của MONA Pay là 103.168.55.14 (kiểm ngày 28/08/2026, có đổi tụi em cập nhật ở trang địa chỉ IP trong tài liệu).' },
   { q: 'Tôi không có dev, ai làm phần code cho tôi?', a: 'Web làm tại MONA thì đội kỹ thuật tụi em nối sẵn lúc bàn giao, không tính thêm. Web làm nơi khác thì anh chị gửi đoạn code mẫu trên trang này cho người đang quản trị web, thường mất 30 phút; hoặc gọi 1900 636 648 để tụi em báo giá phần nối.' },
   { q: 'Cần chuẩn bị gì trước khi bắt đầu?', a: 'Tài khoản ACB đứng tên anh chị hoặc công ty, số điện thoại đăng ký với ACB để nhận 2 lần OTP khi nối, website có HTTPS. Đăng ký tại my.monapay.vn là dùng ngay, không cần ai duyệt.' },
-  { q: 'Miễn phí tới mức nào?', a: `MONA Pay ${PRICE_LINE}, đủ mọi tính năng. Web bán khoá học vài chục hay vài nghìn đơn một tháng đều không tốn đồng nào, chi tiết tại trang bảng giá.` },
+  { q: 'Miễn phí tới mức nào?', a: `MONA Pay ${PRICE_LINE}, đủ các tính năng VA, VietQR, webhook, Telegram và dashboard. Khi số giao dịch vượt hạn mức, anh chị chọn gói theo nhu cầu tại trang bảng giá.` },
 ];
 
 const jsonld = [
@@ -139,9 +141,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">WordPress · chuyển khoản ACB</span>
-      <h1>Tích hợp cổng thanh toán vào WordPress:<br class="hb" /> <span class="accent">chuyển khoản ACB tự xác nhận</span></h1>
+      <h1><span class="accent">Plugin tự động xác nhận thanh toán</span><br class="hb" /> chuyển khoản cho WordPress</h1>
       <div class="answer-first">
-        <p>MONA Pay đưa thông báo tiền vào tài khoản ACB tới thẳng website WordPress của anh chị bằng webhook có chữ ký. Web nhận gói tin, khớp đúng người trả, rồi tự mở khoá học, xác nhận cọc, gia hạn hội viên. Tiền không qua MONA Pay, dán 1 đoạn PHP là chạy, {PRICE_LINE}.</p>
+        <p>Plugin tự động xác nhận thanh toán chuyển khoản cho WordPress nhận báo có qua webhook rồi khớp đúng người trả. Web có thể mở khoá học, xác nhận cọc hoặc gia hạn hội viên; anh chị được thử webhook trước khi nối ngân hàng, trả 0% phí giao dịch và dùng {PRICE_LINE}.</p>
       </div>
       <div class="btn-row">
         <a class="btn btn-primary" href={SITE.appRegister}>Tạo tài khoản miễn phí</a>
@@ -153,7 +155,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Đủ kiểu web, chung một chỗ kẹt</span>
-      <h2>Web WordPress nào đang thu tiền chuyển khoản bằng tay?</h2>
+      <h2>Plugin thanh toán WordPress dùng cho website nào?</h2>
       <p class="lead">Trong 14.000+ dự án tụi em làm từ 2016, WordPress chiếm phần lớn. Web nào có thu tiền là có người ngồi dò sao kê, bất kể bán gì.</p>
       <div class="grid grid-2" style="margin-top:1.5rem">
         <div class="card"><div class="icon">1</div><h3>Web bán khoá học, tài liệu, thành viên trả phí</h3><p>Học viên chuyển khoản xong nhắn "em chuyển rồi", admin mở app ngân hàng dò, rồi vào WordPress mở quyền bằng tay. Khuya nhắn thì sáng mới có khoá. Học viên đóng tiền lúc đang hứng, chờ 8 tiếng là nguội.</p></div>
@@ -167,7 +169,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Cách MONA Pay làm</span>
-      <h2>Web WordPress nhận tiền tự động qua 4 bước</h2>
+      <h2>Tích hợp cổng thanh toán vào website WordPress qua 4 bước</h2>
       <p class="lead">Chính website khanhhung.academy và mona.host của tụi em đã thu học phí, thu tiền hosting bằng đúng luồng này nhiều năm trước khi mở public.</p>
       <div style="margin-top:1.5rem"><Steps items={steps} /></div>
     </div>
@@ -176,7 +178,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Làm ngay hôm nay</span>
-      <h2>Dán 1 đoạn PHP, web WordPress có địa chỉ nhận webhook</h2>
+      <h2>QR code chuyển khoản tự xác nhận qua webhook WordPress</h2>
       <p>Đoạn code bên dưới tạo địa chỉ <code>https://web-cua-anh-chi.vn/wp-json/monapay/v1/webhook</code>, kiểm chữ ký HMAC, chặn gói lệch giờ quá 5 phút, chặn xử lý trùng, rồi phát sự kiện <code>monapay_tien_vao</code>. Cuối file có ví dụ bắt sự kiện để mở khoá học cho học viên; đặt cọc hay hội viên thì đổi vài dòng trong hàm đó. Web làm tại MONA thì tụi em nối sẵn phần này lúc bàn giao, khỏi tự dán.</p>
       <CodeTabs tabs={[
         { label: 'PHP (WordPress)', lang: 'php', code: PHP },

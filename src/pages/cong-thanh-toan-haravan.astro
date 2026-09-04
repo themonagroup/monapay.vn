@@ -6,8 +6,8 @@ import Steps from '../components/Steps.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'Haravan cổng thanh toán chuyển khoản: tự xác nhận đơn, miễn phí';
-const description = 'Haravan cổng thanh toán chuyển khoản với MONA Pay: khách quét VietQR đúng số tiền, tiền vào thẳng ACB, đơn tự xác nhận qua lớp nối hoặc Telegram báo ngay.';
+const title = 'Haravan xác nhận thanh toán tự động khi chuyển khoản QR';
+const description = 'Haravan xác nhận thanh toán tự động khi chuyển khoản QR. Cổng thanh toán Haravan 0% phí, miễn phí 500 giao dịch/tháng; thử trước khi nối ngân hàng với MONA Pay.';
 
 const stepsNoi = [
   { title: 'Nối tài khoản ACB vào MONA Pay', body: 'Đăng ký tại my.monapay.vn, dùng ngay không cần duyệt. Đi wizard 4 bước với 2 lần OTP do ACB gửi về số điện thoại chủ tài khoản. Từ lúc này, tiền vào ACB là MONA Pay nhận được thông báo giao dịch.' },
@@ -21,10 +21,11 @@ const stepsTam = [
   { title: 'Telegram báo tiền vào, nhân viên đổi trạng thái đơn', body: 'Tin về nhóm Telegram của shop trong vài giây: ngân hàng, số tài khoản, số tiền, thời gian, nội dung. Nhân viên đọc tin rồi vào Haravan bấm đã thanh toán. Vẫn một thao tác tay, nhưng không ai phải canh app ngân hàng.' },
 ];
 const faq = [
+  { q: 'Thiết lập hình thức chuyển khoản qua QR trên Haravan có mất phí không?', a: `MONA Pay thu 0% trên giá trị chuyển khoản và ${PRICE_LINE}. Nếu shop cần đội MONA viết lớp nối riêng với Haravan thì chi phí phần mềm được báo riêng.` },
+  { q: 'Chưa nối ngân hàng có thử cổng thanh toán Haravan được không?', a: 'Được. Anh chị tạo tài khoản, thử tạo VietQR, gửi webhook và kiểm tra luồng xử lý trước. Khi phần nhận webhook chạy đúng mới nối tài khoản ngân hàng để nhận giao dịch thật.' },
   { q: 'Haravan có nhận chuyển khoản tự xác nhận được không?', a: 'Được theo 2 đường. Đường đầy đủ: lớp nối nhận webhook MONA Pay rồi gọi API Haravan đổi trạng thái đơn, tự động trong vài giây. Đường tạm không cần code: khách chọn chuyển khoản, quét VietQR động, Telegram báo tiền vào, nhân viên đổi trạng thái tay.' },
-  { q: 'Tôi không có dev, MONA có làm lớp nối cho tôi không?', a: 'Có. MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án, lớp nối Haravan thường xong trong vài ngày. Chi phí phần lớp nối báo riêng, còn MONA Pay thì miễn phí. Gọi 1900 636 648 để tụi em xem gói Haravan của anh chị có mở API không.' },
+  { q: 'Tôi không có dev, MONA có làm lớp nối cho tôi không?', a: `Có. MONA làm phần mềm theo yêu cầu từ 2016, hơn 14.000 dự án, lớp nối Haravan thường xong trong vài ngày. Chi phí phần lớp nối báo riêng; MONA Pay ${PRICE_LINE}. Gọi 1900 636 648 để tụi em xem gói Haravan của anh chị có mở API không.` },
   { q: 'Tiền có qua Haravan hay MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về lớp nối, Telegram, dashboard. Không rút tiền, không giữ tiền.' },
-  { q: 'Phí dùng MONA Pay với Haravan là bao nhiêu?', a: `MONA Pay ${PRICE_LINE}. Không phần trăm trên số tiền, không phí rút. Ví và cổng nội địa thu phần trăm theo hợp đồng; PayPal Việt Nam thu 4,40% cộng phí cố định và 60.000đ mỗi lần rút về ngân hàng trong nước (biểu phí công bố, kiểm 28/08/2026).` },
   { q: 'Cần chuẩn bị gì phía ngân hàng?', a: 'Tài khoản thanh toán ACB đứng tên anh chị và số điện thoại đã đăng ký với ACB để nhận 2 lần OTP khi nối. ACB đang chạy, các ngân hàng khác đang kết nối, xem trạng thái tại <a href="/ngan-hang">trang ngân hàng hỗ trợ</a>.' },
 ];
 const jsonld = [
@@ -39,9 +40,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">Haravan · chuyển khoản ACB</span>
-      <h1>Haravan cổng thanh toán chuyển khoản:<br class="hb" /> <span class="accent">tiền vào là đơn tự xác nhận</span></h1>
+      <h1><span class="accent">Haravan xác nhận thanh toán tự động</span><br class="hb" /> khi chuyển khoản QR</h1>
       <div class="answer-first">
-        <p>Haravan cổng thanh toán chuyển khoản với MONA Pay chạy như sau: mỗi đơn một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và đơn trên Haravan được đánh dấu đã thanh toán qua lớp nối. Không thu phần trăm, miễn phí 500 giao dịch mỗi tháng.</p>
+        <p>Haravan xác nhận thanh toán tự động khi chuyển khoản QR bằng cách nhận webhook báo có từ MONA Pay qua một lớp nối. Mỗi đơn có VietQR đúng số tiền; shop được thử luồng trước khi nối ngân hàng, trả 0% phí giao dịch và dùng {PRICE_LINE}.</p>
       </div>
       <p class="lead">{SITE.entity}</p>
       <div class="btn-row">
@@ -54,7 +55,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Chuyện shop Haravan hay gặp</span>
-      <h2>Đơn chuyển khoản trên Haravan<br class="br-d" /> kẹt ở khâu xác nhận tay</h2>
+      <h2>Thiết lập hình thức chuyển khoản qua QR trên Haravan</h2>
       <p class="lead">Nhiều khách MONA bán trên Haravan song song với web riêng. Chỗ kẹt giống nhau: khách chọn chuyển khoản, đơn nằm chờ, nhân viên phải mở app ngân hàng đối chiếu rồi mới bấm đã thanh toán. Ngày 30 đơn là mất hơn một tiếng chỉ để đối chiếu, chưa kể đơn tối và cuối tuần.</p>
       <div class="grid grid-3">
         <div class="card"><div class="icon">1</div><h3>Đối chiếu bằng mắt</h3><p>Khách gửi ảnh biên lai, nhân viên soi số tiền, soi nội dung, soi giờ. Nhiều khách chuyển cùng số tiền trong một buổi là bắt đầu đoán.</p></div>
@@ -67,7 +68,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Đường đầy đủ</span>
-      <h2>Lớp nối Haravan với MONA Pay<br class="br-d" /> đổi trạng thái đơn trong vài giây</h2>
+      <h2>Cổng thanh toán Haravan tự xác nhận đơn qua lớp nối</h2>
       <p class="lead">MONA Pay bắn webhook khi tiền vào. Lớp nối nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Haravan. Tụi em không hứa "cài app một cú là chạy", vì MONA Pay chưa có ứng dụng trên kho ứng dụng Haravan; phần lớp nối đội MONA viết cho khách hoặc dev của anh chị tự viết.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
     </div>
@@ -76,7 +77,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Đường tạm, không cần code</span>
-      <h2>Shop nhỏ chưa cần lớp nối:<br class="br-d" /> VietQR động cộng Telegram là đủ</h2>
+      <h2>Haravan thanh toán trực tuyến bằng VietQR và Telegram</h2>
       <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
     </div>
   </section>
@@ -84,7 +85,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">So sánh</span>
-      <h2>Ba cách nhận tiền cho shop Haravan</h2>
+      <h2>Ba cách nhận tiền qua cổng thanh toán Haravan</h2>
       <div class="table-wrap">
         <table>
           <thead><tr><th>Tiêu chí</th><th>Ví, cổng nội địa thu phần trăm</th><th>Cổng quốc tế (PayPal, Stripe)</th><th>Chuyển khoản VietQR + MONA Pay</th></tr></thead>
@@ -105,7 +106,7 @@ const jsonld = [
       <h2>Tụi em nối ACB, viết lớp nối,<br class="br-d" /> để lại tài liệu cho dev của anh chị</h2>
       <div class="grid grid-3">
         <div class="card"><h3>Nối ACB và cấu hình</h3><p>Wizard 4 bước, webhook, nhóm Telegram, mẫu tin. Kẹt chỗ nào gọi 1900 636 648, giờ hành chính có người trực.</p></div>
-        <div class="card"><h3>Viết lớp nối Haravan</h3><p>Nhận webhook, kiểm chữ ký HMAC, đổi trạng thái đơn qua API Haravan. Thường vài ngày. Chi phí báo riêng, MONA Pay vẫn miễn phí.</p></div>
+        <div class="card"><h3>Viết lớp nối Haravan</h3><p>Nhận webhook, kiểm chữ ký HMAC, đổi trạng thái đơn qua API Haravan. Thường vài ngày. Chi phí lớp nối báo riêng; MONA Pay {PRICE_LINE}.</p></div>
         <div class="card"><h3>Tài liệu máy đọc được</h3><p>Mọi trang docs có bản .md, llms.txt, openapi.json. Dev hoặc AI agent của anh chị đọc thẳng, code mẫu cURL, PHP, Node.</p></div>
       </div>
       <p style="margin-top:1.2rem">Cùng nguyên lý với <a href="/cong-thanh-toan-shopify">Shopify</a>, <a href="/cong-thanh-toan-woocommerce">WooCommerce</a> và <a href="/cong-thanh-toan-sapo">Sapo</a>. Cách nối ACB chi tiết ở trang <a href="/acb">ngân hàng ACB</a>.</p>

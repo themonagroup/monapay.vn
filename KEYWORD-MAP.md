@@ -46,3 +46,15 @@ Việc treo (Ahrefs credit): verify KD `sepay alternative`, `casso vs sepay`; co
 | Trang | Keyword chính | Keyword phụ | Ghi chú |
 |---|---|---|---|
 | `mona.media/mona-pay-cong-thanh-toan-tu-dong/` (post 140738) | `cổng thanh toán` 300 · KD1 | `api ngân hàng` 200, `cổng thanh toán miễn phí`, `tích hợp cổng thanh toán vào website` 50, `tài khoản ngân hàng ảo` 300, brand `MONA Pay` | Bài giới thiệu từ góc nhìn MONA; đã link từ stripe/webhook-la-gi/webhook-sepay. ⛔️ Không target "tự động báo có" (keyword ma). |
+
+## Nền tảng: chuẩn CỤM NGƯỜI DÙNG GÕ (Mon flag 04/09: "đặt tên page không chuẩn keyword"). Nguồn: top title Bing/Google VI 04/09 + Ahrefs 27/08. Title ≤65 ký tự, keyword ĐẦU title/H1/meta/đoạn mở; H2 ăn cụm phụ.
+| Trang | Cụm chính (đặt đầu title/H1) | Cụm phụ (H2/FAQ/meta) |
+|---|---|---|
+| `/cong-thanh-toan-woocommerce` | `plugin WooCommerce chuyển khoản QR tự động xác nhận thanh toán` | `plugin thanh toán WooCommerce Việt Nam`, `tích hợp mã QR code thanh toán vào đơn hàng WooCommerce`, `plugin tự động xác nhận thanh toán qua tài khoản ngân hàng`, `cổng thanh toán WooCommerce`, `tự động báo có`, `chuyển khoản QR xử lý đơn hàng tự động` |
+| `/cong-thanh-toan-wordpress` | `plugin tự động xác nhận thanh toán chuyển khoản cho WordPress` | `tích hợp cổng thanh toán vào website WordPress`, `plugin thanh toán WordPress`, `QR code chuyển khoản` |
+| `/cong-thanh-toan-shopify` | `cổng thanh toán Shopify Việt Nam` (đang rank) + `chuyển khoản QR tự xác nhận` | `Shopify Payments Việt Nam` (chưa hỗ trợ → cách thu tiền), `tích hợp thanh toán QR code vào Shopify`, `app thanh toán Shopify chuyển khoản` |
+| `/cong-thanh-toan-opencart` | `module thanh toán OpenCart chuyển khoản QR tự động xác nhận` | `cài đặt và kích hoạt module thanh toán OpenCart`, `tích hợp thanh toán chuyển khoản ngân hàng vào OpenCart`, `cổng thanh toán OpenCart Việt Nam` |
+| `/cong-thanh-toan-prestashop` | `module thanh toán PrestaShop chuyển khoản QR tự xác nhận đơn` | `cổng thanh toán PrestaShop Việt Nam`, `module thanh toán PrestaShop`, `tích hợp VietQR vào PrestaShop` |
+| `/cong-thanh-toan-haravan` | `Haravan xác nhận thanh toán tự động khi chuyển khoản QR` | `thiết lập hình thức chuyển khoản qua QR Haravan`, `cổng thanh toán Haravan`, `Haravan thanh toán trực tuyến` |
+| `/cong-thanh-toan-sapo` | `Sapo chuyển khoản QR tự động xác nhận đơn` | `cổng thanh toán Sapo`, `Sapo báo có chuyển khoản`, `thanh toán QR Sapo Web` |
+| `/cong-thanh-toan-kiotviet` | `thông báo chuyển khoản tự động cho KiotViet: loa báo có, nhóm Zalo` | `loa thông báo thanh toán QR`, `KiotViet thanh toán chuyển khoản`, `báo có chuyển khoản tự động` |

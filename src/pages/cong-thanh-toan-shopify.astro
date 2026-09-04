@@ -6,8 +6,8 @@ import Steps from '../components/Steps.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'Cổng thanh toán Shopify Việt Nam: nhận chuyển khoản, tự xác nhận';
-const description = 'Cổng thanh toán Shopify cho shop Việt Nam: khách quét VietQR vào tài khoản ACB, MONA Pay báo trong vài giây, đơn tự xác nhận qua lớp nối. Miễn phí 500 giao dịch mỗi tháng.';
+const title = 'Cổng thanh toán Shopify Việt Nam chuyển khoản QR tự xác nhận';
+const description = 'Cổng thanh toán Shopify Việt Nam: QR tự xác nhận, không cần Shopify Payments Việt Nam. 0% phí, miễn phí 500 giao dịch/tháng, thử trước khi nối ngân hàng.';
 
 const stepsNoi = [
   { title: 'Tạo tài khoản MONA Pay, nối tài khoản ACB', body: 'Đăng ký tại my.monapay.vn, dùng ngay không cần duyệt. Vào mục Ngân hàng và VA, đi wizard 4 bước với 2 lần OTP do ACB gửi về số điện thoại chủ tài khoản. Xong bước này, mỗi lần tiền vào ACB là MONA Pay biết.' },
@@ -27,6 +27,8 @@ const liveFlow = [
   { name: 'Tiền vào, đơn Shopify tự sang Paid', text: 'MONA Pay xác nhận tiền đã vào, trang báo thành công và ứng dụng tự đánh dấu đơn Shopify là đã thanh toán.', image: SITE.url + '/img/shopify/shopify-order-paid.png' },
 ];
 const faq = [
+  { q: 'Shopify Payments không hỗ trợ Việt Nam thì thu tiền sao?', a: 'Shop vẫn có thể bật chuyển khoản ngân hàng và cho khách trong nước quét VietQR. MONA Pay nhận báo có rồi gửi webhook; ứng dụng hoặc lớp nối dùng webhook đó để đánh dấu đúng đơn đã thanh toán trên Shopify.' },
+  { q: 'Chưa nối ngân hàng có thử cổng thanh toán Shopify được không?', a: 'Được. Bật chế độ sandbox để thử từ lúc tạo đơn, mở trang VietQR tới lúc đơn sang Paid mà không chuyển tiền thật. Chạy đủ luồng rồi mới nối tài khoản ngân hàng để nhận tiền thật.' },
   { q: 'Shop Shopify ở Việt Nam có nhận chuyển khoản tự động được không?', a: 'Được, qua 2 đường. Đường đầy đủ: lớp nối nhận webhook từ MONA Pay rồi đổi trạng thái đơn trên Shopify qua API, đơn tự sang đã thanh toán trong vài giây. Đường tạm không cần code: bật chuyển khoản trong Shopify, gắn mã VietQR động, tiền vào là Telegram báo, nhân viên đổi trạng thái tay.' },
   { q: 'Lớp nối giữa MONA Pay và Shopify là gì, ai viết?', a: 'Là một đoạn chương trình nhỏ nhận gói tin webhook của MONA Pay, kiểm chữ ký HMAC, tìm đúng đơn theo mã trong nội dung chuyển khoản, rồi gọi API của Shopify đánh dấu đơn đã thanh toán. Đội MONA viết cho khách trong vài ngày, hoặc dev của anh chị tự viết theo tài liệu tại monapay.vn/docs.' },
   { q: 'Tiền của khách có đi qua MONA Pay hay Shopify không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB đứng tên anh chị. MONA Pay chỉ đọc thông báo giao dịch từ ACB rồi báo về lớp nối, Telegram và dashboard. Không có bước rút tiền, không có khoản nào bị giữ lại.' },
@@ -40,7 +42,7 @@ const jsonld = [
     { '@type': 'ListItem', position: 1, name: 'Trang chủ', item: SITE.url + '/' },
     { '@type': 'ListItem', position: 2, name: 'Cổng thanh toán Shopify', item: SITE.url + '/cong-thanh-toan-shopify' },
   ] },
-  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Luồng chạy thật của cổng thanh toán Shopify MONA Pay', description: 'Bốn bước từ cài ứng dụng MONA Pay đến khi đơn Shopify tự chuyển sang trạng thái Paid.', image: SITE.url + '/img/shopify/shopify-order-paid.png',
+  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Tích hợp thanh toán QR code vào Shopify: luồng chạy thật', description: 'Bốn bước từ cài ứng dụng MONA Pay đến khi đơn Shopify tự chuyển sang trạng thái Paid.', image: SITE.url + '/img/shopify/shopify-order-paid.png',
     step: liveFlow.map((step, index) => ({ '@type': 'HowToStep', position: index + 1, name: step.name, text: step.text, ...(step.image ? { image: step.image } : {}) })),
   },
 ];
@@ -49,9 +51,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">Shopify · chuyển khoản ACB</span>
-      <h1>Cổng thanh toán Shopify Việt Nam:<br class="hb" /> <span class="accent">khách chuyển khoản, đơn tự xác nhận</span></h1>
+      <h1><span class="accent">Cổng thanh toán Shopify Việt Nam</span><br class="hb" /> chuyển khoản QR tự xác nhận</h1>
       <div class="answer-first">
-        <p>Cổng thanh toán Shopify cho shop Việt Nam làm theo cách này: mỗi đơn có một mã VietQR động đúng số tiền, khách quét app ngân hàng, tiền vào thẳng tài khoản ACB của anh chị, MONA Pay báo trong vài giây và lớp nối đánh dấu đơn đã thanh toán trên Shopify. Miễn phí 500 giao dịch mỗi tháng, không thu phần trăm.</p>
+        <p>Cổng thanh toán Shopify Việt Nam chuyển khoản QR tự xác nhận tạo một mã VietQR đúng số tiền cho từng đơn. MONA Pay báo có qua webhook để đơn sang Paid; shop được thử đủ luồng trước khi nối ngân hàng, trả 0% phí giao dịch và dùng {PRICE_LINE}.</p>
       </div>
       <p class="lead">{SITE.entity}</p>
       <div class="btn-row">
@@ -64,7 +66,7 @@ const jsonld = [
   <section class="section-alt shopify-live">
     <div class="wrap">
       <span class="eyebrow">Ảnh thật · 4 bước</span>
-      <h2>Luồng chạy thật trên cửa hàng Shopify</h2>
+      <h2>Tích hợp thanh toán QR code vào Shopify: luồng chạy thật</h2>
       <p class="lead">Từ lúc shop nhập key tới khi tiền vào và đơn tự đổi trạng thái, đây là đúng luồng đang chạy trên cửa hàng thử nghiệm của MONA Pay.</p>
 
       <ol class="live-flow">
@@ -136,7 +138,7 @@ const jsonld = [
               <picture>
                 <source srcset="/img/shopify/shopify-order-paid.avif" type="image/avif" />
                 <source srcset="/img/shopify/shopify-order-paid.webp" type="image/webp" />
-                <img src="/img/shopify/shopify-order-paid.png" width="1280" height="860" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay tự đánh dấu đơn hàng Shopify số 1004 là Paid" />
+                <img src="/img/shopify/shopify-order-paid.png" width="1280" height="860" loading="lazy" decoding="async" alt="Cổng thanh toán Shopify MONA Pay tự đánh dấu đơn hàng Shopify #1004 là Paid" />
               </picture>
               <figcaption>Trong Shopify Admin, đơn có MONA Pay link, mã giao dịch và timeline tự đánh dấu Paid. Ảnh chụp trên cửa hàng thử nghiệm.</figcaption>
             </figure>
@@ -149,13 +151,13 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Chuyện shop Shopify hay gặp</span>
-      <h2>Bán trên Shopify mà khách trong nước<br class="br-d" /> vẫn thích chuyển khoản</h2>
+      <h2>Shopify Payments Việt Nam chưa hỗ trợ thì thu tiền sao?</h2>
       <p class="lead">Khách MONA làm web bán hàng có một nhóm đang chạy Shopify, phần lớn để bán ra nước ngoài nhưng vẫn có khách Việt. Nhóm này gặp cùng một chỗ kẹt: khách trong nước không quen trả bằng thẻ quốc tế, cứ hỏi "cho em số tài khoản". Và từ lúc khách chuyển tới lúc đơn được xác nhận là một khoảng trống toàn thao tác tay.</p>
       <div class="grid grid-2">
         <div class="card"><div class="icon">1</div><h3>Khách chuyển xong phải chụp màn hình</h3><p>Khách gửi ảnh biên lai qua chat, nhân viên mở app ngân hàng đối chiếu số tiền và nội dung, rồi vào Shopify bấm đã thanh toán. Mỗi đơn mất vài phút, ngày 50 đơn là mất cả buổi.</p></div>
         <div class="card"><div class="icon">2</div><h3>Đơn tối và cuối tuần nằm chờ</h3><p>Khách chuyển lúc 22h, không ai canh app ngân hàng, đơn nằm ở trạng thái chờ tới sáng hôm sau. Khách mua hàng số như khoá học, vé, mã kích hoạt thì khoảng chờ này là lý do hủy đơn.</p></div>
         <div class="card"><div class="icon">3</div><h3>Nhầm đơn khi nhiều khách chuyển cùng số tiền</h3><p>Ba khách cùng chuyển 350.000đ trong 10 phút, nội dung gõ tay mỗi người một kiểu. Kế toán phải đoán ai là ai, đoán sai là gửi nhầm hàng.</p></div>
-        <div class="card"><div class="icon">4</div><h3>Cổng thu phần trăm ăn vào lãi</h3><p>Cổng quốc tế thu phần trăm trên mỗi đơn và có phí rút về ngân hàng trong nước. Đơn 500.000đ lãi mỏng, mất thêm vài phần trăm là hết lãi. Trong khi khách Việt có app ngân hàng, quét VietQR là xong, không mất phí gì.</p></div>
+        <div class="card"><div class="icon">4</div><h3>Cổng thu phần trăm ăn vào lãi</h3><p>Cổng quốc tế thu phần trăm trên mỗi đơn và có phí rút về ngân hàng trong nước. Đơn 500.000đ lãi mỏng, mất thêm vài phần trăm là hết lãi. Khách Việt có app ngân hàng thì quét VietQR, MONA Pay không thu phần trăm giao dịch.</p></div>
       </div>
     </div>
   </section>
@@ -163,7 +165,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Đường đầy đủ</span>
-      <h2>Đơn Shopify tự sang đã thanh toán<br class="br-d" /> qua lớp nối với MONA Pay</h2>
+      <h2>App thanh toán Shopify chuyển khoản tự xác nhận đơn</h2>
       <p class="lead">MONA Pay bắn webhook khi tiền vào tài khoản ảo hoặc VietQR. Muốn đơn trên Shopify tự đổi trạng thái thì cần một lớp nối: nhận webhook, kiểm chữ ký, gọi API quản lý đơn của Shopify. Đội MONA viết lớp nối này cho khách, hoặc dev của anh chị tự viết theo tài liệu.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsNoi} /></div>
       <p style="margin-top:1.2rem">Tụi em nói rõ hai điều để anh chị khỏi mua hớ: MONA Pay chưa có ứng dụng cài sẵn trên kho ứng dụng Shopify, và việc đổi trạng thái đơn phụ thuộc vào gói Shopify của anh chị có mở API quản lý đơn hàng hay không. Anh chị kiểm với Shopify trước, phần còn lại tụi em lo.</p>
@@ -173,7 +175,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Đường tạm, không cần code</span>
-      <h2>Chưa có dev thì làm cách này:<br class="br-d" /> VietQR động cộng Telegram</h2>
+      <h2>Cổng thanh toán Shopify Việt Nam khi chưa có dev</h2>
       <p class="lead">Đường này đủ dùng cho shop nhỏ vài chục đơn mỗi ngày. Không lập trình, không chạm vào code Shopify. Vẫn còn một thao tác tay là đổi trạng thái đơn, nhưng bỏ được hẳn việc mở app ngân hàng ngồi canh.</p>
       <div style="margin-top:1.5rem"><Steps items={stepsTam} /></div>
     </div>

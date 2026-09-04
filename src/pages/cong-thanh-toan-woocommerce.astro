@@ -7,8 +7,8 @@ import CodeTabs from '../components/CodeTabs.astro';
 import { SITE } from '../data/site';
 import { PRICE_LINE } from '../data/pricing';
 
-const title = 'Cổng thanh toán WooCommerce chuyển khoản, tự xác nhận đơn';
-const description = 'Cổng thanh toán WooCommerce của MONA Pay: khách chuyển khoản ACB xong, đơn tự sang đã thanh toán trong vài giây qua webhook. Không giữ tiền, miễn phí 500 giao dịch mỗi tháng.';
+const title = 'Plugin WooCommerce chuyển khoản QR tự động xác nhận thanh toán';
+const description = 'Plugin WooCommerce chuyển khoản QR tự động xác nhận thanh toán. Tự động báo có, 0% phí, miễn phí 500 giao dịch/tháng; thử trước khi nối ngân hàng cùng MONA Pay.';
 
 const PHP = `<?php
 // mona-pay-webhook.php: bỏ vào wp-content/mu-plugins/ (hoặc functions.php của child theme)
@@ -175,12 +175,14 @@ const wooFlow = [
 ];
 
 const faq = [
+  { q: 'Plugin WooCommerce chuyển khoản ngân hàng có mất phí không?', a: `MONA Pay thu 0% trên giá trị chuyển khoản và ${PRICE_LINE}. Shop xem các gói theo số giao dịch tại trang bảng giá trước khi chạy thật.` },
+  { q: 'Chưa nối ngân hàng có thử plugin được không?', a: 'Được. Bật Chế độ thử trong cài đặt plugin để đi hết luồng từ checkout, trang VietQR tới lúc đơn đổi trạng thái. Chế độ này không chuyển tiền thật; chạy ổn rồi mới nối tài khoản ngân hàng.' },
   { q: 'Tiền của shop có đi qua MONA Pay không?', a: 'Không. Khách chuyển thẳng vào tài khoản ACB của anh chị. MONA Pay chỉ nhận thông báo từ ngân hàng rằng có giao dịch vào, rồi báo lại cho web. Không có ví trung gian, không có chuyện rút tiền về sau, không có phí trên từng giao dịch kiểu cổng thẻ.' },
   { q: 'Đã có plugin cài lên WooCommerce chưa?', a: 'Có. Plugin "MONA Pay for WooCommerce" hiện ở bản 0.3.2, tải file zip mới nhất tại https://github.com/themonagroup/woocommerce-monapay/releases/latest rồi cài trong WordPress (Plugins → Thêm mới → Tải plugin lên); bản nộp kho wordpress.org đang chờ duyệt. Khách làm web tại MONA thì đội kỹ thuật tụi em cài sẵn khi bàn giao; dev của anh chị cũng có thể dán đoạn PHP mẫu trên trang này nếu không muốn cài plugin.' },
   { q: 'Khách chuyển thiếu tiền hoặc gõ sai nội dung thì sao?', a: 'Đoạn code mẫu chỉ xác nhận khi số tiền nhận được lớn hơn hoặc bằng tổng đơn và nội dung có đúng mã đơn. Trường hợp còn lại, giao dịch vẫn nằm trong dashboard MONA Pay với đầy đủ số tiền, nội dung, thời gian để nhân viên đối chiếu tay, không mất dấu.' },
   { q: 'Web bị sập đúng lúc khách chuyển thì có mất giao dịch không?', a: 'Không mất. MONA Pay ghi lại từng lần gửi webhook kèm kết quả (mã HTTP, thời gian phản hồi, nhãn lỗi). Web trả về 200/201/202 trong 10 giây mới tính thành công; lỗi thì anh chị vào Webhooks, mục Lịch sử, bấm gửi lại. Lịch gửi lại tự động tối đa 7 lần đang được triển khai và sẽ công bố tại trang tài liệu khi lên.' },
   { q: 'Nhiều khách chuyển cùng số tiền cùng lúc, web có xác nhận nhầm đơn không?', a: 'Không, vì web khớp đơn theo mã đơn trong nội dung chuyển khoản (DH1234), không khớp theo số tiền. Muốn chắc hơn nữa, anh chị cấp mỗi đơn 1 tài khoản ảo (VA) riêng: tiền vào VA nào là biết đơn nào, kể cả khi khách quên gõ nội dung.' },
-  { q: 'Dùng WooCommerce cho 1 shop nhỏ, 50 đơn/tháng thì tốn bao nhiêu?', a: `MONA Pay ${PRICE_LINE}, đủ tính năng: VA, VietQR, webhook, Telegram, dashboard. Shop 50 đơn hay 5.000 đơn mỗi tháng đều không tốn đồng nào, chi tiết tại trang bảng giá.` },
+  { q: 'Dùng WooCommerce cho 1 shop nhỏ, 50 đơn/tháng thì tốn bao nhiêu?', a: `MONA Pay ${PRICE_LINE}, đủ tính năng: VA, VietQR, webhook, Telegram và dashboard. Shop 50 đơn mỗi tháng nằm trong hạn mức miễn phí; số giao dịch cao hơn xem gói phù hợp tại trang bảng giá.` },
   { q: 'Cần điều kiện gì để bắt đầu?', a: 'Một tài khoản ACB đứng tên anh chị hoặc công ty, số điện thoại đã đăng ký với ACB để nhận OTP, và 1 website WooCommerce có HTTPS. Đăng ký tài khoản MONA Pay tại my.monapay.vn là dùng ngay, không cần ai duyệt.' },
 ];
 
@@ -192,7 +194,7 @@ const jsonld = [
   { '@context': 'https://schema.org', '@type': 'WebPage', name: title, description, url: SITE.url + '/cong-thanh-toan-woocommerce', inLanguage: 'vi',
     about: { '@type': 'SoftwareApplication', name: 'MONA Pay', applicationCategory: 'FinanceApplication', operatingSystem: 'Web', url: SITE.url },
     publisher: { '@id': SITE.url + '/#organization' } },
-  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Cài xong là chạy: luồng thật trên WooCommerce',
+  { '@context': 'https://schema.org', '@type': 'HowTo', name: 'Tích hợp mã QR code thanh toán vào đơn hàng WooCommerce',
     description: 'Năm bước từ cài plugin WooCommerce MONA Pay tới khi đơn tự chuyển sang Đang xử lý.',
     step: wooFlow.map((item, index) => ({
       '@type': 'HowToStep',
@@ -209,9 +211,9 @@ const jsonld = [
   <section class="hero">
     <div class="wrap">
       <span class="eyebrow">WooCommerce · chuyển khoản ACB</span>
-      <h1>Cổng thanh toán WooCommerce:<br class="hb" /> <span class="accent">khách chuyển khoản, đơn tự xác nhận</span></h1>
+      <h1><span class="accent">Plugin WooCommerce chuyển khoản QR</span><br class="hb" /> tự động xác nhận thanh toán</h1>
       <div class="answer-first">
-        <p>MONA Pay nối tài khoản ACB của anh chị với website WooCommerce. Khách quét mã VietQR đúng số tiền, tiền vào thẳng tài khoản ACB, ACB báo cho MONA Pay, MONA Pay bắn webhook về web và đơn tự đổi trạng thái trong vài giây. Không ai phải canh app ngân hàng, không chụp màn hình, {PRICE_LINE}.</p>
+        <p>Plugin WooCommerce chuyển khoản QR tự động xác nhận thanh toán tạo VietQR đúng số tiền cho từng đơn. Tiền vào tài khoản ngân hàng, MONA Pay gửi webhook để đơn tự đổi trạng thái; shop được thử đủ luồng trước khi nối ngân hàng, trả 0% phí giao dịch và dùng {PRICE_LINE}.</p>
       </div>
       <div class="btn-row">
         <a class="btn btn-primary" href="https://github.com/themonagroup/woocommerce-monapay/releases/latest" rel="noopener">Tải plugin WooCommerce (GitHub)</a>
@@ -224,7 +226,7 @@ const jsonld = [
   <section class="section-alt woo-live">
     <div class="wrap">
       <span class="eyebrow">Ảnh thật · 5 bước</span>
-      <h2>Cài xong là chạy: luồng thật trên WooCommerce</h2>
+      <h2>Tích hợp mã QR code thanh toán vào đơn hàng WooCommerce</h2>
       <p class="lead">Từ lúc shop nhập key tới khi đơn số 20 tự đổi trạng thái, đây là luồng plugin đang chạy trên cửa hàng demo của MONA Pay.</p>
       <div class="callout ok woo-sandbox-note">
         <p><strong>Chưa nối ngân hàng vẫn thử được:</strong> bật Chế độ thử (sandbox) trong cài đặt plugin.</p>
@@ -255,7 +257,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Chuyện quen ở shop bán hàng</span>
-      <h2>Bán online mà xác nhận tiền bằng mắt người thì kẹt chỗ nào?</h2>
+      <h2>Plugin thanh toán WooCommerce Việt Nam xử lý đơn chuyển khoản ra sao?</h2>
       <p class="lead">Tụi em làm web bán hàng cho khách từ 2016, tới giờ đã qua 14.000+ dự án. Cứ shop nào nhận chuyển khoản là gặp đúng mấy cảnh này.</p>
       <div class="grid grid-2" style="margin-top:1.5rem">
         <div class="card"><div class="icon">1</div><h3>Khách chuyển xong phải chụp màn hình gửi Zalo</h3><p>Khách vừa trả tiền vừa phải làm thêm việc chứng minh. Shop nhận ảnh, mở app ngân hàng dò lại, rồi mới dám bấm xác nhận. Một đơn mất 5 phút, 50 đơn một ngày là hết buổi sáng của một nhân viên chỉ để dò tiền.</p></div>
@@ -269,7 +271,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Cách MONA Pay làm</span>
-      <h2>Từ lúc khách quét mã tới lúc đơn đổi trạng thái, 4 bước không có tay người</h2>
+      <h2>Plugin tự động xác nhận thanh toán qua tài khoản ngân hàng</h2>
       <p class="lead">Tụi em dùng cách này để thu tiền hosting, học phí, đơn phần mềm cho chính MONA, rồi từ 2022 hơn 6.000 khách hàng mới của MONA thu tiền qua đây trước khi mở cho anh chị.</p>
       <div style="margin-top:1.5rem"><Steps items={steps} /></div>
     </div>
@@ -278,7 +280,7 @@ const jsonld = [
   <section>
     <div class="wrap">
       <span class="eyebrow">Làm ngay hôm nay</span>
-      <h2>Ba cách nối MONA Pay vào WooCommerce</h2>
+      <h2>Cài plugin WooCommerce chuyển khoản QR theo 3 cách</h2>
       <div class="card" style="margin-bottom:1.5rem">
         <span class="badge badge-cta">Cài 1 nút</span>
         <h3>Cài plugin "MONA Pay for WooCommerce", 3 bước, không cần code</h3>
@@ -320,7 +322,7 @@ const jsonld = [
   <section class="section-alt">
     <div class="wrap">
       <span class="eyebrow">Muốn chắc hơn nữa</span>
-      <h2>Mỗi đơn một tài khoản ảo, khách quên gõ nội dung vẫn khớp đúng</h2>
+      <h2>Chuyển khoản QR xử lý đơn hàng tự động bằng tài khoản ảo</h2>
       <div class="grid grid-3">
         <div class="card"><h3>Tài khoản ảo (VA) theo đơn</h3><p>ACB cấp cho anh chị một đầu số, từ đó sinh ra nhiều số tài khoản ảo. Mỗi đơn hàng gắn 1 số ảo riêng, tiền vào số nào là biết đơn nào, không cần đọc nội dung chuyển khoản. Tiền vẫn nằm trong tài khoản ACB chính.</p></div>
         <div class="card"><h3>QR động đúng số tiền</h3><p>Mã VietQR sinh cho từng đơn đã điền sẵn số tiền và nội dung. Khách chỉ quét và bấm chuyển. Muốn huỷ đơn thì huỷ luôn mã QR qua API, khách quét mã cũ sẽ không chuyển được.</p></div>
